@@ -70,7 +70,19 @@ function report(report) {
   $('report').replaceChildren();
   if (!report.available) { empty($('report'), report.message); return; }
   $('report').append(node('h3', report.title), node('p', report.notice, 'notice'), node('p', 'Draft generated: ' + report.generated_at, 'muted'));
-  for (const section of report.sections) { $('report').append(node('h3', section.heading), node('p', section.text)); for (const url of section.source_urls) { const a = node('a', url); a.href = url; a.rel = 'noopener noreferrer'; $('report').append(a); } }
+  for (const section of report.sections) {
+    $('report').append(node('h3', section.heading), node('p', section.text));
+    const sources = node('ul');
+    for (const url of section.source_urls) {
+      const parsed = new URL(url);
+      const path = parsed.pathname.replace(/^\/|\/$/g, '').replaceAll('-', ' ') || 'home';
+      const label = path.charAt(0).toUpperCase() + path.slice(1);
+      const a = node('a', (parsed.hostname === 'cccbuild.com' ? 'Original site: ' : 'Updated site: ') + label);
+      a.href = url; a.rel = 'noopener noreferrer';
+      const item = node('li'); item.append(a); sources.append(item);
+    }
+    $('report').append(sources);
+  }
 }
 function render() {
   const counts = state.counts, budget = state.model_budget, r = state.readiness;
