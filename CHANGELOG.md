@@ -14,3 +14,7 @@ Local fixture tests and syntax checks are recorded in `docs/validation.md`. No G
 
 - Updated integration_url to /ai/ and usage_guide_url to /ai/agent.md.
 - Dashboard and budget routes remain unchanged.
+
+## 2026-11-04
+
+2026-11-04: Removed mentions of public administration features, protected dashboard.js access via cookie session validation, implemented advisory public crawler allowlist while preserving dashboard credentials, authentication logs, budgets, and MCP two-tool integration.

@@ -27,9 +27,7 @@ Public: `GET /health`, `/docs`, `/openapi.json`, `/agent-card.json`, `/.well-kno
 
 MCP supports JSON-RPC initialize version `2025-03-26`, initialized notifications, tools/list, and read-only tools/call (`get_faq`, `ask_company_question`). This is a documented tools subset, **not** full streamable MCP, SSE, full A2A compliance, or action-taking interoperability. Read `/docs` and `/openapi.json` for the actual schemas.
 
-Private: `/dashboard`, `/dashboard/login`; `/private/api/dashboard/login-state`, `/session`, `/login`, `/logout`, `/summary?days=7|30`, `/export.csv?days=7|30`, `/export.json?days=7|30` beneath `/private/api/dashboard`. Login-state/session/summary/exports are GET; login/logout are POST. Private routes have no credentialed CORS and require strong hash configuration, signed sessions, role checks, and strict same-origin CSRF on all privileged POSTs, including login. No URL password is accepted.
-
-Only `sri@srinagubandi.com` is an administrator. Set `PUBLIC_ORIGIN` to the exact verified HTTPS origin and `ADMIN_PASSWORD_HASH` to a supported strong one-way hash. Generate locally with `python3 hash_password.py`, which uses hidden prompts and prints only the hash. Parent/operator handles creating credentials and any approved Sri access email; this service sends no access emails. See [`docs/configuration.md`](docs/configuration.md).
+Operational access is session authenticated and not exposed as a public tool; public source code does not provide route secrecy.
 
 ## Budget and fixed providers
 
