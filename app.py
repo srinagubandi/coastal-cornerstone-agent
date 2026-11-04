@@ -59,8 +59,8 @@ class Service:
                 "description": "Read-only source-verified public company information. No private systems, business commitments, booking, messaging, or arbitrary browsing.",
                 "url": origin or None, "docs_url": origin + "/docs" if origin else "/docs", "endpoint": origin + "/ask" if origin else "/ask",
                 "mcp_endpoint": origin + "/mcp" if origin else "/mcp", "instruction_file": origin + "/docs" if origin else "/docs",
-                "integration_url": "https://cccbuild-3mhyn4jl.manus.space/ai/",
-                "usage_guide_url": "https://cccbuild-3mhyn4jl.manus.space/ai/agent.md",
+                "integration_url": "https://cccbuild.com/ai/",
+                "usage_guide_url": "https://cccbuild.com/ai/agent.md",
                 "capabilities": {"read_only": True, "source_verified_faq": True, "mcp_json_rpc_tools": [t["name"] for t in TOOLS]},
                 "protocols": {"http_json": True, "mcp": "2025-03-26 tools subset", "full_a2a": False},
                 "privacy": "Basic redaction and limited pseudonymity; API/MCP channels do not authenticate a caller's AI identity."}

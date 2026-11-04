@@ -5,7 +5,7 @@
     "name": "Coastal Cornerstone Construction",
     "email": "ben@cccbuild.com",
     "phone": "+17277715672",
-    "site_url": "https://cccbuild-3mhyn4jl.manus.space"
+    "site_url": "https://cccbuild.com/"
   },
   "faqs": [
     {
@@ -13,7 +13,6 @@
       "question": "What does Coastal Cornerstone Construction do?",
       "answer": "Coastal Cornerstone Construction manages commercial, industrial, and government-grade construction projects and builds and renovates homes in Central Florida. We coordinate owners, end users, design teams, and subcontractors from planning through construction.",
       "source_urls": [
-        "https://cccbuild-3mhyn4jl.manus.space/",
         "https://cccbuild.com/"
       ],
       "tags": [
@@ -29,8 +28,7 @@
       "question": "How many years of experience does your company have?",
       "answer": "Our team brings more than 40 years of experience in design, construction, value engineering, estimating, and project management.",
       "source_urls": [
-        "https://cccbuild-3mhyn4jl.manus.space/about/",
-        "https://cccbuild.com/about-us/"
+        "https://cccbuild.com/about/"
       ],
       "tags": [
         "experience",
@@ -45,8 +43,8 @@
       "question": "Where is Coastal Cornerstone Construction based?",
       "answer": "We are based in Clearwater, Florida.",
       "source_urls": [
-        "https://cccbuild-3mhyn4jl.manus.space/about/",
-        "https://cccbuild-3mhyn4jl.manus.space/contact/"
+        "https://cccbuild.com/about/",
+        "https://cccbuild.com/contact/"
       ],
       "tags": [
         "location",
@@ -61,8 +59,8 @@
       "question": "What areas do you serve?",
       "answer": "We serve most of Central Florida, from Gainesville to Venice. Our base is in Clearwater.",
       "source_urls": [
-        "https://cccbuild.com/about-us/",
-        "https://cccbuild-3mhyn4jl.manus.space/"
+        "https://cccbuild.com/",
+        "https://cccbuild.com/about/"
       ],
       "tags": [
         "service-area"
@@ -76,8 +74,8 @@
       "question": "Do you build custom homes?",
       "answer": "Yes. We build custom homes and complete renovations and additions, reviewing the proposed work and discussing design options and cost estimates with homeowners before construction begins.",
       "source_urls": [
-        "https://cccbuild-3mhyn4jl.manus.space/residential/",
-        "https://cccbuild.com/services/"
+        "https://cccbuild.com/residential/",
+        "https://cccbuild.com/commercial/"
       ],
       "tags": [
         "residential",
@@ -92,8 +90,8 @@
       "question": "Do you handle home renovations and additions?",
       "answer": "Yes. We complete renovations, home additions, and remodeling. Contact us with the project location and the work you are considering.",
       "source_urls": [
-        "https://cccbuild-3mhyn4jl.manus.space/residential/",
-        "https://cccbuild.com/services/"
+        "https://cccbuild.com/residential/",
+        "https://cccbuild.com/commercial/"
       ],
       "tags": [
         "residential",
@@ -109,8 +107,7 @@
       "question": "What types of commercial projects do you work on?",
       "answer": "Our commercial work includes corporate offices, retail centers, government facilities, and industrial buildings. We coordinate design information and subcontractor work throughout construction.",
       "source_urls": [
-        "https://cccbuild-3mhyn4jl.manus.space/commercial/",
-        "https://cccbuild.com/services/"
+        "https://cccbuild.com/commercial/"
       ],
       "tags": [
         "commercial",
@@ -125,7 +122,7 @@
       "question": "Do you work on government or institutional projects?",
       "answer": "Our commercial experience includes government and institutional facilities. We coordinate the design team and trades and account for applicable building requirements.",
       "source_urls": [
-        "https://cccbuild-3mhyn4jl.manus.space/commercial/",
+        "https://cccbuild.com/commercial/",
         "https://cccbuild.com/"
       ],
       "tags": [
@@ -141,7 +138,7 @@
       "question": "Do you build industrial facilities?",
       "answer": "Yes. Our construction experience includes industrial warehouses and facilities alongside commercial and government projects.",
       "source_urls": [
-        "https://cccbuild-3mhyn4jl.manus.space/commercial/",
+        "https://cccbuild.com/commercial/",
         "https://cccbuild.com/"
       ],
       "tags": [
@@ -157,7 +154,7 @@
       "question": "What is ICF construction?",
       "answer": "Insulated concrete forms (ICF) combine steel-reinforced concrete walls with continuous insulation. The concrete strengthens the walls, and the insulation slows heat transfer. Roof and foundation connections, protected windows and doors, drainage, and site conditions are part of the full-building design.",
       "source_urls": [
-        "https://cccbuild-3mhyn4jl.manus.space/icf/"
+        "https://cccbuild.com/icf/"
       ],
       "tags": [
         "icf"
@@ -171,7 +168,7 @@
       "question": "How does ICF construction help with storm protection in Florida?",
       "answer": "Steel-reinforced concrete walls resist high winds. Engineered roof and foundation connections and protected windows and doors extend the storm-resilience design through the whole home.",
       "source_urls": [
-        "https://cccbuild-3mhyn4jl.manus.space/icf/"
+        "https://cccbuild.com/icf/"
       ],
       "tags": [
         "icf",
@@ -186,7 +183,7 @@
       "question": "Does an ICF home reduce outside noise?",
       "answer": "The concrete core and insulation help reduce outside noise so it is easier to relax indoors. Windows, doors, and the roof also affect how much sound reaches your rooms.",
       "source_urls": [
-        "https://cccbuild-3mhyn4jl.manus.space/icf/"
+        "https://cccbuild.com/icf/"
       ],
       "tags": [
         "icf",
@@ -201,7 +198,7 @@
       "question": "Can ICF construction lower energy bills?",
       "answer": "Insulated, well-sealed walls can reduce the work needed to heat and cool your home, which can help lower energy bills over time. Savings depend on the home design, equipment, and use.",
       "source_urls": [
-        "https://cccbuild-3mhyn4jl.manus.space/icf/"
+        "https://cccbuild.com/icf/"
       ],
       "tags": [
         "icf",
@@ -216,7 +213,7 @@
       "question": "How does ICF help with moisture and mold in Florida?",
       "answer": "Controlling moisture is the key to limiting mold growth in Florida. Good drainage, wall details that manage rain, and indoor humidity control are part of an ICF home's design.",
       "source_urls": [
-        "https://cccbuild-3mhyn4jl.manus.space/icf/"
+        "https://cccbuild.com/icf/"
       ],
       "tags": [
         "icf",
@@ -232,7 +229,7 @@
       "question": "Does ICF help with indoor air quality?",
       "answer": "A well-sealed home pairs with controlled fresh-air ventilation and suitable HVAC filters. The filters help reduce airborne dust and particles; the ventilation brings in fresh air.",
       "source_urls": [
-        "https://cccbuild-3mhyn4jl.manus.space/icf/"
+        "https://cccbuild.com/icf/"
       ],
       "tags": [
         "icf",
@@ -247,7 +244,7 @@
       "question": "Does ICF provide more even room temperatures?",
       "answer": "Continuous insulation helps reduce temperature swings through the walls. Windows, shading, and well-designed HVAC distribution help carry that comfort from one room to the next.",
       "source_urls": [
-        "https://cccbuild-3mhyn4jl.manus.space/icf/"
+        "https://cccbuild.com/icf/"
       ],
       "tags": [
         "icf",
@@ -262,7 +259,7 @@
       "question": "How durable are ICF walls?",
       "answer": "Reinforced concrete provides a lasting wall structure. Quality finishes, flashing, and routine upkeep help protect it. Plan for maintenance of the whole home when considering long-term costs.",
       "source_urls": [
-        "https://cccbuild-3mhyn4jl.manus.space/icf/"
+        "https://cccbuild.com/icf/"
       ],
       "tags": [
         "icf",
@@ -277,7 +274,7 @@
       "question": "Does ICF work in both summer and winter conditions in Florida?",
       "answer": "Insulation slows summer heat entering the home and helps retain indoor warmth in winter. The concrete core also moderates temperature swings, supporting comfort through Florida's changing seasons.",
       "source_urls": [
-        "https://cccbuild-3mhyn4jl.manus.space/icf/"
+        "https://cccbuild.com/icf/"
       ],
       "tags": [
         "icf",
@@ -293,7 +290,7 @@
       "question": "What do you review when planning an ICF home?",
       "answer": "We review the ICF walls alongside the roof, foundation, protected openings, drainage, ventilation, and HVAC. These decisions need to reflect your Florida property's conditions, the planned use of the home, and its maintenance needs.",
       "source_urls": [
-        "https://cccbuild-3mhyn4jl.manus.space/icf/"
+        "https://cccbuild.com/icf/"
       ],
       "tags": [
         "icf",
@@ -308,7 +305,7 @@
       "question": "What is value engineering?",
       "answer": "Value engineering is our review of construction options against the project's scope and budget. It helps compare alternatives without assuming that one approach suits every project.",
       "source_urls": [
-        "https://cccbuild-3mhyn4jl.manus.space/about/"
+        "https://cccbuild.com/about/"
       ],
       "tags": [
         "process",
@@ -323,8 +320,8 @@
       "question": "How do you communicate with clients during a project?",
       "answer": "We explain proposed work, costs, and decisions and discuss questions as the project develops. We report progress and explain when site conditions or project decisions change the work plan.",
       "source_urls": [
-        "https://cccbuild-3mhyn4jl.manus.space/about/",
-        "https://cccbuild-3mhyn4jl.manus.space/residential/"
+        "https://cccbuild.com/about/",
+        "https://cccbuild.com/residential/"
       ],
       "tags": [
         "process",
@@ -339,7 +336,7 @@
       "question": "What does your construction process look like from start to finish?",
       "answer": "The process begins with the proposed work and your priorities. We define the scope and discuss cost estimates and scheduling, then plan design options and materials before coordinating construction. During the build, we coordinate the trades, report progress, and address issues as they arise.",
       "source_urls": [
-        "https://cccbuild-3mhyn4jl.manus.space/process/"
+        "https://cccbuild.com/process/"
       ],
       "tags": [
         "process"
@@ -353,8 +350,8 @@
       "question": "Do you coordinate subcontractors?",
       "answer": "Yes. We coordinate owners, end users, design teams, and subcontractors, tracking project decisions and the work that depends on them.",
       "source_urls": [
-        "https://cccbuild-3mhyn4jl.manus.space/commercial/",
-        "https://cccbuild-3mhyn4jl.manus.space/process/"
+        "https://cccbuild.com/commercial/",
+        "https://cccbuild.com/process/"
       ],
       "tags": [
         "process",
@@ -369,8 +366,8 @@
       "question": "Do you work on projects in coastal locations?",
       "answer": "Yes. Our team has experience with coastal sites, including high winds, heavy rain, and saltwater exposure. We review those conditions during project planning.",
       "source_urls": [
-        "https://cccbuild.com/about-us/",
-        "https://cccbuild-3mhyn4jl.manus.space/commercial/"
+        "https://cccbuild.com/commercial/",
+        "https://cccbuild.com/about/"
       ],
       "tags": [
         "coastal",
@@ -385,8 +382,8 @@
       "question": "Can you build or manage projects in remote locations?",
       "answer": "Yes. We plan around site access and conditions in remote locations, including the coordination these projects require.",
       "source_urls": [
-        "https://cccbuild-3mhyn4jl.manus.space/commercial/",
-        "https://cccbuild-3mhyn4jl.manus.space/projects/"
+        "https://cccbuild.com/commercial/",
+        "https://cccbuild.com/projects/"
       ],
       "tags": [
         "remote",
@@ -401,7 +398,7 @@
       "question": "Do you work with architects and engineers?",
       "answer": "Yes. We work with architects, engineers, and developers to coordinate design information and subcontractor work during construction.",
       "source_urls": [
-        "https://cccbuild-3mhyn4jl.manus.space/commercial/"
+        "https://cccbuild.com/commercial/"
       ],
       "tags": [
         "process",
@@ -416,8 +413,8 @@
       "question": "How do I get a cost estimate for my project?",
       "answer": "Contact us by phone, text, email, or through the project information form and describe the work you are considering. We review scope, design options, and cost estimates during the planning phase. Pricing is specific to each project and is not published at a fixed rate.",
       "source_urls": [
-        "https://cccbuild-3mhyn4jl.manus.space/contact/",
-        "https://cccbuild-3mhyn4jl.manus.space/process/"
+        "https://cccbuild.com/contact/",
+        "https://cccbuild.com/process/"
       ],
       "tags": [
         "pricing",
@@ -432,8 +429,7 @@
       "question": "How do I contact Coastal Cornerstone Construction?",
       "answer": "You can call or text (727) 771-5672, email ben@cccbuild.com, or submit your project details through the project information form on the Contact page.",
       "source_urls": [
-        "https://cccbuild-3mhyn4jl.manus.space/contact/",
-        "https://cccbuild.com/contact-us/"
+        "https://cccbuild.com/contact/"
       ],
       "tags": [
         "contact"
@@ -447,7 +443,7 @@
       "question": "What are your business hours?",
       "answer": "Our hours are Monday through Friday, 7am to 4pm.",
       "source_urls": [
-        "https://cccbuild-3mhyn4jl.manus.space/contact/"
+        "https://cccbuild.com/contact/"
       ],
       "tags": [
         "contact",
@@ -462,7 +458,7 @@
       "question": "Can I text you instead of calling?",
       "answer": "Yes. You can reach us by call or text at (727) 771-5672. The Contact page includes call and text links that open your device's app, plus a copy-number option if you prefer.",
       "source_urls": [
-        "https://cccbuild-3mhyn4jl.manus.space/contact/"
+        "https://cccbuild.com/contact/"
       ],
       "tags": [
         "contact"
@@ -476,8 +472,7 @@
       "question": "How do I submit a project inquiry form?",
       "answer": "The Contact page embeds our project information form provided through Projul. You can also open it in a new tab if it does not load in the page.",
       "source_urls": [
-        "https://cccbuild-3mhyn4jl.manus.space/contact/",
-        "https://cccbuild.com/contact-us/"
+        "https://cccbuild.com/contact/"
       ],
       "tags": [
         "contact",
@@ -492,8 +487,8 @@
       "question": "Are you licensed and insured?",
       "answer": "For current licensing, insurance, and certification details, contact Ben at ben@cccbuild.com or (727) 771-5672. The Resources page links our published capability statement.",
       "source_urls": [
-        "https://cccbuild.com/",
-        "https://cccbuild-3mhyn4jl.manus.space/resources/"
+        "https://cccbuild.com/resources/",
+        "https://cccbuild.com/"
       ],
       "tags": [
         "credentials",
@@ -508,8 +503,8 @@
       "question": "Is Coastal Cornerstone Construction BBB accredited?",
       "answer": "Our footer links to the Coastal Cornerstone BBB profile. Use that profile to check the current accreditation status, or ask the team for details.",
       "source_urls": [
-        "https://cccbuild.com/",
-        "https://cccbuild-3mhyn4jl.manus.space/resources/"
+        "https://cccbuild.com/resources/",
+        "https://cccbuild.com/"
       ],
       "tags": [
         "credentials",
@@ -524,7 +519,7 @@
       "question": "Do you have a capability statement?",
       "answer": "Yes. Our capability statement PDF outlines our construction capabilities and includes company contact information. You can open it from the Resources page.",
       "source_urls": [
-        "https://cccbuild-3mhyn4jl.manus.space/resources/"
+        "https://cccbuild.com/resources/"
       ],
       "tags": [
         "credentials",
@@ -539,7 +534,7 @@
       "question": "What does the capability statement cover?",
       "answer": "It provides a company overview and contact information. Project-specific scope, pricing, and engineering requirements are reviewed separately for each project.",
       "source_urls": [
-        "https://cccbuild-3mhyn4jl.manus.space/resources/"
+        "https://cccbuild.com/resources/"
       ],
       "tags": [
         "resources",
@@ -554,8 +549,8 @@
       "question": "Do you handle full-service projects from concept to completion?",
       "answer": "Our services include design coordination, estimating, value engineering, and project management for new construction, renovations, and additions.",
       "source_urls": [
-        "https://cccbuild.com/",
-        "https://cccbuild-3mhyn4jl.manus.space/process/"
+        "https://cccbuild.com/process/",
+        "https://cccbuild.com/"
       ],
       "tags": [
         "services",
@@ -570,8 +565,8 @@
       "question": "What industries or project types have you worked on historically?",
       "answer": "Our experience spans residential homes, commercial offices and retail centers, government and institutional facilities, industrial warehouses, and coastal and remote location projects. Historically, our work has ranged from small remodels to multi-million-dollar developments.",
       "source_urls": [
-        "https://cccbuild.com/about-us/",
-        "https://cccbuild-3mhyn4jl.manus.space/projects/"
+        "https://cccbuild.com/projects/",
+        "https://cccbuild.com/about/"
       ],
       "tags": [
         "experience",
@@ -586,7 +581,7 @@
       "question": "Do you handle smaller remodel projects?",
       "answer": "Historically, our work has included projects ranging from small remodels to multi-million-dollar developments. Contact us to discuss the scope of your specific project.",
       "source_urls": [
-        "https://cccbuild.com/about-us/"
+        "https://cccbuild.com/about/"
       ],
       "tags": [
         "residential",
@@ -602,7 +597,7 @@
       "question": "What is your approach to safety and building regulations?",
       "answer": "We account for applicable safety requirements and building regulations when planning and managing construction work.",
       "source_urls": [
-        "https://cccbuild-3mhyn4jl.manus.space/"
+        "https://cccbuild.com/"
       ],
       "tags": [
         "compliance",
@@ -617,7 +612,7 @@
       "question": "Who do you serve as the point of contact for on commercial projects?",
       "answer": "On commercial projects, we serve as the point of contact for the project owner, coordinating with end users, design teams, and subcontractors through construction.",
       "source_urls": [
-        "https://cccbuild-3mhyn4jl.manus.space/commercial/"
+        "https://cccbuild.com/commercial/"
       ],
       "tags": [
         "commercial",
@@ -632,8 +627,7 @@
       "question": "Do you work on retail construction?",
       "answer": "Yes. Retail centers are among the commercial project types we build and manage.",
       "source_urls": [
-        "https://cccbuild-3mhyn4jl.manus.space/commercial/",
-        "https://cccbuild.com/services/"
+        "https://cccbuild.com/commercial/"
       ],
       "tags": [
         "commercial",
@@ -648,7 +642,7 @@
       "question": "How do you handle project scope definition before construction starts?",
       "answer": "We review the project and outline the proposed work, discuss priorities, cost estimates, and scheduling needs, and identify design options and site requirements before construction begins.",
       "source_urls": [
-        "https://cccbuild-3mhyn4jl.manus.space/process/"
+        "https://cccbuild.com/process/"
       ],
       "tags": [
         "process",
@@ -663,7 +657,7 @@
       "question": "What is ICF guidance and where can I read it?",
       "answer": "The ICF guidance explains the wall system and details to review with your design team. It is linked from our Resources page under ICF Building America Solution Center.",
       "source_urls": [
-        "https://cccbuild-3mhyn4jl.manus.space/resources/"
+        "https://cccbuild.com/resources/"
       ],
       "tags": [
         "icf",
@@ -678,7 +672,7 @@
       "question": "Does ICF help reduce long-term energy use?",
       "answer": "Reducing heating and cooling demand is a practical part of building sustainably. ICF insulation can help cut ongoing energy use alongside efficient equipment and other choices in the home design.",
       "source_urls": [
-        "https://cccbuild-3mhyn4jl.manus.space/icf/"
+        "https://cccbuild.com/icf/"
       ],
       "tags": [
         "icf",
@@ -694,7 +688,7 @@
       "question": "What site conditions do you factor in when planning an ICF home?",
       "answer": "The property's flood zone, elevation, and soil conditions guide foundation design. Drainage and moisture-control details are planned for the coastal or inland site.",
       "source_urls": [
-        "https://cccbuild-3mhyn4jl.manus.space/icf/"
+        "https://cccbuild.com/icf/"
       ],
       "tags": [
         "icf",

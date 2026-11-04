@@ -7,7 +7,6 @@
       "heading": "Homepage and company overview",
       "text": "Covers general construction services, location in Clearwater, Florida, and the types of projects (commercial, industrial, government, residential). Useful for questions about the company’s core business and experience.",
       "source_urls": [
-        "https://cccbuild-3mhyn4jl.manus.space/",
         "https://cccbuild.com/"
       ]
     },
@@ -15,35 +14,32 @@
       "heading": "About, experience, and value engineering",
       "text": "The dataset covers team experience, value engineering, project communication, and the capability statement. It explains how to start an estimating conversation; it does not publish project prices.",
       "source_urls": [
-        "https://cccbuild-3mhyn4jl.manus.space/about/",
-        "https://cccbuild.com/about-us/",
-        "https://cccbuild-3mhyn4jl.manus.space/resources/"
+        "https://cccbuild.com/about/",
+        "https://cccbuild.com/resources/"
       ]
     },
     {
       "heading": "Residential, commercial, and project types",
       "text": "Explains custom home building, renovations, additions, and commercial project types (offices, retail, government, industrial). Also covers work in coastal and remote locations. Answers scope-related and project-type questions.",
       "source_urls": [
-        "https://cccbuild-3mhyn4jl.manus.space/residential/",
-        "https://cccbuild.com/services/",
-        "https://cccbuild-3mhyn4jl.manus.space/commercial/",
-        "https://cccbuild-3mhyn4jl.manus.space/projects/"
+        "https://cccbuild.com/residential/",
+        "https://cccbuild.com/commercial/",
+        "https://cccbuild.com/projects/"
       ]
     },
     {
       "heading": "ICF construction and building performance",
       "text": "The dataset explains the nine ICF benefits, including storm resilience, quiet, potential energy savings, moisture management, and seasonal comfort. Questions requiring project-specific engineering need the design team.",
       "source_urls": [
-        "https://cccbuild-3mhyn4jl.manus.space/icf/"
+        "https://cccbuild.com/icf/"
       ]
     },
     {
       "heading": "Process and contact information",
       "text": "The dataset describes scope review, planning, trade coordination, business hours, and contact methods. Questions about a project’s current schedule or a binding estimate need a direct discussion with the team.",
       "source_urls": [
-        "https://cccbuild-3mhyn4jl.manus.space/process/",
-        "https://cccbuild-3mhyn4jl.manus.space/contact/",
-        "https://cccbuild.com/contact-us/"
+        "https://cccbuild.com/process/",
+        "https://cccbuild.com/contact/"
       ]
     }
   ],
