@@ -22,7 +22,7 @@ document.getElementById('loginform').addEventListener('submit', async (event) =>
       headers: {'Content-Type': 'application/json', 'X-CSRF-Token': csrf},
       body: JSON.stringify({email: document.getElementById('email').value, password: password.value})});
     password.value = '';
-    if (response.ok) { location.replace('/dashboard'); return; }
+    if (response.ok) { location.replace('/dashboard/' + (/^#chat=[0-9a-f]{32}$/.test(location.hash) ? location.hash : '')); return; }
     if (response.status === 429) throw new Error('Too many sign-in attempts. Please wait and try again.');
     if (response.status === 403) { await prepare(); throw new Error('Sign-in session expired. Please try again.'); }
     throw new Error('Sign in failed. Check your credentials.');

@@ -1,7 +1,14 @@
 <!doctype html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="robots" content="noindex,nofollow"><title>Question intelligence | Coastal Cornerstone</title><link rel="stylesheet" href="/static/styles.css"><script src="/static/dashboard.js" defer></script></head>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="robots" content="noindex,nofollow"><title>Question intelligence | Coastal Cornerstone</title><link rel="stylesheet" href="/static/styles.css"><script src="/static/dashboard.js" defer></script><link rel="stylesheet" href="/static/chat-dashboard.css">
+<script defer src="/static/chat-dashboard.js"></script>
+</head>
 <body><a class="skip" href="#main">Skip to dashboard</a><header class="topbar"><a class="brand" href="/dashboard">Coastal <span>Cornerstone</span><small>PRIVATE QUESTION INTELLIGENCE</small></a><nav aria-label="Account"><span class="account">Sri · Administrator</span><button id="logout" class="ghost">Sign out</button></nav></header>
-<main id="main" class="workspace"><div class="pagehead"><div><p class="eyebrow">REAL QUESTIONS. HUMAN OVERSIGHT.</p><h1>Question intelligence</h1><p class="muted">Public information service · API &amp; MCP channels</p></div><div class="actions"><label for="days">Reporting window</label><select id="days"><option value="7">Last 7 days</option><option value="30">Last 30 days</option></select><button id="exportcsv" class="ghost">Export CSV</button><button id="exportjson" class="ghost">Export JSON</button></div></div>
+<main id="main" class="workspace"><div class="cc-dashboard-tabs" role="tablist" aria-label="Dashboard sections">
+  <button id="overview-tab" role="tab" aria-controls="overview-panel" aria-selected="true" tabindex="0" type="button">Overview</button>
+  <button id="chats-tab" role="tab" aria-controls="chats-panel" aria-selected="false" tabindex="-1" type="button">Chats</button>
+</div>
+<section id="overview-panel" role="tabpanel" aria-labelledby="overview-tab" tabindex="0">
+<div class="pagehead"><div><p class="eyebrow">REAL QUESTIONS. HUMAN OVERSIGHT.</p><h1>Question intelligence</h1><p class="muted">Public information service · API &amp; MCP channels</p></div><div class="actions"><label for="days">Reporting window</label><select id="days"><option value="7">Last 7 days</option><option value="30">Last 30 days</option></select><button id="exportcsv" class="ghost">Export CSV</button><button id="exportjson" class="ghost">Export JSON</button></div></div>
 <p id="status" class="notice" role="status" aria-live="polite">Loading retained real request activity…</p>
 <section class="metrics" aria-label="Request metrics"><article class="metric"><p>Total requests</p><strong id="total">—</strong><small>Retained incoming questions</small></article><article class="metric"><p>Answered</p><strong id="answered">—</strong><small>Exact curated FAQ answers</small></article><article class="metric"><p>Unanswered</p><strong id="unanswered">—</strong><small>Human review fallback</small></article><article class="metric"><p>Model cost</p><strong id="cost">—</strong><small>Charges &amp; uncertain reservations</small></article></section>
 <div class="twocol"><section class="panel"><div class="sectionhead"><h2>30-day question trend</h2><span class="badge">UTC · real incoming traffic</span></div><div id="trend" class="trend" aria-label="30-day request chart"></div><p id="trendtext" class="muted"></p></section><section class="panel"><div class="sectionhead"><h2>Model budget</h2><span class="badge">$1 / UTC month</span></div><p class="big" id="budget">—</p><div class="budgettrack" aria-hidden="true"><span id="budgetbar"></span></div><dl class="compact" id="budgetdetail"></dl><p class="muted">Worst-case reservations include in-flight and uncertain failures. No recurring paid dashboard reports.</p></section></div>
@@ -9,4 +16,33 @@
 <section class="panel"><div class="sectionhead"><h2>Incoming questions</h2><span id="tablecount" class="badge"></span></div><div class="filters"><label for="search">Search sanitized questions<input id="search" type="search" placeholder="Search questions, FAQ IDs, outcome…"></label><label for="outcome">Outcome<select id="outcome"><option value="all">All outcomes</option><option value="answered">Answered</option><option value="needs_review">Needs review</option><option value="rate_blocked">Rate blocked</option><option value="invalid">Invalid input</option></select></label></div><div class="tablewrap" tabindex="0" role="region" aria-label="Incoming questions table"><table><caption class="sr-only">Sanitized incoming questions in the selected reporting window</caption><thead><tr><th scope="col">UTC time</th><th scope="col">Question</th><th scope="col">Channel</th><th scope="col">Outcome / protection</th><th scope="col">FAQ IDs</th><th scope="col">Model / cost</th></tr></thead><tbody id="questions"></tbody></table></div><button class="ghost" id="more" hidden>Show more questions</button></section>
 <section class="panel"><div class="sectionhead"><h2>Unknown question review</h2><span class="badge">Never auto-approved</span></div><div class="tabs" role="group" aria-label="Review queue filter"><button data-state="all" aria-pressed="true">All retained</button><button data-state="pending" aria-pressed="false">Pending</button><button data-state="digest_pending" aria-pressed="false">Digest reserved</button><button data-state="sent" aria-pressed="false">Digest sent</button></div><div id="unknowns" class="reviewlist"></div><p class="muted">Review source evidence and edit the approved FAQ file through the operator workflow. This dashboard does not approve facts or trigger emails.</p></section>
 <div class="twocol"><section class="panel"><h2>Cited source usage</h2><div id="sources" class="sourcelist"></div></section><section class="panel"><h2>Optional source review draft</h2><div id="report"></div></section></div>
-<footer class="privatefooter"><h2>What these logs mean</h2><p id="privacy"></p><p id="retention"></p><p>There is no synthetic traffic or historical demo activity. An empty dashboard means no retained questions have arrived. A channel label is not a verified AI identity.</p></footer></main></body></html>
+<footer class="privatefooter"><h2>What these logs mean</h2><p id="privacy"></p><p id="retention"></p><p>There is no synthetic traffic or historical demo activity. An empty dashboard means no retained questions have arrived. A channel label is not a verified AI identity.</p></footer>
+</section>
+
+<section id="chats-panel" role="tabpanel" aria-labelledby="chats-tab" tabindex="0" hidden>
+  <div class="cc-chat-header">
+    <h2>Private chats</h2>
+    <p class="muted">Read-only business conversations shared with the company team. Records are retained for 30 days.</p>
+  </div>
+  <div class="cc-chat-controls">
+    <label for="chat-search">Search chats
+      <input id="chat-search" type="search" placeholder="Search previews, status, or chat IDs">
+    </label>
+    <button id="chat-refresh" type="button" class="ghost">Refresh chats</button>
+  </div>
+  <p id="chat-status" class="cc-chat-status" role="status" aria-live="polite" aria-atomic="true">Open Chats to load retained conversations.</p>
+  <div class="cc-chat-layout">
+    <aside class="cc-chat-sidebar">
+      <h3>Conversations</h3>
+      <ul id="chat-list" class="cc-chat-list" aria-label="Conversation list">
+        <li class="cc-chat-empty">No conversations loaded.</li>
+      </ul>
+    </aside>
+    <article id="chat-detail" class="cc-chat-detail" aria-labelledby="chat-detail-title" tabindex="0">
+      <h3 id="chat-detail-title">Conversation</h3>
+      <p class="cc-chat-empty">Select a chat to view its saved messages and contact details.</p>
+    </article>
+  </div>
+</section>
+
+</main></body></html>

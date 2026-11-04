@@ -236,7 +236,7 @@ class Store:
         signature = hmac.new(self.session_key, raw.encode(), hashlib.sha256).hexdigest()
         token = raw + "." + signature
         csrf = secrets.token_urlsafe(32)
-        ttl = 8 * 3600 if role == "admin" else 600
+        ttl = 8 * 3600 if role in ("admin", "ben") else 600
         with self.transaction() as db:
             db.execute("DELETE FROM sessions WHERE expires < ?", (now,))
             db.execute("INSERT INTO sessions VALUES (?,?,?,?)", (hashlib.sha256(token.encode()).hexdigest(), role, csrf, now + ttl))

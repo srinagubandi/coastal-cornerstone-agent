@@ -1,13 +1,16 @@
 """Standard-library HTTP service; Railway supplies public TLS and a /data volume."""
 import hmac
 import json
+import re
+from chat_service import ChatService
+from chat_http import is_chat_path, serve_chat, chat_headers
 import threading
 from http import HTTPStatus
 from http.cookies import SimpleCookie, CookieError
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from urllib.parse import parse_qs, urlsplit
 from agent import Agent
-from config import BODY_LIMIT, Config, ROOT
+from config import BODY_LIMIT, Config, ROOT, ADMIN_EMAIL, RECIPIENT
 from dashboard import Dashboard
 from digest import Digest
 from store import Store
@@ -68,6 +71,7 @@ class Service:
         self.agent = Agent(self.config, self.store, transport)
         self.digest = Digest(self.config, self.store, transport)
         self.dashboard = Dashboard(self.config, self.store, self.agent, self.digest)
+        self.chat = ChatService(self.config, self.store, self.agent, transport)
 
     def card(self):
         origin = self.config.public_origin
@@ -284,6 +288,9 @@ class Handler(BaseHTTPRequestHandler):
         if self.service.config.public_origin.startswith("https://"):
             self.send_header("Strict-Transport-Security", "max-age=31536000")
         path = urlsplit(self.path).path
+        if is_chat_path(path):
+            origin = self.headers.get('Origin')
+            extra = {**chat_headers(self.service.config, origin), **(extra or {})}
         if path in PUBLIC_ROUTES or is_faq_resource(path):
             self.send_header("Access-Control-Allow-Origin", "*")
             self.send_header("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
@@ -334,9 +341,19 @@ class Handler(BaseHTTPRequestHandler):
             return None
         name = "ccc_session" if role == "admin" else "ccc_login"
         result = self.service.store.session(self.cookie(name))
-        return result if result and result["role"] == role else None
+        if not result:
+            return None
+        if (role == "admin" and result["role"] in ("admin", "ben")) or result["role"] == role:
+            return result
+        return None
 
     def do_OPTIONS(self):
+        if is_chat_path(urlsplit(self.path).path):
+            client = self.context()
+            if client and self.limited_read(client):
+                return serve_chat(self, self.path, client, 'OPTIONS')
+            else:
+                return None
         if urlsplit(self.path).path in PUBLIC_ROUTES or is_faq_resource(urlsplit(self.path).path):
             self.respond(204)
         else:
@@ -357,6 +374,8 @@ class Handler(BaseHTTPRequestHandler):
         split = urlsplit(self.path)
         path = split.path
         s = self.service
+        if is_chat_path(path):
+            return serve_chat(self, path, client, 'GET')
         if path == "/health":
             return self.respond(200, {"status": "ok", "knowledge_count": len(s.agent.faqs), "model_configured": bool(s.config.api_key), "digest_enabled": s.config.digest_enabled})
         if path in {"/agent-card.json", "/.well-known/agent-card.json"}:
@@ -409,9 +428,9 @@ class Handler(BaseHTTPRequestHandler):
             return self.respond(200, (ROOT / "docs/index.html").read_bytes(), "text/html; charset=utf-8")
         if path == '/robots.txt':
             return self.respond(200, b'User-agent: *\nDisallow: /\nAllow: /docs\nAllow: /faq\nAllow: /openapi.json\nAllow: /agent-card.json\nAllow: /.well-known/agent-card.json\nAllow: /mcp\nAllow: /ask\nAllow: /health\nAllow: /static/styles.css\nAllow: /robots.txt\n', 'text/plain; charset=utf-8')
-        assets = {"/static/styles.css": "styles.css", "/static/dashboard.js": "dashboard.js", "/static/login.js": "login.js"}
+        assets = {'/static/styles.css': 'styles.css', '/static/dashboard.js': 'dashboard.js', '/static/login.js': 'login.js', '/static/chat-dashboard.js': 'chat-dashboard.js', '/static/chat-dashboard.css': 'chat-dashboard.css'}
         if path in assets:
-            if path == '/static/dashboard.js' and not self.session():
+            if path in ('/static/dashboard.js', '/static/chat-dashboard.js', '/static/chat-dashboard.css') and not self.session():
                 return self.respond(401, {'error': 'Authentication required'})
             ctype = "text/css; charset=utf-8" if path.endswith(".css") else "text/javascript; charset=utf-8"
             return self.respond(200, (ROOT / "static" / assets[path]).read_bytes(), ctype)
@@ -435,7 +454,23 @@ class Handler(BaseHTTPRequestHandler):
             if not session:
                 return self.respond(401, {"error": "Authentication required"})
             if path == "/private/api/dashboard/session":
-                return self.respond(200, {"email": "sri@srinagubandi.com", "role": "admin", "csrf": session["csrf"], "expires": session["expires"]})
+                return self.respond(200, {"email": ADMIN_EMAIL if session["role"] == "admin" else RECIPIENT, "role": session["role"], "csrf": session["csrf"], "expires": session["expires"]})
+            if path == '/private/api/dashboard/chats':
+                if split.query:
+                    return self.respond(400, {'error': 'Query parameters not allowed'})
+                return self.respond(200, s.chat.private_list())
+            if path.startswith('/private/api/dashboard/chats/'):
+                sid = path[len('/private/api/dashboard/chats/'):]
+                split = urlsplit(self.path)
+                if split.query:
+                    return self.respond(400, {'error': 'Query parameters not allowed'})
+                if re.fullmatch(r'[0-9a-f]{32}', sid) is None:
+                    return self.respond(404, {'error': 'Not found'})
+                result = s.chat.private_detail(sid)
+                if isinstance(result, dict):
+                    return self.respond(200, result)
+                else:
+                    return self.respond(404, {'error': 'Not found'})
             query = parse_qs(split.query, keep_blank_values=True)
             if set(query) - {"days"} or len(query.get("days", ["7"])) != 1 or query.get("days", ["7"])[0] not in {"7", "30"}:
                 return self.respond(400, {"error": "days must be 7 or 30; no other query parameters are accepted"})
@@ -487,6 +522,8 @@ class Handler(BaseHTTPRequestHandler):
             return
         path = urlsplit(self.path).path
         s = self.service
+        if is_chat_path(path):
+            return serve_chat(self, path, client, 'POST')
         if path not in {"/ask", "/mcp", "/private/api/dashboard/login", "/private/api/dashboard/logout"}:
             return self.respond(404, {"error": "Not found"})
         if path.startswith("/private/"):
@@ -524,7 +561,8 @@ class Handler(BaseHTTPRequestHandler):
             if not s.dashboard.verify_login(body["email"], body["password"]):
                 return self.respond(401, {"error": "Invalid credentials"})
             s.store.revoke_session(self.cookie("ccc_login"))
-            token, csrf = s.store.create_session()
+            role = "admin" if body["email"] == ADMIN_EMAIL else "ben"
+            token, csrf = s.store.create_session(role)
             return self.respond(200, {"ok": True, "csrf": csrf}, extra={"Set-Cookie": self.set_cookie("ccc_session", token, 8 * 3600)})
         if body != {}:
             return self.respond(400, {"error": "Logout requires an empty JSON object"})
@@ -573,6 +611,7 @@ if __name__ == "__main__":
     service = Service()
     server = Server(("0.0.0.0", service.config.port), service)
     service.digest.start()
+    service.chat.start()
     print("Coastal Cornerstone information service starting; digest " + ("enabled" if service.config.digest_enabled else "paused"), flush=True)
     try:
         server.serve_forever(poll_interval=0.5)
@@ -580,4 +619,5 @@ if __name__ == "__main__":
         pass
     finally:
         service.digest.stop.set()
+        service.chat.stop.set()
         server.server_close()

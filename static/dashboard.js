@@ -12,7 +12,7 @@ function detail(parent, values) {
 }
 async function request(path, options = {}) {
   const response = await fetch(path, {credentials: 'same-origin', cache: 'no-store', ...options});
-  if (response.status === 401) { location.replace('/dashboard/login'); throw new Error('Session expired.'); }
+  if (response.status === 401) { location.replace('/dashboard/login' + (/^#chat=[0-9a-f]{32}$/.test(location.hash) ? location.hash : '')); throw new Error('Session expired.'); }
   if (!response.ok) throw new Error(response.status === 429 ? 'Request limit reached. Please wait before refreshing.' : 'Request could not be completed.');
   return response;
 }
@@ -114,4 +114,4 @@ $('more').addEventListener('click', () => { visible += 200; questions(); });
 $('exportcsv').addEventListener('click', () => download('csv')); $('exportjson').addEventListener('click', () => download('json'));
 for (const button of document.querySelectorAll('[data-state]')) button.addEventListener('click', () => { queueState = button.dataset.state; for (const b of document.querySelectorAll('[data-state]')) b.setAttribute('aria-pressed', String(b === button)); unknowns(); });
 $('logout').addEventListener('click', async () => { try { await request('/private/api/dashboard/logout', {method: 'POST', headers: {'Content-Type': 'application/json', 'X-CSRF-Token': csrf}, body: '{}'}); location.replace('/dashboard/login'); } catch (error) { text('status', error.message); } });
-(async () => { try { csrf = (await (await request('/private/api/dashboard/session')).json()).csrf; await load(); } catch (error) { text('status', error.message); } })();
+(async () => { try { const response = await request('/private/api/dashboard/session'); const session = await response.json(); csrf = session.csrf; const accountElement = document.querySelector('.account'); if (accountElement) { accountElement.textContent = session.role === 'ben' ? 'Ben · Company team' : 'Sri · Administrator'; } await load(); } catch (error) { text('status', error.message); } })();

@@ -8,7 +8,7 @@ import io
 import json
 import secrets
 import threading
-from config import ADMIN_EMAIL
+from config import ADMIN_EMAIL, RECIPIENT
 from safety import csv_safe, redact
 
 
@@ -74,15 +74,33 @@ class Dashboard:
         return bool(self.config.public_origin and hash_spec(self.config.admin_hash))
 
     def verify_login(self, email, password):
-        # Always verify a supplied password even when the username is wrong.
         if not self.hash_slots.acquire(blocking=False):
             return False
         try:
-            password_ok = verify_password(password, self.config.admin_hash)
+            email_valid = isinstance(email, str) and len(email) <= 254
+            admin_email = ADMIN_EMAIL
+            ben_email = RECIPIENT
+            if email_valid:
+                email_bytes = email.encode("utf-8", errors="replace")
+                is_admin = hmac.compare_digest(email_bytes, admin_email.encode())
+                is_ben = hmac.compare_digest(email_bytes, ben_email.encode())
+            else:
+                is_admin = False
+                is_ben = False
+            ben_configured = bool(hash_spec(self.config.ben_admin_hash)) if self.config.ben_admin_hash is not None else False
+            if is_admin:
+                hash_to_check = self.config.admin_hash
+                account_valid = True
+            elif is_ben and ben_configured:
+                hash_to_check = self.config.ben_admin_hash
+                account_valid = True
+            else:
+                hash_to_check = self.config.admin_hash
+                account_valid = False
+            password_ok = verify_password(password, hash_to_check)
+            return self.enabled and account_valid and password_ok
         finally:
             self.hash_slots.release()
-        email_ok = isinstance(email, str) and hmac.compare_digest(email.encode(), ADMIN_EMAIL.encode())
-        return self.enabled and password_ok and email_ok
 
     def csrf_ok(self, session, origin, csrf):
         return bool(session and isinstance(origin, str) and origin == self.config.public_origin and

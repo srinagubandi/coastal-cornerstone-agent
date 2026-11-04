@@ -39,6 +39,9 @@ class Config:
     api_key: str = os.getenv("OPENROUTER_API_KEY", "")
     resend_key: str = os.getenv("RESEND_API_KEY", "")
     admin_hash: str = os.getenv("ADMIN_PASSWORD_HASH", "")
+    ben_admin_hash: str = os.getenv("BEN_ADMIN_PASSWORD_HASH", "")
+    chat_enabled: bool = os.getenv("CHAT_ENABLED", "false").lower() == "true"
+    chat_emails_enabled: bool = os.getenv("CHAT_EMAILS_ENABLED", "false").lower() == "true"
     digest_enabled: bool = os.getenv("DIGEST_ENABLED", "false").lower() == "true"
     trust_proxy: bool = os.getenv("TRUST_PROXY", "false").lower() == "true"
     cookie_secure: bool = os.getenv("COOKIE_SECURE", "true").lower() != "false"
