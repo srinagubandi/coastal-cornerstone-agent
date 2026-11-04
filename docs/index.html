@@ -2,6 +2,18 @@
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="description" content="Source-grounded, read-only Coastal Cornerstone public company information API and MCP tool documentation."><title>Agent access | Coastal Cornerstone</title><link rel="stylesheet" href="/static/styles.css"></head>
 <body><a class="skip" href="#main">Skip to content</a><header class="topbar"><a class="brand" href="/docs">Coastal <span>Cornerstone</span><small>PUBLIC INFORMATION AGENT</small></a><nav aria-label="Public navigation"><a href="/faq">Curated FAQs</a><a href="/openapi.json">OpenAPI</a><a href="/agent-card.json">Discovery</a></nav></header>
 <main id="main" class="docs"><p class="eyebrow">READ-ONLY · SOURCE-VERIFIED · NO BUSINESS COMMITMENTS</p><h1>Coastal Cornerstone company information</h1><p class="lead">A read-only information service for Coastal Cornerstone Construction. Answers come from a curated FAQ snapshot, never from model invention.</p>
+<section class="panel">
+<h2>Read Public Answers</h2>
+<p>These public Frequently Asked Questions are available as both human-readable HTML pages and machine-readable JSON.</p>
+<ul>
+<li><a href="https://cccbuild-3mhyn4jl.manus.space/faq/">Full Company HTML FAQ</a> (Main FAQ Index)</li>
+<li><a href="https://coastal-cornerstone-agent-production.up.railway.app/faq/faq-004">Service Area Record</a> (HTML)</li>
+<li><a href="/faq/faq-004.json">Service Area Record</a> (JSON)</li>
+<li><a href="/faq">Machine-readable FAQ Endpoint</a> (JSON)</li>
+</ul>
+<p>Page-only assistants can read these approved FAQ answers without POST requests or MCP protocol. These GET reads of approved FAQ content do NOT invoke our paid model, store question logs, or send email. Access logs and bounded rate counters may exist, but we do not promise anonymous usage or absence of logs.</p>
+</section>
+
 <section class="panel"><h2>MCP endpoint</h2><p><strong>URL:</strong> <code>https://coastal-cornerstone-agent-production.up.railway.app/mcp</code></p><p>Paste this public HTTPS URL into any client that speaks the 2025-03-26 tools subset. No authentication is required for the two public tools: <code>get_faq</code> (optional FAQ ID) and <code>ask_company_question</code> (question only).</p><pre><code>import asyncio
 from mcp import Client
 

@@ -12,8 +12,24 @@ from dashboard import Dashboard
 from digest import Digest
 from store import Store
 from safety import client_ip
+import faq_pages
+import re
 
+FAQ_ID_RE = re.compile(r'^faq-[0-9]{3}$', re.ASCII)
 PUBLIC_ROUTES = {"/health", "/docs", "/docs/", "/openapi.json", "/agent-card.json", "/.well-known/agent-card.json", "/faq", "/ask", "/mcp", "/robots.txt"}
+def is_faq_resource(path):
+    if not path.startswith('/faq/'):
+        return False
+    parts = path.split('/')
+    if len(parts) != 3:
+        return False
+    filename = parts[2]
+    if filename.endswith('.json'):
+        filename = filename[:-5]
+    if len(filename) > 100:
+        return False
+    return bool(FAQ_ID_RE.fullmatch(filename))
+
 TOOLS = [
     {"name": "get_faq", "description": "Read source-verified, runtime-eligible curated FAQs. No private review questions.",
      "inputSchema": {"type": "object", "properties": {"id": {"type": "string", "maxLength": 100}}, "additionalProperties": False},
@@ -62,6 +78,12 @@ class Service:
                 "integration_url": "https://cccbuild-3mhyn4jl.manus.space/ai/",
                 "usage_guide_url": "https://cccbuild-3mhyn4jl.manus.space/ai/agent.md",
                 "capabilities": {"read_only": True, "source_verified_faq": True, "mcp_json_rpc_tools": [t["name"] for t in TOOLS]},
+                "public_faq_resources": {"html_page": "https://cccbuild-3mhyn4jl.manus.space/faq/",
+                                         "json_snapshot": origin + "/faq" if origin else "/faq",
+                                         "example_faq_html": origin + "/faq/faq-004" if origin else "/faq/faq-004",
+                                         "example_faq_json": origin + "/faq/faq-004.json" if origin else "/faq/faq-004.json",
+                                         "html_pattern": origin + "/faq/{id}" if origin else "/faq/{id}",
+                                         "json_pattern": origin + "/faq/{id}.json" if origin else "/faq/{id}.json"},
                 "protocols": {"http_json": True, "mcp": "2025-03-26 tools subset", "full_a2a": False},
                 "privacy": "Basic redaction and limited pseudonymity; API/MCP channels do not authenticate a caller's AI identity."}
 
@@ -71,12 +93,99 @@ class Service:
             "faq_ids": {"type": "array", "items": {"type": "string"}}, "sources": {"type": "array", "items": {"type": "string", "format": "uri"}},
             "review_queued": {"type": "boolean"}, "knowledge_version": {"type": "string"}, "model_used": {"type": ["string", "null"]}}}
         faq_schema = {"type": "object", "required": ["version", "business", "faqs"], "properties": {"version": {"type": "string"}, "business": {"type": "string"}, "faqs": {"type": "array", "items": {"type": "object", "required": ["id", "question", "answer", "source_urls", "status", "runtime_eligible"], "properties": {"id": {"type": "string"}, "question": {"type": "string"}, "answer": {"type": "string"}, "source_urls": {"type": "array", "items": {"type": "string", "format": "uri"}}, "tags": {"type": "array", "items": {"type": "string"}}, "status": {"const": "source_verified"}, "runtime_eligible": {"const": True}}}}}}
+        faq_item_schema = {"type": "object", "required": ["id", "question", "answer", "source_urls", "status", "runtime_eligible"], "properties": {"id": {"type": "string"}, "question": {"type": "string"}, "answer": {"type": "string"}, "source_urls": {"type": "array", "items": {"type": "string", "format": "uri"}}, "tags": {"type": "array", "items": {"type": "string"}}, "status": {"const": "source_verified"}, "runtime_eligible": {"const": True}}}
         errors = {str(code): {"description": HTTPStatus(code).phrase} for code in (400, 411, 413, 415, 429, 503)}
         paths = {"/ask": {"post": {"operationId": "askCompanyQuestion", "summary": "Source-grounded read-only question", "requestBody": {"required": True, "content": {"application/json": {"schema": TOOLS[1]["inputSchema"]}}}, "responses": {"200": {"description": "Curated answer or non-invented fallback", "content": {"application/json": {"schema": answer_schema}}}, **errors}}},
                  "/faq": {"get": {"operationId": "getFaq", "responses": {"200": {"description": "Eligible source-verified snapshot", "content": {"application/json": {"schema": faq_schema}}}, "429": {"description": "Read rate limit"}}}},
                  "/mcp": {"post": {"operationId": "mcpTools", "description": "JSON-RPC 2.0 initialize, notifications/initialized, tools/list, tools/call. MCP 2025-03-26 tools subset; no SSE, full lifecycle, or A2A claim.", "requestBody": {"required": True, "content": {"application/json": {"schema": {"type": "object", "required": ["jsonrpc", "method"], "properties": {"jsonrpc": {"const": "2.0"}, "id": {"type": ["integer", "string", "null"]}, "method": {"type": "string"}, "params": {"type": "object"}}, "additionalProperties": False}}}}, "responses": {"200": {"description": "JSON-RPC result or error", "content": {"application/json": {"schema": {"type": "object", "required": ["jsonrpc", "id"], "properties": {"jsonrpc": {"const": "2.0"}, "id": {"type": ["integer", "string", "null"]}, "result": {}, "error": {"type": "object"}}}}}}, "204": {"description": "Notification accepted, no content"}, **errors}}}}
         for path in ("/health", "/agent-card.json", "/.well-known/agent-card.json", "/openapi.json", "/docs"):
             paths[path] = {"get": {"responses": {"200": {"description": "Public configuration/discovery"}, "429": {"description": "Read rate limit"}}}}
+        paths["/faq/{id}"] = {
+            "get": {
+                "summary": "Get FAQ HTML page",
+                "description": "Returns an HTML page for a specific FAQ record",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": True,
+                        "schema": {
+                            "type": "string",
+                            "pattern": "^faq-[0-9]{3}$",
+                            "maxLength": 100
+                        },
+                        "description": "FAQ identifier, format: faq-###"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "FAQ HTML page",
+                        "content": {"text/html": {}}
+                    },
+                    "400": {"description": "Bad request"},
+                    "404": {"description": "FAQ not found"},
+                    "429": {"description": "Too many requests"}
+                }
+            }
+        }
+        paths["/faq/{id}.json"] = {
+            "get": {
+                "summary": "Get FAQ JSON data",
+                "description": "Returns JSON with public_faq for a specific FAQ record",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": True,
+                        "schema": {
+                            "type": "string",
+                            "pattern": "^faq-[0-9]{3}$",
+                            "maxLength": 100
+                        },
+                        "description": "FAQ identifier, format: faq-###"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "FAQ data",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "public_faq": faq_schema["properties"]["faqs"]["items"]
+                                    },
+                                    "required": ["public_faq"]
+                                }
+                            }
+                        }
+                    },
+                    "400": {"description": "Bad request"},
+                    "404": {"description": "FAQ not found"},
+                    "429": {"description": "Too many requests"}
+                }
+            }
+        }
+        if "get" not in paths["/mcp"]:
+            paths["/mcp"]["get"] = {
+                "summary": "MCP GET method not allowed",
+                "description": "MCP endpoint only allows POST and OPTIONS; GET returns 405 Method Not Allowed",
+                "responses": {
+                    "405": {
+                        "description": "Method Not Allowed",
+                        "headers": {
+                            "Allow": {
+                                "schema": {
+                                    "type": "string",
+                                    "example": "POST, OPTIONS"
+                                },
+                                "description": "Allowed HTTP methods"
+                            }
+                        }
+                    },
+                    "429": {"description": "Too many requests"}
+                }
+            }
         return {"openapi": "3.1.0", "info": {"title": "Coastal Cornerstone public information agent", "version": "1.0.0", "description": "Public read-only FAQ API. Curated source answers only; no business commitments."},
                 "servers": [{"url": self.config.public_origin or "/"}], "paths": paths}
 
@@ -175,7 +284,7 @@ class Handler(BaseHTTPRequestHandler):
         if self.service.config.public_origin.startswith("https://"):
             self.send_header("Strict-Transport-Security", "max-age=31536000")
         path = urlsplit(self.path).path
-        if path in PUBLIC_ROUTES:
+        if path in PUBLIC_ROUTES or is_faq_resource(path):
             self.send_header("Access-Control-Allow-Origin", "*")
             self.send_header("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
             self.send_header("Access-Control-Allow-Headers", "Content-Type")
@@ -228,7 +337,7 @@ class Handler(BaseHTTPRequestHandler):
         return result if result and result["role"] == role else None
 
     def do_OPTIONS(self):
-        if urlsplit(self.path).path in PUBLIC_ROUTES:
+        if urlsplit(self.path).path in PUBLIC_ROUTES or is_faq_resource(urlsplit(self.path).path):
             self.respond(204)
         else:
             self.respond(403, {"error": "Private endpoints do not support cross-origin access"})
@@ -256,6 +365,46 @@ class Handler(BaseHTTPRequestHandler):
             return self.respond(200, s.openapi())
         if path == "/faq":
             return self.respond(200, s.agent.public_faq())
+        if path.startswith('/faq/'):
+            try:
+                if split.query:
+                    if path.endswith('.json'):
+                        self.respond(400, {'error': 'Query parameters not allowed', 'faq_url': 'https://cccbuild-3mhyn4jl.manus.space/faq/'}, content_type='application/json')
+                    else:
+                        return self.respond(400, faq_pages.render_faq_error(400, s.config).encode('utf-8'), content_type='text/html; charset=utf-8')
+                    return
+
+                filename = path.split('/')[-1]
+                is_json = filename.endswith('.json')
+                if is_json:
+                    filename = filename[:-5]
+
+                if is_faq_resource(path):
+                    faq_id = filename
+                    faq = s.agent.faqs.get(faq_id)
+                    if faq is None:
+                        if is_json:
+                            self.respond(404, {'error': 'FAQ not found', 'faq_url': 'https://cccbuild-3mhyn4jl.manus.space/faq/'}, content_type='application/json')
+                        else:
+                            self.respond(404, faq_pages.render_faq_404(None, s.config).encode('utf-8'), content_type='text/html; charset=utf-8')
+                        return
+
+                    if is_json:
+                        self.respond(200, {'public_faq': faq}, content_type='application/json')
+                    else:
+                        html = faq_pages.render_faq_html(faq, s.config)
+                        self.respond(200, faq_pages.render_faq_html(faq, s.config).encode('utf-8'), content_type='text/html; charset=utf-8')
+                else:
+                    if is_json:
+                        self.respond(404, {'error': 'Invalid FAQ ID format', 'faq_url': 'https://cccbuild-3mhyn4jl.manus.space/faq/'}, content_type='application/json')
+                    else:
+                        self.respond(404, faq_pages.render_faq_404(None, s.config).encode('utf-8'), content_type='text/html; charset=utf-8')
+            except Exception:
+                if is_json:
+                    self.respond(500, {'error': 'Internal server error'}, content_type='application/json')
+                else:
+                    self.respond(500, 'Internal server error', content_type='text/plain')
+            return
         if path in {"/", "/docs", "/docs/"}:
             return self.respond(200, (ROOT / "docs/index.html").read_bytes(), "text/html; charset=utf-8")
         if path == '/robots.txt':
@@ -297,6 +446,12 @@ class Handler(BaseHTTPRequestHandler):
                 return self.respond(200, s.dashboard.csv_export(days), "text/csv; charset=utf-8", {"Content-Disposition": 'attachment; filename="coastal-questions.csv"'})
             if path == "/private/api/dashboard/export.json":
                 return self.respond(200, s.dashboard.summary(days), extra={"Content-Disposition": 'attachment; filename="coastal-questions.json"'})
+        if path == "/mcp":
+            origin = s.config.public_origin
+            links = {"html": ("https://cccbuild-3mhyn4jl.manus.space/faq/"),
+                     "json": (origin + "/faq" if origin else "/faq"),
+                     "example_faq_html": (origin + "/faq/faq-004" if origin else "/faq/faq-004")}
+            return self.respond(405, {"error": "Only POST and OPTIONS are supported for MCP", "faq_read_links": links}, extra={"Allow": "POST, OPTIONS"})
         self.respond(404, {"error": "Not found"})
 
     def read_body(self):
