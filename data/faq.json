@@ -1,6 +1,6 @@
 {
-  "version": "2026-11-03",
-  "updated_at": "2026-11-03",
+  "version": "2026-11-04",
+  "updated_at": "2026-11-04",
   "business": {
     "name": "Coastal Cornerstone Construction",
     "email": "ben@cccbuild.com",
@@ -59,10 +59,10 @@
     {
       "id": "faq-004",
       "question": "What areas do you serve?",
-      "answer": "We serve most of Central Florida, from Gainesville to Venice. Our base is in Clearwater.",
+      "answer": "We serve most of Central Florida, from Gainesville to Venice, based in Clearwater. Our primary focus is Hillsborough, Pinellas, Pasco, Hernando, and Citrus counties.",
       "source_urls": [
-        "https://cccbuild.com/about-us/",
-        "https://cccbuild-3mhyn4jl.manus.space/"
+        "https://cccbuild-3mhyn4jl.manus.space/",
+        "https://cccbuild.com/about-us/"
       ],
       "tags": [
         "service-area"
@@ -169,7 +169,7 @@
     {
       "id": "faq-011",
       "question": "How does ICF construction help with storm protection in Florida?",
-      "answer": "Steel-reinforced concrete walls resist high winds. Engineered roof and foundation connections and protected windows and doors extend the storm-resilience design through the whole home.",
+      "answer": "Reinforced concrete ICF walls can help resist strong winds when combined with project‑engineered wall, roof, and foundation connections and protected doors and windows. Whole‑home performance depends on coordinated design, installation, and site conditions.",
       "source_urls": [
         "https://cccbuild-3mhyn4jl.manus.space/icf/"
       ],
@@ -692,13 +692,86 @@
     {
       "id": "faq-045",
       "question": "What site conditions do you factor in when planning an ICF home?",
-      "answer": "The property's flood zone, elevation, and soil conditions guide foundation design. Drainage and moisture-control details are planned for the coastal or inland site.",
+      "answer": "Flood risk depends on flood zone, elevation, and soil conditions, which guide foundation design and site drainage. Coastal exposure may require an engineered pile or elevated foundation, accounting for waves, erosion, scour, and local requirements. Elevation alone does not make a structure floodproof.",
       "source_urls": [
+        "https://cccbuild-3mhyn4jl.manus.space/resources/",
         "https://cccbuild-3mhyn4jl.manus.space/icf/"
       ],
       "tags": [
         "icf",
         "site-planning"
+      ],
+      "status": "source_verified",
+      "runtime_eligible": true,
+      "review_status": "pending_client_review"
+    },
+    {
+      "id": "faq-046",
+      "question": "Are you a Women-Owned Small Business (WOSB)?",
+      "answer": "Yes. Coastal Cornerstone Construction LLC is a Federal Government registered SBA Women-Owned Small Business.",
+      "source_urls": [
+        "https://cccbuild-3mhyn4jl.manus.space/resources/"
+      ],
+      "tags": [
+        "qualifications"
+      ],
+      "status": "source_verified",
+      "runtime_eligible": true,
+      "review_status": "pending_client_review"
+    },
+    {
+      "id": "faq-047",
+      "question": "What is your Florida contractor license number?",
+      "answer": "CBC1266336 (Bently Piersma - Qualifying Agent).",
+      "source_urls": [
+        "https://cccbuild-3mhyn4jl.manus.space/resources/"
+      ],
+      "tags": [
+        "qualifications"
+      ],
+      "status": "source_verified",
+      "runtime_eligible": true,
+      "review_status": "pending_client_review"
+    },
+    {
+      "id": "faq-048",
+      "question": "Do you have bonding capacity?",
+      "answer": "Yes, we have bonding capacity for applicable projects. Contact us for details on specific project needs.",
+      "source_urls": [
+        "https://cccbuild-3mhyn4jl.manus.space/resources/"
+      ],
+      "tags": [
+        "qualifications"
+      ],
+      "status": "source_verified",
+      "runtime_eligible": true,
+      "review_status": "pending_client_review"
+    },
+    {
+      "id": "faq-049",
+      "question": "How do ICF walls resist tornado and hurricane debris?",
+      "answer": "Tests on reinforced concrete wall assemblies show a concrete core can help resist wind‑borne debris. Performance depends on specified wall thickness, reinforcement, and construction; openings, roof, and whole‑house connections remain important.",
+      "source_urls": [
+        "https://cccbuild-3mhyn4jl.manus.space/resources/"
+      ],
+      "tags": [
+        "icf",
+        "research"
+      ],
+      "status": "source_verified",
+      "runtime_eligible": true,
+      "review_status": "pending_client_review"
+    },
+    {
+      "id": "faq-050",
+      "question": "Do ICF homes qualify for automatic insurance discounts?",
+      "answer": "ICF construction does not automatically qualify for insurance premium discounts. Verified mitigation features, as determined by your carrier, influence potential credits. Contact your carrier and a qualified inspector for an evaluation.",
+      "source_urls": [
+        "https://cccbuild-3mhyn4jl.manus.space/resources/"
+      ],
+      "tags": [
+        "icf",
+        "research"
       ],
       "status": "source_verified",
       "runtime_eligible": true,

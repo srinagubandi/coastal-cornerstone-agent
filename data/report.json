@@ -1,7 +1,7 @@
 {
   "type": "source_review",
   "title": "Coastal Cornerstone Construction dataset coverage",
-  "generated_at": "2026-11-03",
+  "generated_at": "2026-11-04",
   "sections": [
     {
       "heading": "Homepage and company overview",
@@ -44,6 +44,14 @@
         "https://cccbuild-3mhyn4jl.manus.space/process/",
         "https://cccbuild-3mhyn4jl.manus.space/contact/",
         "https://cccbuild.com/contact-us/"
+      ]
+    },
+    {
+      "heading": "Priority counties, company qualifications, and researched ICF guidance",
+      "text": "We serve most of Central Florida, from Gainesville to Venice, based in Clearwater. Our primary focus is Hillsborough, Pinellas, Pasco, Hernando, and Citrus counties. Yes. Coastal Cornerstone Construction LLC is a Federal Government registered SBA Women-Owned Small Business. CBC1266336 (Bently Piersma - Qualifying Agent). Yes, we have bonding capacity for applicable projects. Contact us for details on specific project needs.",
+      "source_urls": [
+        "https://cccbuild-3mhyn4jl.manus.space/resources/",
+        "https://cccbuild-3mhyn4jl.manus.space/faq/"
       ]
     }
   ],
