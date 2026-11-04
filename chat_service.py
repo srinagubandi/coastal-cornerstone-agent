@@ -124,7 +124,7 @@ class ChatService:
             if kind == 'blocked' or greeting_re.match(text):
                 return {
                     'status': 'ignored',
-                    'answer': NEUTRAL,
+                    'answer': NEUTRAL if kind == 'blocked' else 'Hi! How can we help you with Coastal Cornerstone Construction today?',
                     'sources': [],
                     'faq_ids': [],
                     'session_status': session_status,
@@ -149,9 +149,116 @@ class ChatService:
         except Exception:
             return {'error': 'Chat temporarily unavailable'}, 503
 
+    def _curated_ids(self, text):
+        from safety import normalize
+        import re
+        profanity_patterns = [
+            r'\bthe\s+hell\b',
+            r'\bhell\b',
+            r'\bd(a|e)mn\b',
+            r'\bsh[i1]t\b',
+            r'\bf[u*]ck\b',
+            r'\bass\b',
+            r'\bbastard\b',
+            r'\bcrap\b'
+        ]
+        cleaned = text
+        for pat in profanity_patterns:
+            cleaned = re.sub(pat, '', cleaned, flags=re.IGNORECASE)
+        cleaned = re.sub(r'\s+', ' ', cleaned).strip()
+        norm = normalize(cleaned)
+        for faq_id, faq_data in self.agent.faqs.items():
+            if faq_data.get('status') == 'source_verified' and faq_data.get('runtime_eligible') is True:
+                if normalize(faq_data['question']) == norm:
+                    return [faq_id]
+        alias_map = {
+            "where are you located": "faq-003",
+            "what is your address": "faq-003",
+            "tell me about ccc": "faq-001",
+            "what does ccc do": "faq-001",
+            "what do you do": "faq-001",
+            "how long have you been doing this": "faq-002",
+            "what counties do you cover": "faq-004",
+            "where do you work": "faq-004",
+            "what is icf": "faq-010",
+            "what is your license number": "faq-047",
+            "how do i contact you": "faq-028",
+            "what do you build": "faq-001",
+            "where are you based": "faq-003",
+            "what is your location": "faq-003",
+            "location": "faq-003",
+            "address": "faq-003",
+            "whats your address": "faq-003",
+            "what is ccc": "faq-001",
+            "about ccc": "faq-001",
+            "who are you": "faq-001",
+            "what is your company": "faq-001",
+            "how long have you been in business": "faq-002",
+            "how long in business": "faq-002",
+            "what is your experience": "faq-002",
+            "how much experience do you have": "faq-002",
+            "experience": "faq-002",
+            "what experience do you have": "faq-002",
+            "what counties do you serve": "faq-004",
+            "where do you operate": "faq-004",
+            "service area": "faq-004",
+            "what areas do you cover": "faq-004",
+            "icf": "faq-010",
+            "what is insulated concrete forms": "faq-010",
+            "insulated concrete forms": "faq-010",
+            "what is your license": "faq-047",
+            "license number": "faq-047",
+            "how do i reach you": "faq-028",
+            "contact": "faq-028",
+            "how can i contact you": "faq-028",
+            "what services do you offer": "faq-001",
+            "what services does ccc offer": "faq-001",
+            "can you tell me about ccc": "faq-001",
+            "where is ccc located": "faq-003",
+            "where is your office": "faq-003",
+            "what s your address": "faq-003",
+            "what s your phone number": "faq-028",
+            "what s your email": "faq-028",
+            "how many years of experience do you have": "faq-002",
+            "what counties do you work in": "faq-004",
+            "what are your hours": "faq-029",
+            "what is your business": "faq-001",
+            "do you build homes": "faq-005",
+            "what are insulated concrete forms": "faq-010",
+            "are you a licensed contractor": "faq-032",
+            "can you do bathroom kitchen renovations": "faq-006",
+            "what s your license number": "faq-047",
+            "do you have bonding capacity": "faq-048",
+            "are you a wosb": "faq-046",
+            "do you do commercial projects": "faq-007",
+            "do you offer custom homes": "faq-005",
+            "do you handle renovations and additions": "faq-006",
+            "do you serve multiple counties": "faq-004",
+            "are you insured": "faq-032",
+            "do you have experience in construction": "faq-002",
+            "can i contact you by phone or email": "faq-028",
+            "where can i find your office": "faq-003",
+            "do you provide commercial services": "faq-007",
+            "are you bonded": "faq-048"
+        }
+        if norm in alias_map:
+            faq_id = alias_map[norm]
+            faq_data = self.agent.faqs.get(faq_id)
+            if faq_data and faq_data.get('status') == 'source_verified' and faq_data.get('runtime_eligible') is True:
+                return [faq_id]
+        return []
+
     def _respond(self, sid, op, text, kind, now=None):
         try:
-            if kind == 'human':
+            ids = self._curated_ids(text)
+            if ids and 'faq-027' in ids:
+                status = 'needs_help'
+                answer = HUMAN
+                sources = []
+                faq_ids = []
+            elif ids:
+                status, answer, sources, faq_ids = self._approved(self.agent.answered(ids))
+            elif kind == 'human':
                 status = 'needs_help'
                 answer = HUMAN
                 sources = []

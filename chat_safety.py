@@ -26,13 +26,19 @@ INJECTION_PATTERN = re.compile('(ignore|disregard|override).{0,100}(instructions
 
 NSFW_PATTERN = re.compile(r"\b(?:pornography|pornographic|porn|sex|sexual|erotic|nudes|rape|masturbation|exploits|hacking|bombmaking|kill\s*people)\b", re.IGNORECASE)
 PRIVATE_DATA_PATTERN = re.compile(r"\b(?:customer\s*records?|private\s*records?|private\s*data|CRM|credit\s*cards?|social\s*security)\b", re.IGNORECASE)
-OFFTOPIC_PATTERN = re.compile(r"\b(?:sports|football|bitcoin|cryptocurrency|crypto|politics|jokes|recipes|videogames|poems|homework|calculus)\b", re.IGNORECASE)
+OFFTOPIC_PATTERN = re.compile('(?i)\\b(sports?|football|bitcoins?|cryptocurrenc(y|ies)?|cryptos?|politics?|jokes?|recipes?|videogames?|poems?|homework|calculuses?)\\b', re.IGNORECASE)
 
 import re
 
 BUSINESS_PATTERN = re.compile('(?:\\b(company|coastal|cornerstone|construction|build|building|home|house|residential|commercial|icf|concrete|insulation|hurricane|project|contractor|service|contact|location|florida|pool|remodel|permit|engineering|warranty|price|pricing|cost|quote|accessibility|team|business|phone|email|hours|areas|serve|serving|counties|license|licensed|WOSB|women-owned|BBB|hurricanes|storms|wind|flood|insurance|pilings|mold|energy|noise|maintenance|benefits|Hillsborough|Pinellas|Pasco|Hernando|Citrus)s?\\b)|(?:\\b(subcontractor|subcontractors|architect|architects|engineer|engineers|text|texting|call|calling|capability statement|capability statements|bonding|bond|bonded|capacity)\\b)', re.IGNORECASE)
 
 HUMAN_TRIGGER_PATTERN = re.compile(r'\b(quote|quotation)s?\b|\b(price|cost)s?\b|\b(pricing|estimate)s?\b|\b(engineering|warranty|warranties)\b|\b(structural calculation)s?\b|\b(load[ -]bearing)\b|\b(availability|available|booking|book|schedule|scheduling)\b', re.IGNORECASE)
+
+GENERAL_COMPANY_PATTERN = re.compile('\\b(?:ccc|address|located|based|portfolio|owner|ownership|experience|renovations|kitchen|bathroom|how\\s+long\\s+have\\s+you\\s+been\\s+doing\\s+this|what\\s+do\\s+you\\s+do|where\\s+(?:do\\s+you\\s+work|do\\s+you\\s+build)|what\\s+counties\\s+do\\s+you\\s+cover)\\b', re.IGNORECASE)
+HUMAN_HELP_PATTERN = re.compile('\\b(?:I need more help|can I talk to someone|can I speak to Ben|please call me)\\b', re.IGNORECASE)
+
+CONSTRUCTION_TOPIC_PATTERN = re.compile('(?i)\\b(builders?|foundations?|framing|roofs?|roofing|walls?|drywall|cements?|materials?|windows?|doors?|plumbings?|electrical|HVAC|carpentry)\\b', re.IGNORECASE)
+STRUCTURAL_HELP_PATTERN = re.compile('\\b(structural\\s+(loads|calculations)|design\\b.*\\bload-bearing)\\b', re.IGNORECASE)
 
 def screen_message(body):
     if not isinstance(body, dict) or set(body.keys()) != {'message'}:
@@ -45,14 +51,21 @@ def screen_message(body):
                 PRIVATE_DATA_PATTERN, OFFTOPIC_PATTERN]:
         if pat.search(cleaned):
             return ('blocked', '')
-    if not BUSINESS_PATTERN.search(cleaned):
+    # profanity guard
+    import re
+    profanity_set = {'crap', 'fucking', 'bitch', 'bastard', 'asshole', 'shitty', 'damn', 'fuck', 'fucker', 'hell', 'shit'}
+    company_set = {'building', 'the', 'cornerstone', 'is', 'construction', 'build', 'these', 'that', 'this', 'ccc', 'company', 'a', 'coastal', 'you', 'those', 'your'}
+    tokens = [t.lower() for t in re.findall(r'\b\w+\b', cleaned)]
+    if tokens and any(t in profanity_set for t in tokens) and all(t in profanity_set or t in company_set for t in tokens):
+        return ('blocked', '')
+    if not (BUSINESS_PATTERN.search(cleaned) or GENERAL_COMPANY_PATTERN.search(cleaned) or HUMAN_HELP_PATTERN.search(cleaned) or CONSTRUCTION_TOPIC_PATTERN.search(cleaned) or STRUCTURAL_HELP_PATTERN.search(cleaned)):
         if not re.fullmatch(r'(?i)(hi|hello|thanks|thank\s+you)[.!]?', cleaned):
             return ('blocked', '')
     redacted_text = redact(cleaned)
     if not redacted_text or len(redacted_text) < 2 or len(redacted_text) > 1500 \
             or not re.search(r'[A-Za-z]', redacted_text):
         return ('invalid', '')
-    if HUMAN_TRIGGER_PATTERN.search(cleaned):
+    if HUMAN_TRIGGER_PATTERN.search(cleaned) or HUMAN_HELP_PATTERN.search(cleaned) or STRUCTURAL_HELP_PATTERN.search(cleaned):
         return ('human', redacted_text)
     return ('safe', redacted_text)
 
