@@ -13,7 +13,7 @@ from digest import Digest
 from store import Store
 from safety import client_ip
 
-PUBLIC_ROUTES = {"/health", "/docs", "/docs/", "/openapi.json", "/agent-card.json", "/.well-known/agent-card.json", "/faq", "/ask", "/mcp"}
+PUBLIC_ROUTES = {"/health", "/docs", "/docs/", "/openapi.json", "/agent-card.json", "/.well-known/agent-card.json", "/faq", "/ask", "/mcp", "/robots.txt"}
 TOOLS = [
     {"name": "get_faq", "description": "Read source-verified, runtime-eligible curated FAQs. No private review questions.",
      "inputSchema": {"type": "object", "properties": {"id": {"type": "string", "maxLength": 100}}, "additionalProperties": False},
@@ -77,7 +77,7 @@ class Service:
                  "/mcp": {"post": {"operationId": "mcpTools", "description": "JSON-RPC 2.0 initialize, notifications/initialized, tools/list, tools/call. MCP 2025-03-26 tools subset; no SSE, full lifecycle, or A2A claim.", "requestBody": {"required": True, "content": {"application/json": {"schema": {"type": "object", "required": ["jsonrpc", "method"], "properties": {"jsonrpc": {"const": "2.0"}, "id": {"type": ["integer", "string", "null"]}, "method": {"type": "string"}, "params": {"type": "object"}}, "additionalProperties": False}}}}, "responses": {"200": {"description": "JSON-RPC result or error", "content": {"application/json": {"schema": {"type": "object", "required": ["jsonrpc", "id"], "properties": {"jsonrpc": {"const": "2.0"}, "id": {"type": ["integer", "string", "null"]}, "result": {}, "error": {"type": "object"}}}}}}, "204": {"description": "Notification accepted, no content"}, **errors}}}}
         for path in ("/health", "/agent-card.json", "/.well-known/agent-card.json", "/openapi.json", "/docs"):
             paths[path] = {"get": {"responses": {"200": {"description": "Public configuration/discovery"}, "429": {"description": "Read rate limit"}}}}
-        return {"openapi": "3.1.0", "info": {"title": "Coastal Cornerstone public information agent", "version": "1.0.0", "description": "Public read-only FAQ API. Curated source answers only; no business commitments. Private dashboard is intentionally excluded."},
+        return {"openapi": "3.1.0", "info": {"title": "Coastal Cornerstone public information agent", "version": "1.0.0", "description": "Public read-only FAQ API. Curated source answers only; no business commitments."},
                 "servers": [{"url": self.config.public_origin or "/"}], "paths": paths}
 
     def mcp(self, body, client):
@@ -258,8 +258,12 @@ class Handler(BaseHTTPRequestHandler):
             return self.respond(200, s.agent.public_faq())
         if path in {"/", "/docs", "/docs/"}:
             return self.respond(200, (ROOT / "docs/index.html").read_bytes(), "text/html; charset=utf-8")
+        if path == '/robots.txt':
+            return self.respond(200, b'User-agent: *\nDisallow: /\nAllow: /docs\nAllow: /faq\nAllow: /openapi.json\nAllow: /agent-card.json\nAllow: /.well-known/agent-card.json\nAllow: /mcp\nAllow: /ask\nAllow: /health\nAllow: /static/styles.css\nAllow: /robots.txt\n', 'text/plain; charset=utf-8')
         assets = {"/static/styles.css": "styles.css", "/static/dashboard.js": "dashboard.js", "/static/login.js": "login.js"}
         if path in assets:
+            if path == '/static/dashboard.js' and not self.session():
+                return self.respond(401, {'error': 'Authentication required'})
             ctype = "text/css; charset=utf-8" if path.endswith(".css") else "text/javascript; charset=utf-8"
             return self.respond(200, (ROOT / "static" / assets[path]).read_bytes(), ctype)
         if path in {"/dashboard", "/dashboard/", "/dashboard/login"}:
