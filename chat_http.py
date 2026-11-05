@@ -14,7 +14,7 @@ def chat_origin(config, origin):
         return False
     if parsed.username or parsed.password or parsed.path or parsed.query or parsed.fragment:
         return False
-    allowed = {'https://cccbuild-3mhyn4jl.manus.space', 'https://cccbuild.com'}
+    allowed = {'https://cccbuild-3mhyn4jl.manus.space', 'https://cccbuild.com', 'https://cccbuild-website-production.up.railway.app'}
     if parsed.scheme == 'https' and origin in allowed:
         return True
     if hasattr(config, 'public_origin') and isinstance(config.public_origin, str):
