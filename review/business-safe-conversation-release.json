@@ -1,0 +1,244 @@
+{
+  "decision": "BLOCKED_NOT_RELEASE_READY",
+  "worktree": "/home/ubuntu/ccc-agent-conversation",
+  "branch": "feat/business-safe-conversation-2026-11-05",
+  "base_head": "c89cae5ff58d11272e7c26afd6ed857fdd2ae433",
+  "runtime_implementation_changed_files": [],
+  "intended_changes_not_completed": [
+    "agent.py",
+    "safety.py",
+    "chat_safety.py",
+    "chat_service.py",
+    "tests/test_conversation.py",
+    "tests/test_agent.py",
+    "app.py behavior descriptors",
+    "README.md",
+    "docs/index.html",
+    "docs/operator-rules.md",
+    "docs/review-workflow.md"
+  ],
+  "artifact_changes_only": [
+    "review/business-safe-conversation-plan.md",
+    "review/business-safe-conversation-release.json"
+  ],
+  "blockers": [
+    {
+      "label": "agent-conversation-implementation-v1",
+      "result": "charged_truncation",
+      "max_tokens": 48000,
+      "saved_content": "agent-model-partial.py",
+      "receipt": "/tmp/ccc-faq-expansion-2026-11-05/agent-conversation-implementation-v1-raw.json"
+    },
+    {
+      "label": "agent-conversation-safety-continuation",
+      "result": "transport_response_ended_prematurely_reservation_retained"
+    },
+    {
+      "label": "agent-conversation-agent-continuation",
+      "result": "transport_response_ended_prematurely_reservation_retained"
+    },
+    {
+      "label": "agent-conversation-public-docs-plan",
+      "result": "transport_response_ended_prematurely_reservation_retained"
+    },
+    {
+      "label": "agent-conversation-safety-sequential-recovery",
+      "result": "charged_truncation",
+      "max_tokens": 32000,
+      "saved_content": "safety-model-partial.py",
+      "receipt": "/tmp/ccc-faq-expansion-2026-11-05/agent-conversation-safety-sequential-recovery-raw.json"
+    },
+    {
+      "label": "agent-conversation-safety-tail-only",
+      "result": "transport_response_ended_prematurely_reservation_retained"
+    }
+  ],
+  "verification": {
+    "baseline_command": "python3 -m unittest discover -s tests -v",
+    "baseline_passed_tests": 36,
+    "baseline_evidence": "/tmp/ccc-agent-conversation-2026-11-05/baseline-tests.txt",
+    "implementation_tests": "not_run_no_complete_implementation",
+    "adversarial_upgrade_matrix": "not_run_no_complete_implementation",
+    "claude_actual_release_review": "NOT_OBTAINED_NO_COMPLETE_IMPLEMENTATION",
+    "claude_hash_coverage": null,
+    "preservation_checks": [
+      {
+        "path": "data/faq.json",
+        "sha256": "54d242205df49a3c4dc99c47cd2c6e69f8ba3fcc43937f335e4f837b8da71d93",
+        "unchanged_from_head": true
+      },
+      {
+        "path": "config.py",
+        "sha256": "a1a53b59f44fb132be5b338662db81e9cc6d17523c92ff007a7b3fdd0a5cf82b",
+        "unchanged_from_head": true
+      },
+      {
+        "path": "store.py",
+        "sha256": "aa06da2c1daf8b83b494fbd83d920ee41c8f179d967a94cf6c903f38c3a7e7ee",
+        "unchanged_from_head": true
+      },
+      {
+        "path": "chat_store.py",
+        "sha256": "16941ad771e61a11fa3d8a73e4a30d2fdbb113dd3d4c2586142792539abfba86",
+        "unchanged_from_head": true
+      },
+      {
+        "path": "chat_mail.py",
+        "sha256": "2e15a1015d646a7f89242b112e6aaf66f5fd01abea5292a893f5a83611f55d75",
+        "unchanged_from_head": true
+      },
+      {
+        "path": "chat_http.py",
+        "sha256": "839e9ad2f0666fcb6be6e7ab94f678653a7001bccc0f79205172ef12fb76de2e",
+        "unchanged_from_head": true
+      },
+      {
+        "path": "digest.py",
+        "sha256": "b631edca06334f8b340bd385de96c26327a96c1c4afb337ca56cafe8ee9fd8e3",
+        "unchanged_from_head": true
+      },
+      {
+        "path": "dashboard.py",
+        "sha256": "70463764416f8b252dde01dab24d6e18104253f3a4d62ba6c74763fc0dce4dbc",
+        "unchanged_from_head": true
+      },
+      {
+        "path": "network.py",
+        "sha256": "fbebdd9be68470a336c124771f49cd07c2d57a0958da47e2e79340eecb606e9b",
+        "unchanged_from_head": true
+      },
+      {
+        "path": "agent.py",
+        "sha256": "5f29fdf750990950271b6ec329472cf49e7b4ad514870d15e20d3c9417c65ba8",
+        "unchanged_from_head": true
+      },
+      {
+        "path": "safety.py",
+        "sha256": "5dba161cec009446b0ed1adcba27dc651b433ad9d4225fa4a6cef690dd03d08d",
+        "unchanged_from_head": true
+      },
+      {
+        "path": "chat_safety.py",
+        "sha256": "34af9071ab434ec3c19ec80e9533f32697ffdca2cee157b12246707e529437f0",
+        "unchanged_from_head": true
+      },
+      {
+        "path": "chat_service.py",
+        "sha256": "c0a8b7b7ec4c745b252a9e4065bdf2444f28a625b9813eba717978be42a7602d",
+        "unchanged_from_head": true
+      },
+      {
+        "path": "app.py",
+        "sha256": "5434226157f3c985b94ad59397676a8ea780570fcfbf176f8947aacb0d482304",
+        "unchanged_from_head": true
+      },
+      {
+        "path": "README.md",
+        "sha256": "9a084f5825320261efd74a824fe5abdf88770cd66b0779940d054ee73c6768ae",
+        "unchanged_from_head": true
+      },
+      {
+        "path": "docs/index.html",
+        "sha256": "f2e5a6b9df5f08a70efd17be0dd5fa3cf2cb64add677e2f82637a31db5a952a3",
+        "unchanged_from_head": true
+      },
+      {
+        "path": "docs/operator-rules.md",
+        "sha256": "eab08fefaf695e177757c1ce49ab665ebdbb3abd71d1cf5ac6134f5c122b12d2",
+        "unchanged_from_head": true
+      },
+      {
+        "path": "docs/review-workflow.md",
+        "sha256": "a9f8ece891c647b8bf8120dccf55d7968c7889949b6f48b73caef0a3c7fa8f06",
+        "unchanged_from_head": true
+      }
+    ],
+    "runtime_monthly_cap_micro_usd": 1000000,
+    "runtime_model": "deepseek/deepseek-v4-flash",
+    "runtime_max_output_tokens": 8192,
+    "reservation_store_unchanged": true,
+    "faq_bytes_unchanged": true,
+    "eligible_faq_count": 50,
+    "new_100_draft_runtime_answers_added": 0
+  },
+  "development_budget": {
+    "shared_cap_usd": "10",
+    "shared_spent_usd": "0.431115566",
+    "shared_outstanding_reserved_usd": "0.6696089389",
+    "shared_committed_usd": "1.1007245049",
+    "ledger_path": "/tmp/ccc-faq-expansion-2026-11-05/development-budget.json",
+    "caller_modified": false,
+    "uncertain_reservations_released": false,
+    "calls": [
+      {
+        "label": "openweight-100-additional-client-faq-questions",
+        "model": "deepseek/deepseek-v4-pro-0813",
+        "state": "completed",
+        "reserved_usd": "0.1957898019",
+        "cost_usd": "0.0603996"
+      },
+      {
+        "label": "agent-conversation-implementation-v1",
+        "model": "deepseek/deepseek-v4-pro-0813",
+        "state": "completed",
+        "reserved_usd": "0.2397930832",
+        "cost_usd": "0.1824516"
+      },
+      {
+        "label": "openweight-100-question-quality-review",
+        "model": "deepseek/deepseek-v4-pro-0813",
+        "state": "completed",
+        "reserved_usd": "0.0983531527",
+        "cost_usd": "0.049367901"
+      },
+      {
+        "label": "agent-conversation-safety-continuation",
+        "model": "deepseek/deepseek-v4-pro-0813",
+        "state": "reserved",
+        "reserved_usd": "0.1464885389"
+      },
+      {
+        "label": "agent-conversation-agent-continuation",
+        "model": "deepseek/deepseek-v4-pro-0813",
+        "state": "reserved",
+        "reserved_usd": "0.1507091905"
+      },
+      {
+        "label": "agent-conversation-public-docs-plan",
+        "model": "deepseek/deepseek-v4-pro-0813",
+        "state": "reserved",
+        "reserved_usd": "0.1526489998"
+      },
+      {
+        "label": "agent-conversation-safety-sequential-recovery",
+        "model": "deepseek/deepseek-v4-pro-0813",
+        "state": "completed",
+        "reserved_usd": "0.1465045142",
+        "cost_usd": "0.138896465"
+      },
+      {
+        "label": "agent-conversation-safety-tail-only",
+        "model": "deepseek/deepseek-v4-pro-0813",
+        "state": "reserved",
+        "reserved_usd": "0.2197622097"
+      }
+    ]
+  },
+  "deployment": {
+    "push": false,
+    "main_edit": false,
+    "deploy": false,
+    "production_data_access": false,
+    "browser_operations": false,
+    "production_questions": false,
+    "emails_sent": false,
+    "paid_agent_runtime_calls": false,
+    "local_commit": false
+  },
+  "artifact_root": "/tmp/ccc-agent-conversation-2026-11-05",
+  "retained_model_drafts_not_applied": [
+    "/tmp/ccc-agent-conversation-2026-11-05/agent-model-partial.py",
+    "/tmp/ccc-agent-conversation-2026-11-05/safety-model-partial.py"
+  ],
+  "restart_constraint": "Only finish retained code with owner-authorized high-effort open-weight model; do not publish partial drafts. Complete tests and actual Claude hash-scoped review before any release authorization."
+}

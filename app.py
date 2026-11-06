@@ -16,6 +16,9 @@ from digest import Digest
 from store import Store
 from safety import client_ip
 import faq_pages
+import os
+import admin_faq_http
+from faq_review import FAQReview
 import re
 
 FAQ_ID_RE = re.compile(r'^faq-[0-9]{3}$', re.ASCII)
@@ -72,6 +75,35 @@ class Service:
         self.digest = Digest(self.config, self.store, transport)
         self.dashboard = Dashboard(self.config, self.store, self.agent, self.digest)
         self.chat = ChatService(self.config, self.store, self.agent, transport)
+        self.faq_review = FAQReview(self.store, list(self.agent.public_faq()['faqs']))
+        # Seed import
+        seed_json = os.environ.get('FAQ_REVIEW_SEED_JSON', '')
+        if seed_json:
+            try:
+                data = json.loads(seed_json)
+                if isinstance(data, dict):
+                    questions = data.get('questions', [])
+                elif isinstance(data, list):
+                    questions = data
+                else:
+                    questions = []
+                if questions:
+                    self.faq_review.import_questions(questions, actor='system:seed')
+            except Exception:
+                pass
+        elif self.config.review_queue_path.exists():
+            try:
+                data = json.loads(self.config.review_queue_path.read_text())
+                if isinstance(data, dict):
+                    questions = data.get('questions', [])
+                elif isinstance(data, list):
+                    questions = data
+                else:
+                    questions = []
+                if questions:
+                    self.faq_review.import_questions(questions, actor='system:seed')
+            except Exception:
+                pass
 
     def card(self):
         origin = self.config.public_origin
@@ -428,9 +460,9 @@ class Handler(BaseHTTPRequestHandler):
             return self.respond(200, (ROOT / "docs/index.html").read_bytes(), "text/html; charset=utf-8")
         if path == '/robots.txt':
             return self.respond(200, b'User-agent: *\nDisallow: /\nAllow: /docs\nAllow: /faq\nAllow: /openapi.json\nAllow: /agent-card.json\nAllow: /.well-known/agent-card.json\nAllow: /mcp\nAllow: /ask\nAllow: /health\nAllow: /static/styles.css\nAllow: /robots.txt\n', 'text/plain; charset=utf-8')
-        assets = {'/static/styles.css': 'styles.css', '/static/dashboard.js': 'dashboard.js', '/static/login.js': 'login.js', '/static/chat-dashboard.js': 'chat-dashboard.js', '/static/chat-dashboard.css': 'chat-dashboard.css'}
+        assets = {'/static/styles.css': 'styles.css', '/static/dashboard.js': 'dashboard.js', '/static/login.js': 'login.js', '/static/chat-dashboard.js': 'chat-dashboard.js', '/static/chat-dashboard.css': 'chat-dashboard.css', '/static/faq-review.js': 'faq-review.js', '/static/faq-review.css': 'faq-review.css'}
         if path in assets:
-            if path in ('/static/dashboard.js', '/static/chat-dashboard.js', '/static/chat-dashboard.css') and not self.session():
+            if path in ('/static/dashboard.js', '/static/chat-dashboard.js', '/static/chat-dashboard.css', '/static/faq-review.js', '/static/faq-review.css') and not self.session():
                 return self.respond(401, {'error': 'Authentication required'})
             ctype = "text/css; charset=utf-8" if path.endswith(".css") else "text/javascript; charset=utf-8"
             return self.respond(200, (ROOT / "static" / assets[path]).read_bytes(), ctype)
@@ -471,12 +503,24 @@ class Handler(BaseHTTPRequestHandler):
                     return self.respond(200, result)
                 else:
                     return self.respond(404, {'error': 'Not found'})
+            if path.startswith('/private/api/dashboard/faq-review/'):
+                rem = path[len('/private/api/dashboard/faq-review/'):]
+                if not rem.startswith('/'):
+                    rem = '/' + rem
+                return admin_faq_http.handle_get(self, rem, session)
             query = parse_qs(split.query, keep_blank_values=True)
             if set(query) - {"days"} or len(query.get("days", ["7"])) != 1 or query.get("days", ["7"])[0] not in {"7", "30"}:
                 return self.respond(400, {"error": "days must be 7 or 30; no other query parameters are accepted"})
             days = int(query.get("days", ["7"])[0])
             if path == "/private/api/dashboard/summary":
                 return self.respond(200, s.dashboard.summary(days))
+            if path == "/private/api/dashboard/review-queue":
+                if split.query:
+                    return self.respond(400, {'error': 'Query parameters not allowed'})
+                queue = s.faq_review.review_queue()
+                if isinstance(queue, list):
+                    return self.respond(200, {'count': len(queue), 'items': queue})
+                return self.respond(200, queue)
             if path == "/private/api/dashboard/export.csv":
                 return self.respond(200, s.dashboard.csv_export(days), "text/csv; charset=utf-8", {"Content-Disposition": 'attachment; filename="coastal-questions.csv"'})
             if path == "/private/api/dashboard/export.json":
@@ -524,7 +568,7 @@ class Handler(BaseHTTPRequestHandler):
         s = self.service
         if is_chat_path(path):
             return serve_chat(self, path, client, 'POST')
-        if path not in {"/ask", "/mcp", "/private/api/dashboard/login", "/private/api/dashboard/logout"}:
+        if path not in {"/ask", "/mcp", "/private/api/dashboard/login", "/private/api/dashboard/logout"} and not (path.startswith('/private/api/dashboard/chats/') and path.endswith('/review')):
             return self.respond(404, {"error": "Not found"})
         if path.startswith("/private/"):
             if not s.dashboard.enabled:
@@ -537,6 +581,8 @@ class Handler(BaseHTTPRequestHandler):
             session = self.session("preauth" if is_login else "admin")
             if not s.dashboard.csrf_ok(session, self.headers.get("Origin"), self.headers.get("X-CSRF-Token")):
                 return self.respond(403, {"error": "Origin and CSRF validation required"})
+            if path.startswith('/private/api/dashboard/faq-review/') and urlsplit(self.path).query:
+                return self.respond(400, {'error': 'Query parameters are not allowed'})
         try:
             body = self.read_body()
         except BodyError as exc:
@@ -545,6 +591,13 @@ class Handler(BaseHTTPRequestHandler):
             if path == "/mcp" and exc.status == 400:
                 return self.respond(400, rpc_error(None, -32700, "Parse error"))
             return self.respond(exc.status, {"error": exc.message})
+        if path.startswith('/private/api/dashboard/faq-review/'):
+            rem = path[len('/private/api/dashboard/faq-review/'):]
+            if not rem.startswith('/'):
+                rem = '/' + rem
+            return admin_faq_http.handle_post(self, rem, body, session, client)
+        if path.startswith('/private/api/dashboard/chats/') and path.endswith('/review'):
+            return self.respond(410, {'error': 'This endpoint has been removed. Please use the new FAQ review system.'})
         if path == "/ask":
             try:
                 value, status = s.agent.ask(body, client, "API")

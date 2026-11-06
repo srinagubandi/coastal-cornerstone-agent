@@ -7,6 +7,9 @@ import time
 import sqlite3
 from contextlib import contextmanager
 
+class ReviewConflict(Exception):
+    pass
+
 DAY = 86400
 
 def _now(now):
@@ -56,6 +59,39 @@ class ChatStore:
                     claim TEXT,
                     provider_id TEXT
                 );
+                CREATE TABLE IF NOT EXISTS chat_reviews (
+                    session_id TEXT PRIMARY KEY,
+                    classification TEXT NOT NULL DEFAULT 'unreviewed',
+                    answer_draft TEXT NOT NULL DEFAULT '',
+                    admin_note TEXT NOT NULL DEFAULT '',
+                    updated REAL NOT NULL,
+                    updated_by TEXT NOT NULL
+                );
+                CREATE TABLE IF NOT EXISTS chat_review_events (
+                    id INTEGER PRIMARY KEY,
+                    session_id TEXT NOT NULL,
+                    classification TEXT NOT NULL,
+                    answer_draft TEXT NOT NULL,
+                    admin_note TEXT NOT NULL,
+                    created REAL NOT NULL,
+                    updated_by TEXT NOT NULL
+                );
+                CREATE TABLE IF NOT EXISTS chat_entries (
+                    id INTEGER PRIMARY KEY,
+                    session_id TEXT NOT NULL,
+                    role TEXT NOT NULL,
+                    text TEXT NOT NULL,
+                    created REAL NOT NULL,
+                    classification TEXT NOT NULL DEFAULT 'unreviewed',
+                    outcome TEXT NOT NULL DEFAULT 'pending',
+                    review_revision INTEGER NOT NULL DEFAULT 0,
+                    reviewed_by TEXT,
+                    reviewed_time REAL,
+                    normalized_text TEXT NOT NULL
+                );
+                CREATE INDEX IF NOT EXISTS idx_chat_entries_session_id ON chat_entries(session_id);
+                CREATE INDEX IF NOT EXISTS idx_chat_entries_normalized_text ON chat_entries(normalized_text);
+                CREATE INDEX IF NOT EXISTS idx_chat_reviews_classification ON chat_reviews(classification);
                 CREATE TABLE IF NOT EXISTS chat_rates (
                     key TEXT,
                     bucket INTEGER,
@@ -272,6 +308,17 @@ class ChatStore:
         for o in outbox_rows:
             email_states[o["kind"]] = o["status"]
 
+        review_row = db.execute(
+            "SELECT classification, answer_draft, admin_note, updated, updated_by FROM chat_reviews WHERE session_id = ?",
+            (sid,)
+        ).fetchone()
+        review = {
+            "classification": review_row["classification"] if review_row else "unreviewed",
+            "answer_draft": review_row["answer_draft"] if review_row else "",
+            "admin_note": review_row["admin_note"] if review_row else "",
+            "updated": review_row["updated"] if review_row else None,
+            "updated_by": review_row["updated_by"] if review_row else None,
+        }
         return {
             "id": row["id"],
             "created": row["created"],
@@ -280,6 +327,7 @@ class ChatStore:
             "messages": messages,
             "contact": contact,
             "email_states": email_states,
+            "review": review,
         }
 
     def snapshot(self, sid):
@@ -301,7 +349,12 @@ class ChatStore:
         if not isinstance(sid, str) or not re.fullmatch(r'[0-9a-f]{32}', sid):
             return None
         with self.store.connect() as db:
-            return self._detail(db, sid)
+            detail = self._detail(db, sid)
+            if detail is None:
+                return None
+            entries = db.execute('SELECT id, role, text, created, classification, outcome, review_revision, reviewed_by, reviewed_time FROM chat_entries WHERE session_id=? ORDER BY id', (sid,)).fetchall()
+            detail['entries'] = [dict(e) for e in entries]
+            return detail
 
     def private_list(self):
         retention_days = 30
@@ -342,12 +395,37 @@ class ChatStore:
             for r in outbox_rows:
                 email_map.setdefault(r['session_id'], {})[r['kind']] = r['status']
 
+            entry_rows = db.execute(
+                "SELECT session_id, role, classification, text FROM chat_entries "
+                "WHERE session_id IN (SELECT id FROM chat_sessions ORDER BY created DESC, id DESC LIMIT 10000) "
+                "ORDER BY id"
+            ).fetchall()
+            entry_map = {}
+            for r in entry_rows:
+                sid = r['session_id']
+                if sid not in entry_map:
+                    entry_map[sid] = {'count': 0, 'classifications': {}, 'first_visitor_text': None}
+                entry_map[sid]['count'] += 1
+                cls = r['classification']
+                entry_map[sid]['classifications'][cls] = entry_map[sid]['classifications'].get(cls, 0) + 1
+                if entry_map[sid]['first_visitor_text'] is None and r['role'] == 'visitor':
+                    entry_map[sid]['first_visitor_text'] = r['text']
+
             chats = []
             for s in sessions:
                 sid = s['id']
                 m = msg_map.get(sid)
                 message_count = m['message_count'] if m else 0
                 preview = (m['preview'] or '')[:160] if m and m['preview'] else ''
+                review = db.execute("SELECT classification FROM chat_reviews WHERE session_id=?", (sid,)).fetchone()
+                entry_info = entry_map.get(sid, {})
+                entry_count = entry_info.get('count', 0)
+                entry_classifications = entry_info.get('classifications', {})
+                first_visitor_text = entry_info.get('first_visitor_text')
+                if first_visitor_text and entry_classifications.get('sensitive_private', 0) == 0:
+                    entry_preview = first_visitor_text[:160]
+                else:
+                    entry_preview = None
                 chats.append({
                     'id': sid,
                     'created': s['created'],
@@ -357,8 +435,89 @@ class ChatStore:
                     'contact_received': sid in contact_set,
                     'email_states': email_map.get(sid, {}),
                     'preview': preview,
+                    'classification': review['classification'] if review else 'unreviewed',
+                    'entry_count': entry_count,
+                    'entry_classifications': entry_classifications,
+                    'entry_preview': entry_preview,
                 })
         return {'chats': chats, 'retention_days': retention_days}
+
+    def update_review(self, sid, classification, answer_draft='', admin_note='', updated_by='admin', now=None):
+        allowed = {'unreviewed', 'ignore', 'needs_answer', 'faq_candidate', 'sensitive_private'}
+        if not isinstance(sid, str) or not re.fullmatch(r'[0-9a-f]{32}', sid):
+            return None
+        if classification not in allowed:
+            raise ValueError('Invalid review classification')
+        if not all(isinstance(v, str) for v in (answer_draft, admin_note, updated_by)):
+            raise ValueError('Review fields must be strings')
+        if len(answer_draft) > 12000 or len(admin_note) > 2000 or len(updated_by) > 254:
+            raise ValueError('Review field too long')
+        now = _now(now)
+        with self.store.transaction() as db:
+            if not db.execute('SELECT 1 FROM chat_sessions WHERE id=?', (sid,)).fetchone():
+                return None
+            db.execute('INSERT INTO chat_reviews (session_id, classification, answer_draft, admin_note, updated, updated_by) VALUES (?, ?, ?, ?, ?, ?) '
+                       'ON CONFLICT(session_id) DO UPDATE SET classification=excluded.classification, answer_draft=excluded.answer_draft, admin_note=excluded.admin_note, updated=excluded.updated, updated_by=excluded.updated_by',
+                       (sid, classification, answer_draft, admin_note, now, updated_by))
+            db.execute('INSERT INTO chat_review_events (session_id, classification, answer_draft, admin_note, created, updated_by) VALUES (?, ?, ?, ?, ?, ?)',
+                       (sid, classification, answer_draft, admin_note, now, updated_by))
+            row = db.execute('SELECT classification, answer_draft, admin_note, updated, updated_by FROM chat_reviews WHERE session_id=?', (sid,)).fetchone()
+            return dict(row)
+
+    def review_events(self, sid):
+        if not isinstance(sid, str) or not re.fullmatch(r'[0-9a-f]{32}', sid):
+            return []
+        with self.store.connect() as db:
+            return [dict(row) for row in db.execute('SELECT classification, answer_draft, admin_note, created, updated_by FROM chat_review_events WHERE session_id=? ORDER BY id DESC LIMIT 100', (sid,)).fetchall()]
+
+    def _normalize(self, text):
+        import re
+        return re.sub(r'\s+', ' ', text.strip().lower())
+
+    def capture_entry(self, sid, role, text, classification, outcome, operation_id=None, now=None):
+        now = _now(now)
+        normalized = self._normalize(text)
+        with self.store.transaction() as db:
+            cursor = db.execute(
+                'INSERT INTO chat_entries (session_id, role, text, created, classification, outcome, normalized_text) VALUES (?, ?, ?, ?, ?, ?, ?)',
+                (sid, role, text, now, classification, outcome, normalized)
+            )
+            return cursor.lastrowid
+
+    def update_entry(self, entry_id, classification, revision, actor, now=None):
+        allowed = {'unreviewed', 'ignore', 'needs_answer', 'faq_candidate', 'sensitive_private'}
+        if classification not in allowed:
+            raise ValueError('Invalid classification')
+        now = _now(now)
+        with self.store.transaction() as db:
+            row = db.execute('SELECT id, review_revision FROM chat_entries WHERE id=?', (entry_id,)).fetchone()
+            if not row:
+                raise ValueError('Entry not found')
+            if revision is not None and row['review_revision'] != revision:
+                raise ReviewConflict('Entry has been modified')
+            new_rev = row['review_revision'] + 1
+            db.execute('UPDATE chat_entries SET classification=?, review_revision=?, reviewed_by=?, reviewed_time=? WHERE id=?',
+                       (classification, new_rev, actor, now, entry_id))
+            updated_row = db.execute('SELECT * FROM chat_entries WHERE id=?', (entry_id,)).fetchone()
+            return dict(updated_row) if updated_row else None
+
+    def get_entry(self, entry_id):
+        with self.store.connect() as db:
+            row = db.execute('SELECT * FROM chat_entries WHERE id=?', (entry_id,)).fetchone()
+            return dict(row) if row else None
+
+    def get_latest_entry_by_normalized(self, normalized_text):
+        with self.store.connect() as db:
+            row = db.execute('SELECT * FROM chat_entries WHERE normalized_text=? ORDER BY id DESC LIMIT 1', (normalized_text,)).fetchone()
+            return dict(row) if row else None
+
+    def is_ignored(self, normalized_text):
+        entry = self.get_latest_entry_by_normalized(normalized_text)
+        return entry is not None and entry['classification'] == 'ignore'
+
+    def set_entry_outcome(self, entry_id, outcome):
+        with self.store.transaction() as db:
+            db.execute('UPDATE chat_entries SET outcome=? WHERE id=?', (outcome, entry_id))
 
     def begin_message(self, sid, text, now=None):
         if not isinstance(text, str) or not (1 <= len(text) <= 1500):
@@ -538,6 +697,9 @@ class ChatStore:
         now = _now(now)
         cutoff = now - 30 * DAY
         with self.store.transaction() as db:
+            db.execute('DELETE FROM chat_entries WHERE created < ?', (cutoff,))
+            db.execute('DELETE FROM chat_reviews WHERE session_id NOT IN (SELECT DISTINCT session_id FROM chat_entries)')
+            db.execute('DELETE FROM chat_review_events WHERE session_id NOT IN (SELECT DISTINCT session_id FROM chat_entries)')
             db.execute('DELETE FROM chat_messages WHERE session_id IN (SELECT id FROM chat_sessions WHERE created < ?)', (cutoff,))
             db.execute('DELETE FROM chat_contacts WHERE session_id IN (SELECT id FROM chat_sessions WHERE created < ?)', (cutoff,))
             db.execute('DELETE FROM chat_outbox WHERE session_id IN (SELECT id FROM chat_sessions WHERE created < ?)', (cutoff,))

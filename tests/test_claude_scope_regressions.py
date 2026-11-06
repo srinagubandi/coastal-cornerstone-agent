@@ -196,11 +196,17 @@ class ClaudeScopeRegressionTests(FixtureTest):
     def test_model_guidance_for_neutral_scope_cases(self):
         cases = [
             ("Is a black roof too hot for Florida?", "Roof color affects heat gain: lighter colors reflect more sunlight, while darker colors absorb more heat."),
-            ("Can a bathroom be accessible for a disabled parent? Is a roll-in shower an option?", "Accessible bathrooms require grab bars, clearance space, and ADA-compliant roll-in showers for wheelchair access."),
             ("How many man-hours is a kitchen remodel?", "A kitchen remodel includes demolition, plumbing, electrical, drywall, and finish work; labor hours vary by project size and finishes."),
             ("What is your process?", "A typical construction process covers planning, estimating, permits, construction, inspections, and closeout."),
             ("What's your estimating process?", "Estimating includes reviewing project scope, materials, labor, site conditions, and subcontractor input before proposing a plan."),
         ]
+        handoff_question = "Can a bathroom be accessible for a disabled parent? Is a roll-in shower an option?"
+        handoff_transport = PlanTransport("unused")
+        handoff_agent = self.agent(handoff_transport, True)
+        handoff_agent.faqs = self.agent_obj.faqs
+        handoff_result, handoff_status = handoff_agent.ask({"question": handoff_question}, self.cid())
+        self.assertEqual((handoff_status, handoff_result["status"]), (200, "needs_review"))
+        self.assertEqual(handoff_transport.calls, [])
         for q, general in cases:
             with self.subTest(question=q):
                 transport = PlanTransport(general)

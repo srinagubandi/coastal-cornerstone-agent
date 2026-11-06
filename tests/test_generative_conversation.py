@@ -5,7 +5,7 @@ from agent import FALLBACK, GENERAL_GUIDANCE, GUIDANCE_LABEL
 from chat_service import ChatService
 from config import MODEL, MODEL_URL
 from safety import classify_question
-from chat_safety import screen_message
+from chat_safety import NEUTRAL, screen_message
 from test_agent import FIXTURE, FixtureTest, MockTransport
 
 MISSING = object()
@@ -171,7 +171,7 @@ class GenerativeConversationTests(FixtureTest):
         for i, text in enumerate(unsafe):
             with self.subTest(text=text[:25]):
                 result, status = agent.ask({"question": text}, "u" + str(i))
-                self.assertEqual((status, result["status"], result["answer"]), (200, "needs_review", FALLBACK))
+                self.assertEqual((status, result["status"], result["answer"]), (200, "needs_review", NEUTRAL))
         self.assertEqual(mock.calls, [])
         legitimate = [
             "white roof color versus black roof color heat gain",

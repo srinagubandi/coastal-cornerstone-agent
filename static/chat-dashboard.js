@@ -270,8 +270,21 @@ function messageSection(messages) {
   return section;
 }
 
-function detailPlaceholder(message){const h3=make('h3','Conversation','chat-detail-title');h3.id='chat-detail-title';const p=make('p',message,'cc-chat-empty');ui.detail.replaceChildren(h3,p)}function renderDetail(data){const h3=make('h3','Conversation '+validId(data.id),'chat-detail-title');h3.id='chat-detail-title';const summary=make('p','Status: '+human(data.status)+' · Created: '+stamp(data.created)+' · Last activity: '+stamp(data.last_seen)),notifications=make('section','','notifications'),h4=make('h4','Notification delivery'),dl=make('dl','','cc-chat-email'),pairs=emailPairs(data.email_states);for(const[kind,state]of pairs){const dt=make('dt',kind),dd=make('dd',state);dl.append(dt,dd)}notifications.append(h4,dl);const contact=contactSection(data.contact),messages=messageSection(data.messages);ui.detail.replaceChildren(h3,summary,contact,notifications,messages)}
-
+function detailPlaceholder(message){const h3=make('h3','Conversation','chat-detail-title');h3.id='chat-detail-title';const p=make('p',message,'cc-chat-empty');ui.detail.replaceChildren(h3,p)}
+function reviewSection(review,id){
+  const section=make('section','','cc-chat-review');
+  const nav=make('nav','Dashboard › Chats › Conversation','cc-breadcrumbs');nav.setAttribute('aria-label','Breadcrumb');
+  const h4=make('h4','Review this conversation');
+  const label=make('label','Classification');
+  const select=document.createElement('select');select.id='chat-review-classification';select.name='classification';
+  [['unreviewed','Unreviewed'],['ignore','Ignore'],['needs_answer','Needs answer'],['faq_candidate','FAQ candidate'],['sensitive_private','Sensitive/private']].forEach(([value,text])=>{const o=document.createElement('option');o.value=value;o.textContent=text;select.append(o)});
+  select.value=review?.classification||'unreviewed';label.append(select);
+  const answerLabel=make('label','Admin answer draft');const answer=document.createElement('textarea');answer.id='chat-review-answer';answer.maxLength=12000;answer.rows=5;answer.placeholder='Write an answer for review; this does not publish it.';answer.value=review?.answer_draft||'';answerLabel.append(answer);
+  const noteLabel=make('label','Admin note');const note=document.createElement('textarea');note.id='chat-review-note';note.maxLength=2000;note.rows=3;note.placeholder='Why this classification or answer was chosen';note.value=review?.admin_note||'';noteLabel.append(note);
+  const save=make('button','Save review','primary');save.type='button';save.addEventListener('click',async()=>{save.disabled=true;try{const response=await fetch('/private/api/dashboard/chats/'+id+'/review',{method:'POST',credentials:'same-origin',headers:{'Content-Type':'application/json','X-CSRF-Token':window.chatDashboardCsrf||''},body:JSON.stringify({classification:select.value,answer_draft:answer.value,admin_note:note.value})});if(response.status===401){location.replace('/dashboard/login#chat='+id);return}if(!response.ok)throw new Error('Review could not be saved.');const data=await response.json();save.textContent='Saved';setTimeout(()=>{save.textContent='Save review'},1200);if(state.chats){const row=state.chats.find(x=>x.id===id);if(row)row.classification=data.review.classification;renderList()}}catch(error){save.textContent=error.message;setTimeout(()=>{save.textContent='Save review'},1800)}finally{save.disabled=false}});
+  const status=make('p',review?.updated?'Last updated '+stamp(review.updated)+' by '+(review.updated_by||'admin'):'Not yet reviewed','muted');section.append(nav,h4,label,answerLabel,noteLabel,save,status);return section;
+}
+function renderDetail(data){const h3=make('h3','Conversation '+validId(data.id),'chat-detail-title');h3.id='chat-detail-title';const summary=make('p','Status: '+human(data.status)+' · Created: '+stamp(data.created)+' · Last activity: '+stamp(data.last_seen)),notifications=make('section','','notifications'),h4=make('h4','Notification delivery'),dl=make('dl','','cc-chat-email'),pairs=emailPairs(data.email_states);for(const[kind,state]of pairs){const dt=make('dt',kind),dd=make('dd',state);dl.append(dt,dd)}notifications.append(h4,dl);const contact=contactSection(data.contact),messages=messageSection(data.messages),review=reviewSection(data.review,data.id);ui.detail.replaceChildren(h3,summary,review,contact,notifications,messages)}
 function setTab(chats, focus = false) {
   ui.overviewTab.setAttribute('aria-selected', String(!chats));
   ui.chatsTab.setAttribute('aria-selected', String(chats));

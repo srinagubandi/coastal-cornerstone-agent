@@ -17,7 +17,7 @@ MONTHLY_CAP = 1_000_000  # microUSD, never configurable upwards
 MAX_OUTPUT_TOKENS = 8192
 BODY_LIMIT = 8192
 QUESTION_LIMIT = 1500
-ALLOWED_SOURCE_HOSTS = frozenset({"cccbuild.com", "www.cccbuild.com", "cccbuild-3mhyn4jl.manus.space"})
+ALLOWED_SOURCE_HOSTS = frozenset({"cccbuild.com", "www.cccbuild.com", "cccbuild-3mhyn4jl.manus.space", "cccbuild-website-production.up.railway.app"})
 
 
 def ceiling(name, default):
@@ -35,6 +35,7 @@ class Config:
     data_dir: Path = Path(os.getenv("DATA_DIR", str(ROOT / ".private")))
     faq_path: Path = Path(os.getenv("FAQ_PATH", str(ROOT / "data/faq.json")))
     report_path: Path = Path(os.getenv("REPORT_PATH", str(ROOT / "data/report.json")))
+    review_queue_path: Path = Path(os.getenv("REVIEW_QUEUE_PATH", str(ROOT / ".private/review-queue.json")))
     public_origin: str = os.getenv("PUBLIC_ORIGIN", "").rstrip("/")
     api_key: str = os.getenv("OPENROUTER_API_KEY", "")
     resend_key: str = os.getenv("RESEND_API_KEY", "")

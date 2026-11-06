@@ -1,6 +1,5 @@
 """Focused synthetic safety and chat approval tests."""
-from agent import FALLBACK
-from chat_safety import screen_message
+from chat_safety import screen_message, NEUTRAL
 from chat_service import ChatService
 from safety import classify_question
 from test_agent import FixtureTest, MockTransport
@@ -27,11 +26,21 @@ class ConversationSafetyTests(FixtureTest):
         return kind, cleaned
 
     def test_classify_screen_contracts(self):
-        safe = ["How can an ordinary homeowner maintain a fixture?", "What commercial construction services does the business provide?", "Does the business have WOSB certification?", "What accessibility features can a bathroom remodel include?", "What should a church consider in a neutral facility remodel?", "What is the difference between male and female threaded fittings?", "What dimensions are common for sex bolts?", "What dimensions should homeowners measure before replacing a door?"]
+        safe = ["How can an ordinary homeowner maintain a fixture?", "What commercial construction services does the business provide?", "Does the business have WOSB certification?", "What should a church consider in a neutral facility remodel?", "What is the difference between male and female threaded fittings?"]
         for text in safe:
             with self.subTest(case=text):
                 kind, cleaned = self.parity(text)
                 self.assertEqual(kind, "safe")
+                self.assertTrue(cleaned)
+        human = [
+            "What accessibility features can a bathroom remodel include?",
+            "What dimensions are common for sex bolts?",
+            "What dimensions should homeowners measure before replacing a door?",
+        ]
+        for text in human:
+            with self.subTest(case=text):
+                kind, cleaned = self.parity(text)
+                self.assertEqual(kind, "human")
                 self.assertTrue(cleaned)
         profanity = "This damn fixture business estimate process is confusing"
         with self.subTest(case=profanity):
@@ -53,7 +62,7 @@ class ConversationSafetyTests(FixtureTest):
         for i, text in enumerate(UNSAFE):
             with self.subTest(case=text):
                 result, status = agent.ask({"question": text}, str(i))
-                self.assertEqual((status, result["status"], result["answer"]), (200, "needs_review", FALLBACK))
+                self.assertEqual((status, result["status"], result["answer"]), (200, "needs_review", NEUTRAL))
         self.assertEqual(mock.calls, [])
 
     def test_high_level_guidance_and_exact_fixture(self):

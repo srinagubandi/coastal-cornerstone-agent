@@ -137,6 +137,26 @@ class Dashboard:
         except (OSError, ValueError, TypeError):
             return empty
 
+    def review_queue(self):
+        """Read-only private review queue; draft records never enter runtime FAQ knowledge."""
+        empty = {"count": 0, "items": [], "message": "No private FAQ review queue has been imported."}
+        try:
+            raw = self.config.review_queue_path.read_bytes()
+            if len(raw) > 500000:
+                return empty
+            data = json.loads(raw)
+            items = data.get("questions") if isinstance(data, dict) else data
+            if not isinstance(items, list):
+                return empty
+            safe=[]
+            for item in items[:500]:
+                if not isinstance(item, dict) or not isinstance(item.get("id"), str) or not isinstance(item.get("question"), str):
+                    continue
+                safe.append({"id": item["id"][:100], "question": redact(item["question"], 500), "category": redact(item.get("category", ""), 100), "review_status": item.get("review_status", "pending_owner_review"), "runtime_eligible": False})
+            return {"count": len(safe), "items": safe, "message": "Questions only; answers require separate admin drafting and approval."}
+        except (OSError, ValueError, TypeError):
+            return empty
+
     def summary(self, days):
         result = self.store.summary(days)
         result.update({"readiness": self.agent.readiness(), "digest": self.digest.readiness(), "report": self.report(),

@@ -14,11 +14,15 @@ class RealisticGeneralOutputTests(FixtureTest):
              "White roof surfaces reflect more sunlight and can reduce heat gain compared with dark roof surfaces. The actual performance depends on climate and roof assembly."),
             ("Why does condensation form on walls in humid rooms?",
              "Condensation occurs when warm humid air contacts a cooler surface and reaches dew point. Ventilation, insulation placement, and air sealing influence surface temperature and drying potential."),
-            ("What are general accessibility principles for entry doors?",
-             "Accessible entry planning considers maneuvering space, threshold design, and approach routes. Project-specific requirements should be confirmed by a qualified design professional."),
             ("What general foundation principles apply to coastal homes?",
              "Foundation performance depends on soil, water table, flood zone, and building loads. Site investigation and a qualified engineer review are needed before selecting a foundation type."),
         ]
+        handoff_transport = PlanTransport("unused")
+        handoff_agent = self.agent(handoff_transport, True)
+        handoff_result, handoff_status = handoff_agent.ask({"question": "What are general accessibility principles for entry doors?"}, "accessibility-handoff")
+        self.assertEqual((handoff_status, handoff_result["status"]), (200, "needs_review"))
+        self.assertEqual(handoff_transport.calls, [])
+
         for question, general in cases:
             with self.subTest(question=question):
                 transport = PlanTransport(plan(general))

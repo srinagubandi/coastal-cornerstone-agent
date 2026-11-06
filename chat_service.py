@@ -19,6 +19,22 @@ class ChatService:
         self.worker = None
         self.worker_lock = threading.Lock()
 
+    def _classify_text(self, raw_text):
+        import re
+        # Credentials/PII patterns
+        if re.search(r'(?i)(password|credential|api[_\s]?key|secret|access[_\s]?token|bearer[_\s]?token|sk-[a-z0-9_-]+|re_[a-z0-9_-]+|eyJ|BEGIN\s+PRIVATE\s+KEY|[0-9]{3}-[0-9]{2}-[0-9]{4}|\b\d{3}[-.\s]?\d{3}[-.\s]?\d{4}\b|[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,})', raw_text):
+            return 'sensitive_private'
+        # Prohibited/injection patterns
+        if re.search(r'(?i)(ignore|disregard|override).{0,100}(instructions|prompt)|(you are now)|(run|execute).{0,100}(code|script|command)|(reveal|exfiltrate).{0,100}(secret|password|system prompt)|(system|developer).{0,100}(prompt|message|instructions)', raw_text):
+            return 'ignore'
+        # Greeting pattern
+        if re.match(r'^\s*(hi|hello|thanks|thank\s?you)\s*[!?.]*\s*$', raw_text, re.IGNORECASE):
+            return 'ignore'
+        # FAQ match
+        if self._curated_ids(raw_text):
+            return 'faq_candidate'
+        return 'needs_answer'
+
     def _auth(self, sid, token, now=None):
         if getattr(self.config, 'chat_enabled', False):
             return self.chats.auth(sid, token, now)
@@ -106,11 +122,77 @@ class ChatService:
             kind, text = screen_message(body)
             if kind == 'invalid' or (kind != 'blocked' and not text):
                 return {'error': 'Invalid message'}, 400
+            raw_text = body['message']
+            auth = self._auth(sid, token, now)
+            if auth is None:
+                return {'error': 'Unauthorized'}, 401
+            # Check ignore
+            normalized = self.chats._normalize(raw_text)
+            if self.chats.is_ignored(normalized):
+                try:
+                    self.chats.capture_entry(sid, 'visitor', raw_text, 'ignore', 'ignored', now=now)
+                    self.chats.capture_entry(sid, 'assistant', NEUTRAL, 'ignore', 'ignored', now=now)
+                except Exception:
+                    pass
+                session_status = 'active' if auth.get('status', 'active') not in ('ending','ended') else 'ended'
+                return {
+                    'status': 'ignored',
+                    'answer': NEUTRAL,
+                    'sources': [],
+                    'faq_ids': [],
+                    'session_status': session_status,
+                }, 200
+            # Classify
+            if kind == 'blocked':
+                classification = self._classify_text(raw_text)
+                if classification != 'sensitive_private':
+                    classification = 'ignore'
+            else:
+                classification = self._classify_text(raw_text)
+            visitor_entry_id = None
+            try:
+                visitor_entry_id = self.chats.capture_entry(sid, 'visitor', raw_text, classification, 'pending', now=now)
+            except Exception:
+                pass
+            response, status_code = self._message(sid, token, body, client, now)
+            if status_code == 200:
+                outcome = response.get('status', 'unknown')
+                answer = response.get('answer', '')
+            elif status_code == 429:
+                outcome = 'rate_blocked'
+                answer = ''
+            elif status_code == 503:
+                outcome = 'provider_failed'
+                answer = ''
+            else:
+                outcome = 'error'
+                answer = ''
+            if visitor_entry_id is not None:
+                try:
+                    self.chats.set_entry_outcome(visitor_entry_id, outcome)
+                    if answer:
+                        self.chats.capture_entry(sid, 'assistant', answer, classification, outcome, now=now)
+                except Exception:
+                    pass
+            return response, status_code
+        except Exception:
+            return {'error': 'Chat temporarily unavailable'}, 503
+
+    def _message(self, sid, token, body, client, now=None):
+        try:
+            if not getattr(self.config, 'chat_enabled', False):
+                return {'error': 'Chat unavailable'}, 404
+            kind, text = screen_message(body)
+            if kind == 'invalid' or (kind != 'blocked' and not text):
+                return {'error': 'Invalid message'}, 400
             auth = self._auth(sid, token, now)
             if auth is None:
                 return {'error': 'Unauthorized'}, 401
             auth_status = auth.get('status', 'active')
             session_status = 'ended' if auth_status in ('ending','ended') else 'active'
+            allowed, retry = self.chats.rate(client, 'message', now)
+            if not allowed:
+                return {'error': 'Rate limit exceeded', 'retry_after': retry}, 429
             greeting_re = re.compile(r'^\s*(hi|hello|thanks|thank\s?you)\s*[!?.]*\s*$', re.IGNORECASE)
             if kind == 'blocked' or greeting_re.match(text):
                 return {
@@ -121,9 +203,6 @@ class ChatService:
                     'session_status': session_status,
                 }, 200
             self.chats.finalize_due(self.mail.make_payload, now)
-            allowed, retry = self.chats.rate(client, 'message', now)
-            if not allowed:
-                return {'error': 'Rate limit exceeded', 'retry_after': retry}, 429
             op, reason = self.chats.begin_message(sid, text, now)
             if not op:
                 if reason in ('missing', 'expired'):
@@ -307,6 +386,9 @@ class ChatService:
             return ({'ok': True, 'status': 'ended'}, 200)
         except Exception:
             return ({'error': 'Chat temporarily unavailable'}, 503)
+
+    def update_entry(self, entry_id, classification, revision, actor, now=None):
+        return self.chats.update_entry(entry_id, classification, revision, actor, now)
 
     def private_list(self):
         try:
