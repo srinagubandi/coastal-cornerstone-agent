@@ -7,6 +7,7 @@
   <button id="overview-tab" role="tab" aria-controls="overview-panel" aria-selected="true" tabindex="0" type="button">Overview</button>
 		  <button id="chats-tab" role="tab" aria-controls="chats-panel" aria-selected="false" tabindex="-1" type="button">Chats</button>
 		  <button id="faq-tab" role="tab" aria-controls="faq-panel" aria-selected="false" tabindex="-1" type="button">FAQ Review</button>
+		  <button id="admin-tab" role="tab" aria-controls="admin-panel" aria-selected="false" tabindex="-1" type="button">Admin</button>
 	  <button id="notifications-tab" role="tab" aria-controls="notifications-panel" aria-selected="false" tabindex="-1" type="button">Notifications</button>
 </div>
 <section id="overview-panel" role="tabpanel" aria-labelledby="overview-tab" tabindex="0">
@@ -26,6 +27,12 @@
   <p id="faq-status" class="notice" role="status" aria-live="polite">Open FAQ Review to load private drafts.</p>
   <section class="panel"><div class="sectionhead"><h2>Approval queue</h2><span id="faq-count" class="badge">Not loaded</span></div><div class="filters"><label for="faq-search">Search questions<input id="faq-search" type="search" placeholder="Search question, category, or status"></label></div><div class="cc-chat-table-wrap" tabindex="0" role="region" aria-label="FAQ approval queue"><table class="cc-chat-table"><caption class="sr-only">Private FAQ draft approval queue</caption><thead><tr><th scope="col">Question</th><th scope="col">Status</th><th scope="col">Answer</th><th scope="col">Source</th><th scope="col">Updated</th></tr></thead><tbody id="faq-list"><tr><td colspan="5" class="cc-chat-empty">No drafts loaded.</td></tr></tbody></table></div></section>
   <article id="faq-detail" class="panel" hidden><div class="sectionhead"><h2 id="faq-detail-title">FAQ draft</h2><button id="faq-detail-close" class="ghost" type="button">Back to queue</button></div><div id="faq-detail-body"></div></article>
+</section>
+
+<section id="admin-panel" role="tabpanel" aria-labelledby="admin-tab" tabindex="0" hidden>
+  <div class="pagehead"><div><p class="eyebrow">PRIVATE ADMINISTRATION</p><h1>Admin</h1><p class="muted">Manage the approved team boundary and review changes without exposing credentials.</p></div></div>
+  <section class="panel"><div class="sectionhead"><h2>Administrators</h2><span class="badge">2 full Admins</span></div><div class="cc-admin-users"><article class="reviewitem"><strong>Sri</strong><p class="muted">Full Admin · dashboard owner · notification and publication controls</p></article><article class="reviewitem"><strong>Ben</strong><p class="muted">Full Admin · company team · notification and publication controls</p></article></div><p class="muted">Password values are never displayed here. Additional self-service user creation and password reset remain deferred.</p></section>
+  <section class="panel"><div class="sectionhead"><h2>Recent review audit</h2><button id="admin-audit-refresh" class="ghost" type="button">Refresh audit</button></div><p id="admin-status" class="notice" role="status" aria-live="polite">Open Admin to load audit history.</p><div class="cc-chat-table-wrap"><table class="cc-chat-table"><caption class="sr-only">Recent FAQ review audit events</caption><thead><tr><th scope="col">Time</th><th scope="col">Action</th><th scope="col">Actor</th><th scope="col">Record</th></tr></thead><tbody id="admin-audit-list"><tr><td colspan="4" class="cc-chat-empty">No audit events loaded.</td></tr></tbody></table></div></section>
 </section>
 
 <section id="notifications-panel" role="tabpanel" aria-labelledby="notifications-tab" tabindex="0" hidden>

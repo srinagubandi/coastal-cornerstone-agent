@@ -18,6 +18,11 @@ const ui = {
   faqDetailTitle: document.getElementById('faq-detail-title'),
   faqDetailBody: document.getElementById('faq-detail-body'),
   faqDetailClose: document.getElementById('faq-detail-close'),
+  adminTab: document.getElementById('admin-tab'),
+  adminPanel: document.getElementById('admin-panel'),
+  adminStatus: document.getElementById('admin-status'),
+  adminAuditList: document.getElementById('admin-audit-list'),
+  adminAuditRefresh: document.getElementById('admin-audit-refresh'),
   notificationsPanel: document.getElementById('notifications-panel'),
   search: document.getElementById('chat-search'),
   list: document.getElementById('chat-list'),
@@ -36,6 +41,7 @@ const state = {
   listLoaded: false,
   faqLoaded: false,
   faqItems: [],
+  adminLoaded: false,
   listEpoch: 0,
   detailEpoch: 0
 };
@@ -373,27 +379,54 @@ async function selectFaq(value) {
   }
 }
 
+function renderAdminAudit(items) {
+  const rows = (Array.isArray(items) ? items : []).slice(0, 100).map(item => {
+    const row = make('tr');
+    row.append(make('td', stamp(item.created || item.updated)), make('td', human(item.action || item.event || 'Review change')), make('td', item.actor || 'Admin'), make('td', item.draft_id || item.entry_id || '—'));
+    return row;
+  });
+  if (!rows.length) { const row = make('tr'); const cell = make('td', 'No review audit events recorded.', 'cc-chat-empty'); cell.colSpan = 4; row.appendChild(cell); rows.push(row); }
+  ui.adminAuditList.replaceChildren(...rows);
+}
+
+async function loadAdmin(force = false) {
+  if (!force && state.adminLoaded) return;
+  ui.adminStatus.textContent = 'Loading private audit history…';
+  try {
+    const data = await getPrivate('/private/api/dashboard/faq-review/audit');
+    renderAdminAudit(Array.isArray(data) ? data : data.items || data.audit || []);
+    state.adminLoaded = true;
+    ui.adminStatus.textContent = 'Audit history is private and shows review changes only.';
+  } catch (error) {
+    ui.adminStatus.textContent = error.message;
+  }
+}
+
 function setTab(tab, focus = false) {
-  const chats = tab === 'chats', faq = tab === 'faq', notifications = tab === 'notifications';
-  ui.overviewTab.setAttribute('aria-selected', String(!chats && !faq && !notifications));
+  const chats = tab === 'chats', faq = tab === 'faq', admin = tab === 'admin', notifications = tab === 'notifications';
+  ui.overviewTab.setAttribute('aria-selected', String(!chats && !faq && !admin && !notifications));
   ui.chatsTab.setAttribute('aria-selected', String(chats));
   ui.faqTab.setAttribute('aria-selected', String(faq));
+  ui.adminTab.setAttribute('aria-selected', String(admin));
   ui.notificationsTab.setAttribute('aria-selected', String(notifications));
-  ui.overviewTab.tabIndex = !chats && !faq && !notifications ? 0 : -1;
+  ui.overviewTab.tabIndex = !chats && !faq && !admin && !notifications ? 0 : -1;
   ui.chatsTab.tabIndex = chats ? 0 : -1;
   ui.faqTab.tabIndex = faq ? 0 : -1;
+  ui.adminTab.tabIndex = admin ? 0 : -1;
   ui.notificationsTab.tabIndex = notifications ? 0 : -1;
-  ui.overviewPanel.hidden = chats || faq || notifications;
+  ui.overviewPanel.hidden = chats || faq || admin || notifications;
   ui.chatsPanel.hidden = !chats;
   ui.faqPanel.hidden = !faq;
+  ui.adminPanel.hidden = !admin;
   ui.notificationsPanel.hidden = !notifications;
   if (focus) {
-    (notifications ? ui.notificationsTab : faq ? ui.faqTab : chats ? ui.chatsTab : ui.overviewTab).focus();
+    (notifications ? ui.notificationsTab : admin ? ui.adminTab : faq ? ui.faqTab : chats ? ui.chatsTab : ui.overviewTab).focus();
   }
   if (chats && !state.listLoaded && ui.list.getAttribute('aria-busy') !== 'true') {
     loadList();
   }
   if (faq) loadFaq();
+  if (admin) loadAdmin();
 }
 
 async function loadList(force = false) {
@@ -488,7 +521,7 @@ ui.list.addEventListener('click',e=>{
 });
 
 function onTabKey(e,tab){
-  const tabs=['overview','chats','faq','notifications'], index=tabs.indexOf(tab);
+  const tabs=['overview','chats','faq','admin','notifications'], index=tabs.indexOf(tab);
   switch(e.key){
     case'ArrowRight':setTab(tabs[(index+1)%tabs.length],true);e.preventDefault();break;
     case'ArrowLeft':setTab(tabs[(index+tabs.length-1)%tabs.length],true);e.preventDefault();break;
@@ -500,15 +533,18 @@ function onTabKey(e,tab){
 ui.overviewTab.addEventListener('keydown',e=>onTabKey(e,'overview'));
 ui.chatsTab.addEventListener('keydown',e=>onTabKey(e,'chats'));
 ui.faqTab.addEventListener('keydown',e=>onTabKey(e,'faq'));
+ui.adminTab.addEventListener('keydown',e=>onTabKey(e,'admin'));
 ui.notificationsTab.addEventListener('keydown',e=>onTabKey(e,'notifications'));
 ui.overviewTab.addEventListener('click',()=>setTab('overview',true));
 ui.chatsTab.addEventListener('click',()=>setTab('chats',true));
 ui.faqTab.addEventListener('click',()=>setTab('faq',true));
+ui.adminTab.addEventListener('click',()=>setTab('admin',true));
 ui.notificationsTab.addEventListener('click',()=>setTab('notifications',true));
 ui.faqRefresh.addEventListener('click',()=>loadFaq(true));
 ui.faqSearch.addEventListener('input',renderFaqList);
 ui.faqList.addEventListener('click',e=>{if(!(e.target instanceof Element))return;const btn=e.target.closest('button[data-faq-id]');if(btn)selectFaq(btn.dataset.faqId);});
 ui.faqDetailClose.addEventListener('click',()=>{ui.faqDetail.hidden=true;ui.faqSearch.focus();});
+ui.adminAuditRefresh.addEventListener('click',()=>loadAdmin(true));
 
 window.addEventListener('hashchange',followHash);
 
