@@ -171,37 +171,35 @@ function renderList() {
 
     if (query && !searchable.includes(query)) continue;
 
-    const btn = make('button', '', 'cc-chat-select');
+    const btn = make('button', previewText, 'cc-chat-row-link');
     btn.type = 'button';
     btn.dataset.chatId = id;
     btn.setAttribute('aria-controls', 'chat-detail');
     btn.setAttribute('aria-current', String(id === state.selected));
 
-    const statusSpan = make('span', human(chat.status), 'cc-chat-row');
-    const createdSpan = make('span', stamp(chat.created), 'cc-chat-row');
-    const previewSpan = make('span', previewText, 'cc-chat-preview');
-    const countSpan = make('span', `Messages: ${Math.max(0, chat.message_count || 0)}`, 'cc-chat-meta');
-    const contactSpan = make('span', contactPhrase, 'cc-chat-meta');
-    const seenSpan = make('span', `Last activity: ${stamp(chat.last_seen)}`, 'cc-chat-meta');
-
-    const badgeNodes = [];
-    for (const [label, text] of emailPairs(chat.email_states)) {
-      const badge = make('span', `${label}: ${text}`, 'cc-chat-badge');
-      badgeNodes.push(badge);
-    }
-
-    btn.append(statusSpan, createdSpan, previewSpan, countSpan, contactSpan, seenSpan, ...badgeNodes);
-
-    const li = make('li', '', 'cc-chat-item');
-    li.appendChild(btn);
-    nodes.push(li);
+    const questionCell = make('td');
+    questionCell.appendChild(btn);
+    const notificationText = emailPairs(chat.email_states).map(([label, text]) => `${label}: ${text}`).join(' · ');
+    const row = make('tr');
+    row.append(
+      make('td', stamp(chat.created)),
+      questionCell,
+      make('td', human(chat.status)),
+      make('td', String(Math.max(0, chat.message_count || 0))),
+      make('td', contactPhrase),
+      make('td', notificationText)
+    );
+    nodes.push(row);
 
     if (id === focusedButtonId) foundFocus = true;
   }
 
   if (nodes.length === 0) {
-    const emptyLi = make('li', query ? 'No chats match your search.' : 'No retained chats yet.', 'cc-chat-empty');
-    nodes.push(emptyLi);
+    const emptyRow = make('tr');
+    const emptyCell = make('td', query ? 'No chats match your search.' : 'No retained chats yet.', 'cc-chat-empty');
+    emptyCell.colSpan = 6;
+    emptyRow.appendChild(emptyCell);
+    nodes.push(emptyRow);
   }
 
   ui.list.replaceChildren(...nodes);

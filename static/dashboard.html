@@ -44,12 +44,16 @@
     <ol id="faq-review-list" class="reviewlist"><li class="cc-chat-empty">Open Chats to load the review queue.</li></ol>
   </section>
   <div class="cc-chat-layout">
-    <aside class="cc-chat-sidebar">
-      <h3>Conversations</h3>
-      <ul id="chat-list" class="cc-chat-list" aria-label="Conversation list">
-        <li class="cc-chat-empty">No conversations loaded.</li>
-      </ul>
-    </aside>
+    <section class="cc-chat-queue" aria-labelledby="chat-queue-title">
+      <div class="sectionhead"><h3 id="chat-queue-title">Conversation queue</h3><span class="badge">Click a question to open</span></div>
+      <div class="cc-chat-table-wrap" tabindex="0" role="region" aria-label="Conversation queue table">
+        <table class="cc-chat-table">
+          <caption class="sr-only">Retained chatbot conversations</caption>
+          <thead><tr><th scope="col">UTC time</th><th scope="col">Question</th><th scope="col">Status</th><th scope="col">Messages</th><th scope="col">Contact</th><th scope="col">Notifications</th></tr></thead>
+          <tbody id="chat-list"><tr><td colspan="6" class="cc-chat-empty">No conversations loaded.</td></tr></tbody>
+        </table>
+      </div>
+    </section>
     <article id="chat-detail" class="cc-chat-detail" aria-labelledby="chat-detail-title" tabindex="0">
       <h3 id="chat-detail-title">Conversation</h3>
       <p class="cc-chat-empty">Select a chat to view its saved messages and contact details.</p>
