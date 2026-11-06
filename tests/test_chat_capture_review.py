@@ -8,7 +8,7 @@ from unittest.mock import patch
 
 from chat_service import ChatService
 from chat_store import ChatStore, ReviewConflict
-from chat_safety import NEUTRAL
+from chat_safety import NEUTRAL, PROHIBITED_DECLINE
 from config import Config
 from store import Store
 
@@ -96,6 +96,7 @@ class TestChatCaptureReview(unittest.TestCase):
         resp, code = self._send('pornography is bad')
         self.assertEqual(code, 200)
         self.assertEqual(resp['status'], 'ignored')
+        self.assertEqual(resp['answer'], PROHIBITED_DECLINE)
         # Check entry captured
         detail = self.chat_store.private_detail(self.sid)
         self.assertIn('entries', detail)
@@ -108,11 +109,18 @@ class TestChatCaptureReview(unittest.TestCase):
         self.assertEqual(visitor['outcome'], 'ignored')
         assistant = entries[1]
         self.assertEqual(assistant['role'], 'assistant')
-        self.assertEqual(assistant['text'], NEUTRAL)
+        self.assertEqual(assistant['text'], PROHIBITED_DECLINE)
         # Public snapshot must not contain entries
         snap = self.chat_store.snapshot(self.sid)
         self.assertNotIn('entries', snap)
         self.assertNotIn('pornography', json.dumps(snap))
+
+    def test_repeated_blocked_phrase_keeps_specific_decline(self):
+        first, first_code = self._send('pornography is bad')
+        second, second_code = self._send('pornography is bad')
+        self.assertEqual((first_code, second_code), (200, 200))
+        self.assertEqual(first['answer'], PROHIBITED_DECLINE)
+        self.assertEqual(second['answer'], PROHIBITED_DECLINE)
 
     def test_greeting_captured(self):
         resp, code = self._send('Hello')

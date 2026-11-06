@@ -140,7 +140,7 @@ class ChatService:
                 return {'error': "Your chat session has expired or is no longer available. Please start a new chat or contact us directly by calling (727) 771-5672, emailing ben@cccbuild.com, or using the public contact form."}, 401
             # Check ignore
             normalized = self.chats._normalize(raw_text)
-            if self.chats.is_ignored(normalized):
+            if kind != 'blocked' and self.chats.is_ignored(normalized):
                 try:
                     self.chats.capture_entry(sid, 'visitor', raw_text, 'ignore', 'ignored', now=now)
                     self.chats.capture_entry(sid, 'assistant', NEUTRAL, 'ignore', 'ignored', now=now)
@@ -209,7 +209,7 @@ class ChatService:
             if kind == 'blocked' or greeting_re.match(text):
                 return {
                     'status': 'ignored',
-                    'answer': self._blocked_answer(text) if kind == 'blocked' else 'Hi! How can we help you with Coastal Cornerstone Construction today?',
+                    'answer': self._blocked_answer(body['message']) if kind == 'blocked' else 'Hi! How can we help you with Coastal Cornerstone Construction today?',
                     'sources': [],
                     'faq_ids': [],
                     'session_status': session_status,
