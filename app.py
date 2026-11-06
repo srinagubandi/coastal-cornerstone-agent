@@ -19,6 +19,7 @@ import faq_pages
 import os
 import admin_faq_http
 from faq_review import FAQReview
+from notifications import NotificationService
 import re
 
 FAQ_ID_RE = re.compile(r'^faq-[0-9]{3}$', re.ASCII)
@@ -73,7 +74,8 @@ class Service:
         self.store = Store(self.config.data_dir)
         self.agent = Agent(self.config, self.store, transport)
         self.digest = Digest(self.config, self.store, transport)
-        self.dashboard = Dashboard(self.config, self.store, self.agent, self.digest)
+        self.notifications = NotificationService(self.config, self.store, transport)
+        self.dashboard = Dashboard(self.config, self.store, self.agent, self.digest, self.notifications)
         self.chat = ChatService(self.config, self.store, self.agent, transport)
         self.faq_review = FAQReview(self.store, list(self.agent.public_faq()['faqs']))
         # Seed import
@@ -487,6 +489,14 @@ class Handler(BaseHTTPRequestHandler):
                 return self.respond(401, {"error": "Authentication required"})
             if path == "/private/api/dashboard/session":
                 return self.respond(200, {"email": ADMIN_EMAIL if session["role"] == "admin" else RECIPIENT, "role": session["role"], "csrf": session["csrf"], "expires": session["expires"]})
+            if path == "/private/api/dashboard/notifications/settings":
+                if split.query:
+                    return self.respond(400, {'error': 'Query parameters not allowed'})
+                return self.respond(200, {'settings': s.dashboard.notification_settings(), 'test_recipient': ADMIN_EMAIL})
+            if path == "/private/api/dashboard/notifications/deliveries":
+                if split.query:
+                    return self.respond(400, {'error': 'Query parameters not allowed'})
+                return self.respond(200, {'deliveries': s.dashboard.notification_deliveries()})
             if path == '/private/api/dashboard/chats':
                 if split.query:
                     return self.respond(400, {'error': 'Query parameters not allowed'})
@@ -568,7 +578,7 @@ class Handler(BaseHTTPRequestHandler):
         s = self.service
         if is_chat_path(path):
             return serve_chat(self, path, client, 'POST')
-        if path not in {"/ask", "/mcp", "/private/api/dashboard/login", "/private/api/dashboard/logout"} and not (path.startswith('/private/api/dashboard/chats/') and path.endswith('/review')):
+        if path not in {"/ask", "/mcp", "/private/api/dashboard/login", "/private/api/dashboard/logout", "/private/api/dashboard/notifications/update", "/private/api/dashboard/notifications/test"} and not (path.startswith('/private/api/dashboard/chats/') and path.endswith('/review')):
             return self.respond(404, {"error": "Not found"})
         if path.startswith("/private/"):
             if not s.dashboard.enabled:
@@ -598,6 +608,20 @@ class Handler(BaseHTTPRequestHandler):
             return admin_faq_http.handle_post(self, rem, body, session, client)
         if path.startswith('/private/api/dashboard/chats/') and path.endswith('/review'):
             return self.respond(410, {'error': 'This endpoint has been removed. Please use the new FAQ review system.'})
+        if path == '/private/api/dashboard/notifications/update':
+            if session['role'] != 'admin' or not isinstance(body, dict) or set(body) != {'trigger', 'enabled', 'recipients'}:
+                return self.respond(403, {'error': 'Administrator access required'})
+            try:
+                return self.respond(200, {'settings': s.dashboard.update_notification(body['trigger'], body['enabled'], body['recipients'], session['role'])})
+            except (ValueError, TypeError):
+                return self.respond(400, {'error': 'Invalid notification setting'})
+        if path == '/private/api/dashboard/notifications/test':
+            if session['role'] != 'admin' or body != {}:
+                return self.respond(403, {'error': 'Administrator access required'})
+            result = s.dashboard.send_notification_test(session.get('token', self.cookie('ccc_session') or ''), session['role'])
+            if result.get('status') == 'rate_limited':
+                return self.respond(429, {'error': 'Test email rate limit reached'})
+            return self.respond(200, result)
         if path == "/ask":
             try:
                 value, status = s.agent.ask(body, client, "API")

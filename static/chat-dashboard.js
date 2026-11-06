@@ -4,8 +4,10 @@
 const ui = {
   overviewTab: document.getElementById('overview-tab'),
   chatsTab: document.getElementById('chats-tab'),
+  notificationsTab: document.getElementById('notifications-tab'),
   overviewPanel: document.getElementById('overview-panel'),
   chatsPanel: document.getElementById('chats-panel'),
+  notificationsPanel: document.getElementById('notifications-panel'),
   search: document.getElementById('chat-search'),
   list: document.getElementById('chat-list'),
   detail: document.getElementById('chat-detail'),
@@ -285,15 +287,19 @@ function reviewSection(review,id){
   const status=make('p',review?.updated?'Last updated '+stamp(review.updated)+' by '+(review.updated_by||'admin'):'Not yet reviewed','muted');section.append(nav,h4,label,answerLabel,noteLabel,save,status);return section;
 }
 function renderDetail(data){const h3=make('h3','Conversation '+validId(data.id),'chat-detail-title');h3.id='chat-detail-title';const summary=make('p','Status: '+human(data.status)+' · Created: '+stamp(data.created)+' · Last activity: '+stamp(data.last_seen)),notifications=make('section','','notifications'),h4=make('h4','Notification delivery'),dl=make('dl','','cc-chat-email'),pairs=emailPairs(data.email_states);for(const[kind,state]of pairs){const dt=make('dt',kind),dd=make('dd',state);dl.append(dt,dd)}notifications.append(h4,dl);const contact=contactSection(data.contact),messages=messageSection(data.messages),review=reviewSection(data.review,data.id);ui.detail.replaceChildren(h3,summary,review,contact,notifications,messages)}
-function setTab(chats, focus = false) {
-  ui.overviewTab.setAttribute('aria-selected', String(!chats));
+function setTab(tab, focus = false) {
+  const chats = tab === 'chats', notifications = tab === 'notifications';
+  ui.overviewTab.setAttribute('aria-selected', String(!chats && !notifications));
   ui.chatsTab.setAttribute('aria-selected', String(chats));
-  ui.overviewTab.tabIndex = chats ? -1 : 0;
+  ui.notificationsTab.setAttribute('aria-selected', String(notifications));
+  ui.overviewTab.tabIndex = !chats && !notifications ? 0 : -1;
   ui.chatsTab.tabIndex = chats ? 0 : -1;
-  ui.overviewPanel.hidden = chats;
+  ui.notificationsTab.tabIndex = notifications ? 0 : -1;
+  ui.overviewPanel.hidden = chats || notifications;
   ui.chatsPanel.hidden = !chats;
+  ui.notificationsPanel.hidden = !notifications;
   if (focus) {
-    (chats ? ui.chatsTab : ui.overviewTab).focus();
+    (notifications ? ui.notificationsTab : chats ? ui.chatsTab : ui.overviewTab).focus();
   }
   if (chats && !state.listLoaded && ui.list.getAttribute('aria-busy') !== 'true') {
     loadList();
@@ -329,7 +335,7 @@ async function selectChat(value, updateHash = true) {
   const id = validId(value);
   if (!id) return;
   state.selected = id;
-  setTab(true);
+  setTab('chats');
   markSelection();
   if (updateHash) history.replaceState(null, '', location.pathname + location.search + '#chat=' + id);
   const epoch = ++state.detailEpoch;
@@ -377,7 +383,7 @@ function followHash(){
     ui.detail.setAttribute('aria-busy','false');
     detailPlaceholder('No conversation selected');
     markSelection();
-    setTab(false);
+    setTab('overview');
   }
 }
 
@@ -391,22 +397,25 @@ ui.list.addEventListener('click',e=>{
   }
 });
 
-function onTabKey(e,isChats){
+function onTabKey(e,tab){
+  const tabs=['overview','chats','notifications'], index=tabs.indexOf(tab);
   switch(e.key){
-    case'ArrowRight':setTab(!isChats,true);e.preventDefault();break;
-    case'ArrowLeft':setTab(!isChats,true);e.preventDefault();break;
-    case'Home':setTab(false,true);e.preventDefault();break;
-    case'End':setTab(true,true);e.preventDefault();break;
+    case'ArrowRight':setTab(tabs[(index+1)%tabs.length],true);e.preventDefault();break;
+    case'ArrowLeft':setTab(tabs[(index+tabs.length-1)%tabs.length],true);e.preventDefault();break;
+    case'Home':setTab('overview',true);e.preventDefault();break;
+    case'End':setTab('notifications',true);e.preventDefault();break;
   }
 }
 
-ui.overviewTab.addEventListener('keydown',e=>onTabKey(e,false));
-ui.chatsTab.addEventListener('keydown',e=>onTabKey(e,true));
-ui.overviewTab.addEventListener('click',()=>setTab(false,true));
-ui.chatsTab.addEventListener('click',()=>setTab(true,true));
+ui.overviewTab.addEventListener('keydown',e=>onTabKey(e,'overview'));
+ui.chatsTab.addEventListener('keydown',e=>onTabKey(e,'chats'));
+ui.notificationsTab.addEventListener('keydown',e=>onTabKey(e,'notifications'));
+ui.overviewTab.addEventListener('click',()=>setTab('overview',true));
+ui.chatsTab.addEventListener('click',()=>setTab('chats',true));
+ui.notificationsTab.addEventListener('click',()=>setTab('notifications',true));
 
 window.addEventListener('hashchange',followHash);
 
 if(hashId())followHash();
-else setTab(false);
+else setTab('overview');
 })();

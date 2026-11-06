@@ -5,7 +5,8 @@
 <body><a class="skip" href="#main">Skip to dashboard</a><header class="topbar"><a class="brand" href="/dashboard">Coastal <span>Cornerstone</span><small>PRIVATE QUESTION INTELLIGENCE</small></a><nav aria-label="Account"><span class="account">Sri · Administrator</span><button id="logout" class="ghost">Sign out</button></nav></header>
 <main id="main" class="workspace"><div class="cc-dashboard-tabs" role="tablist" aria-label="Dashboard sections">
   <button id="overview-tab" role="tab" aria-controls="overview-panel" aria-selected="true" tabindex="0" type="button">Overview</button>
-  <button id="chats-tab" role="tab" aria-controls="chats-panel" aria-selected="false" tabindex="-1" type="button">Chats</button>
+	  <button id="chats-tab" role="tab" aria-controls="chats-panel" aria-selected="false" tabindex="-1" type="button">Chats</button>
+	  <button id="notifications-tab" role="tab" aria-controls="notifications-panel" aria-selected="false" tabindex="-1" type="button">Notifications</button>
 </div>
 <section id="overview-panel" role="tabpanel" aria-labelledby="overview-tab" tabindex="0">
 <div class="pagehead"><div><p class="eyebrow">REAL QUESTIONS. HUMAN OVERSIGHT.</p><h1>Question intelligence</h1><p class="muted">Public information service · API &amp; MCP channels</p></div><div class="actions"><label for="days">Reporting window</label><select id="days"><option value="7">Last 7 days</option><option value="30">Last 30 days</option></select><button id="exportcsv" class="ghost">Export CSV</button><button id="exportjson" class="ghost">Export JSON</button></div></div>
@@ -17,6 +18,12 @@
 <section class="panel"><div class="sectionhead"><h2>Unknown question review</h2><span class="badge">Never auto-approved</span></div><div class="tabs" role="group" aria-label="Review queue filter"><button data-state="all" aria-pressed="true">All retained</button><button data-state="pending" aria-pressed="false">Pending</button><button data-state="digest_pending" aria-pressed="false">Digest reserved</button><button data-state="sent" aria-pressed="false">Digest sent</button></div><div id="unknowns" class="reviewlist"></div><p class="muted">Review source evidence and edit the approved FAQ file through the operator workflow. This dashboard does not approve facts or trigger emails.</p></section>
 <div class="twocol"><section class="panel"><h2>Cited source usage</h2><div id="sources" class="sourcelist"></div></section><section class="panel"><h2>Optional source review draft</h2><div id="report"></div></section></div>
 <footer class="privatefooter"><h2>What these logs mean</h2><p id="privacy"></p><p id="retention"></p><p>There is no synthetic traffic or historical demo activity. An empty dashboard means no retained questions have arrived. A channel label is not a verified AI identity.</p></footer>
+</section>
+
+<section id="notifications-panel" role="tabpanel" aria-labelledby="notifications-tab" tabindex="0" hidden>
+  <div class="pagehead"><div><p class="eyebrow">PRIVATE EMAIL CONTROLS</p><h1>Notifications</h1><p class="muted">Choose which dashboard events may send email. Contact-form notifications stay enabled for business continuity.</p></div></div>
+  <section class="panel"><div class="sectionhead"><h2>Triggers and recipients</h2><span class="badge">Resend</span></div><p id="notification-status" class="notice" role="status" aria-live="polite">Loading notification settings…</p><div id="notification-settings" class="reviewlist"></div><button id="notification-test" class="primary" type="button">Send test email to sri@srinagubandi.com</button></section>
+  <section class="panel"><div class="sectionhead"><h2>Recent delivery status</h2><button id="notification-refresh" class="ghost" type="button">Refresh</button></div><div class="tablewrap"><table><caption class="sr-only">Recent notification deliveries</caption><thead><tr><th>Time</th><th>Trigger</th><th>Recipients</th><th>Status</th></tr></thead><tbody id="notification-deliveries"></tbody></table></div></section>
 </section>
 
 <section id="chats-panel" role="tabpanel" aria-labelledby="chats-tab" tabindex="0" hidden>

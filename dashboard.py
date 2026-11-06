@@ -65,8 +65,8 @@ def verify_password(password, encoded):
 
 
 class Dashboard:
-    def __init__(self, config, store, agent, digest):
-        self.config, self.store, self.agent, self.digest = config, store, agent, digest
+    def __init__(self, config, store, agent, digest, notifications=None):
+        self.config, self.store, self.agent, self.digest, self.notifications = config, store, agent, digest, notifications
         self.hash_slots = threading.BoundedSemaphore(2)
 
     @property
@@ -173,3 +173,19 @@ class Dashboard:
         for row in summary["events"]:
             writer.writerow([csv_safe(json.dumps(row[k]) if isinstance(row[k], list) else row[k] if row[k] is not None else "") for k in columns])
         return stream.getvalue().encode("utf-8")
+
+    def notification_settings(self):
+        return self.notifications.settings() if self.notifications else []
+
+    def notification_deliveries(self):
+        return self.notifications.deliveries() if self.notifications else []
+
+    def update_notification(self, trigger, enabled, recipients, role):
+        if role != 'admin':
+            raise PermissionError('Administrator access required')
+        return self.notifications.update_setting(trigger, enabled, recipients)
+
+    def send_notification_test(self, session_key, role):
+        if role != 'admin':
+            raise PermissionError('Administrator access required')
+        return self.notifications.send_test(session_key)

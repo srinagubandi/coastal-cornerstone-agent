@@ -6,6 +6,7 @@ from unittest.mock import MagicMock, patch
 
 from agent import FALLBACK, GENERAL_GUIDANCE, GUIDANCE_LABEL, MODEL, MODEL_URL
 from chat_service import ChatService
+from chat_safety import PROHIBITED_DECLINE
 from test_agent import FixtureTest
 from test_claude_scope_regressions import ALIAS_FAQ, PUBLIC_SNAPSHOT
 from test_generative_conversation import PlanTransport, plan
@@ -74,6 +75,7 @@ class FinalReleaseNeutralScopeTests(FixtureTest):
         service = ChatService.__new__(ChatService)
         service.agent = agent or self.agent_obj
         service.chats = MagicMock()
+        service.chats.rate.return_value = (True, 0)
         service.chats.complete_message.return_value = True
         service.chats.snapshot.return_value = {"status": "open"}
         service.chats.finalize_due.return_value = None
@@ -261,7 +263,7 @@ class FinalReleaseNeutralScopeTests(FixtureTest):
 
                     self.assertEqual(status, 200)
                     self.assertEqual(result['status'], 'needs_review')
-                    self.assertEqual(result['answer'], NEUTRAL)
+                    self.assertIn('race, sex, religion, or political opinions', result['answer'])
                     self.assertFalse(result['review_queued'])
                     self.assertEqual(result['sources'], [])
                     self.assertNotIn('Ben', result['answer'])
@@ -283,7 +285,7 @@ class FinalReleaseNeutralScopeTests(FixtureTest):
                         reply,
                         {
                             'status': 'ignored',
-                            'answer': NEUTRAL,
+                            'answer': PROHIBITED_DECLINE,
                             'sources': [],
                             'faq_ids': [],
                             'session_status': 'active',

@@ -64,9 +64,16 @@ class ChatMail:
 
         body = "\n".join(lines)[:105000]
 
+        recipients = [RECIPIENT]
+        try:
+            setting = next((x for x in self.store.get_notification_settings() if x['trigger'] == 'contact_form'), None)
+            if setting and setting['enabled'] and setting['recipients']:
+                recipients = setting['recipients']
+        except Exception:
+            pass
         return {
             'from': SENDER,
-            'to': [RECIPIENT],
+            'to': recipients,
             'subject': subject,
             'text': body
         }
@@ -87,8 +94,8 @@ class ChatMail:
         if (not isinstance(payload.get('from'), str) or
             payload.get('from') != SENDER or
             not isinstance(payload.get('to'), list) or
-            len(payload['to']) != 1 or
-            payload['to'][0] != RECIPIENT or
+            not payload['to'] or
+            not all(isinstance(address, str) and re.fullmatch(r'[^@\s]{1,64}@(?:cccbuild\.com|srinagubandi\.com)', address, re.I) for address in payload['to']) or
             not isinstance(payload.get('subject'), str) or
             not isinstance(payload.get('text'), str)):
             self.store.finish_outbox(row['id'], row['claim'], None, now=now)
