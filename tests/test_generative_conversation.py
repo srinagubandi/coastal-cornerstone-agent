@@ -5,7 +5,7 @@ from agent import FALLBACK, GENERAL_GUIDANCE, GUIDANCE_LABEL
 from chat_service import ChatService
 from config import MODEL, MODEL_URL
 from safety import classify_question
-from chat_safety import NEUTRAL, screen_message
+from chat_safety import NEUTRAL, PROHIBITED_DECLINE, screen_message
 from test_agent import FIXTURE, FixtureTest, MockTransport
 
 MISSING = object()
@@ -79,6 +79,11 @@ class GenerativeConversationTests(FixtureTest):
         mock = PlanTransport(plan("Valid general construction text only.", company=["invented"]))
         result, _ = self.ask(mock, self.q("Unmatched general construction inquiry"))
         self.assertEqual(result["status"], "needs_review")
+
+    def test_prohibited_sex_room_uses_specific_neutral_decline(self):
+        result, status = self.ask(MockTransport(), "Do you build a sex room?")
+        self.assertEqual((status, result["status"], result["answer"]), (200, "needs_review", PROHIBITED_DECLINE))
+        self.assertFalse(result["review_queued"])
 
     def test_forged_proofs_rejected_by_rebuild_and_chat_approval(self):
         agent = self.agent(MockTransport(), True)
@@ -171,7 +176,12 @@ class GenerativeConversationTests(FixtureTest):
         for i, text in enumerate(unsafe):
             with self.subTest(text=text[:25]):
                 result, status = agent.ask({"question": text}, "u" + str(i))
-                self.assertEqual((status, result["status"], result["answer"]), (200, "needs_review", NEUTRAL))
+                reason = classify_question(text)[1]
+                expected = PROHIBITED_DECLINE if reason in {
+                    "religious or political debate", "hateful or discriminatory judgment",
+                    "sexual content", "explicit slur or abuse"
+                } else NEUTRAL
+                self.assertEqual((status, result["status"], result["answer"]), (200, "needs_review", expected))
         self.assertEqual(mock.calls, [])
         legitimate = [
             "white roof color versus black roof color heat gain",

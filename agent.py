@@ -13,7 +13,7 @@ from safety import (
     INJECTION_PATTERN, NSFW_PATTERN, PRIVATE_DATA_PATTERN, PRIVATE_URL_PATTERN, SLUR_PATTERN,
     classify_question, normalize, validate_question
 )
-from chat_safety import NEUTRAL
+from chat_safety import NEUTRAL, PROHIBITED_DECLINE
 
 FALLBACK = 'For pricing, scheduling, engineering, or specific accessibility queries, please call (727) 771-5672 or email Ben at ben@cccbuild.com. You may also reach us through our contact form at https://cccbuild-website-production.up.railway.app/contact/#contact-title . Our team will be happy to discuss your needs. This contact is for legitimate business inquiries only.'
 
@@ -353,8 +353,9 @@ class Agent:
             return result
         return self.fallback(question, reason, model_used, cost)
 
-    def fallback(self, question, reason, model_used=None, cost=0, neutral=False):
-        return {"status": "needs_review", "answer": NEUTRAL if neutral else FALLBACK, "faq_ids": [], "sources": [],
+    def fallback(self, question, reason, model_used=None, cost=0, neutral=False, answer_override=None):
+        answer = answer_override if isinstance(answer_override, str) and answer_override else (NEUTRAL if neutral else FALLBACK)
+        return {"status": "needs_review", "answer": answer, "faq_ids": [], "sources": [],
                 "review_queued": False if neutral else self.store.queue_question(question), "knowledge_version": self.version,
                 "model_used": model_used, "_reason": reason, "_cost": cost}
 
@@ -527,7 +528,11 @@ class Agent:
             return {"error": "Rate limit exceeded", "retry_after": retry}, 429
         classification = classify_question(body.get('question', ''))
         if classification[0] == 'blocked' and classification[1] != 'arbitrary off-topic':
-            result = self.fallback(question, 'unsupported_or_unsafe', neutral=True)
+            decline = PROHIBITED_DECLINE if classification[1] in {
+                'religious or political debate', 'hateful or discriminatory judgment',
+                'sexual content', 'explicit slur or abuse'
+            } else NEUTRAL
+            result = self.fallback(question, 'unsupported_or_unsafe', neutral=True, answer_override=decline)
         else:
             result = self._answer(question)
         cost, reason = result.pop("_cost", 0), result.pop("_reason", "curated_faq")
@@ -538,7 +543,11 @@ class Agent:
     def _answer(self, question):
         kind, scope_reason = classify_question(question)
         if kind == "blocked" and scope_reason != "arbitrary off-topic":
-            return self.fallback(question, "unsupported_or_unsafe", neutral=True)
+            decline = PROHIBITED_DECLINE if scope_reason in {
+                'religious or political debate', 'hateful or discriminatory judgment',
+                'sexual content', 'explicit slur or abuse'
+            } else NEUTRAL
+            return self.fallback(question, "unsupported_or_unsafe", neutral=True, answer_override=decline)
         norm = normalize(question)
         if kind == "safe" and scope_reason == "greeting":
             return self.fallback(question, "pure_greeting")
@@ -553,7 +562,11 @@ class Agent:
         if not self.faqs and not GENERAL_GUIDANCE:
             return self.fallback(question, "knowledge_unavailable")
         if kind == "blocked":
-            return self.fallback(question, "unsupported_or_unsafe", neutral=True)
+            decline = PROHIBITED_DECLINE if scope_reason in {
+                'religious or political debate', 'hateful or discriminatory judgment',
+                'sexual content', 'explicit slur or abuse'
+            } else NEUTRAL
+            return self.fallback(question, "unsupported_or_unsafe", neutral=True, answer_override=decline)
 
         cache_key = "conversation:" + self.catalog_hash + ":" + hashlib.sha256(norm.encode()).hexdigest()
         cached = self.store.cache_get(cache_key)

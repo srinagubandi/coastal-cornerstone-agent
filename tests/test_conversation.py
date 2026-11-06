@@ -1,5 +1,5 @@
 """Focused synthetic safety and chat approval tests."""
-from chat_safety import screen_message, NEUTRAL
+from chat_safety import screen_message, NEUTRAL, PROHIBITED_DECLINE
 from chat_service import ChatService
 from safety import classify_question
 from test_agent import FixtureTest, MockTransport
@@ -62,7 +62,12 @@ class ConversationSafetyTests(FixtureTest):
         for i, text in enumerate(UNSAFE):
             with self.subTest(case=text):
                 result, status = agent.ask({"question": text}, str(i))
-                self.assertEqual((status, result["status"], result["answer"]), (200, "needs_review", NEUTRAL))
+                reason = classify_question(text)[1]
+                expected = PROHIBITED_DECLINE if reason in {
+                    "religious or political debate", "hateful or discriminatory judgment",
+                    "sexual content", "explicit slur or abuse"
+                } else NEUTRAL
+                self.assertEqual((status, result["status"], result["answer"]), (200, "needs_review", expected))
         self.assertEqual(mock.calls, [])
 
     def test_high_level_guidance_and_exact_fixture(self):
