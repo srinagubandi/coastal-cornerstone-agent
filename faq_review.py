@@ -263,6 +263,25 @@ class FAQReview:
                 drafts.append(d)
             return drafts
 
+    def audit_list(self, limit=100):
+        """Return recent FAQ review audit events without exposing draft contents."""
+        limit = max(1, min(int(limit), 200))
+        with self.store.connect() as db:
+            rows = db.execute(
+                "SELECT id, draft_id, action, actor, timestamp, metadata "
+                "FROM faq_audit ORDER BY id DESC LIMIT ?",
+                (limit,),
+            ).fetchall()
+        events = []
+        for row in rows:
+            event = dict(row)
+            try:
+                event["metadata"] = json.loads(event["metadata"]) if event["metadata"] else {}
+            except (TypeError, ValueError):
+                event["metadata"] = {}
+            events.append(event)
+        return events
+
     def detail(self, draft_id):
         """Return draft detail with history and duplicate candidates."""
         with self.store.connect() as db:

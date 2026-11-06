@@ -106,6 +106,16 @@ class Service:
                     self.faq_review.import_questions(questions, actor='system:seed')
             except Exception:
                 pass
+        else:
+            packaged_seed = ROOT / 'data' / 'faq-review-seed.json'
+            if packaged_seed.exists():
+                try:
+                    data = json.loads(packaged_seed.read_text())
+                    questions = data.get('questions', []) if isinstance(data, dict) else data
+                    if questions:
+                        self.faq_review.import_questions(questions, actor='system:packaged-seed')
+                except Exception:
+                    pass
 
     def card(self):
         origin = self.config.public_origin

@@ -1,5 +1,10 @@
 # Changelog
 
+## 2026-11-06 — Dashboard remediation
+
+- Restored the private FAQ review audit read path and packaged the approved 100-question review seed for idempotent production startup import. Questions remain private drafts and are not runtime FAQ answers until human approval and publication.
+- Added focused regression coverage for audit-event serialization. Notification settings and deliveries remain read-only during validation; no test email is sent by this change.
+
 ## 1.0.0 — 2026-11-03
 
 Implemented the separate standard-library Python information service from the retained `plan.md`. Added source-verified FAQ loading, deterministic retrieval, version-bound selection caching, a pinned closed-set DeepSeek selector, exact server-rendered curated answers, fixed-host networking, live price ceilings, persistent rate limits, and transactional $1/month budget reservations that retain uncertain failures.

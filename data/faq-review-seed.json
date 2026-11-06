@@ -1,0 +1,1006 @@
+{
+  "version": "draft-2026-11-05",
+  "status": "questions-only; private review required",
+  "questions": [
+    {
+      "source_kind": "draft-faq-2026-11",
+      "source_id": "draft-faq-051",
+      "question": "I already have plans from an architect—what should I send to start the conversation?",
+      "answer": "",
+      "source_urls": [],
+      "tags": [
+        "Homeowners"
+      ]
+    },
+    {
+      "source_kind": "draft-faq-2026-11",
+      "source_id": "draft-faq-052",
+      "question": "Can you build on a lot I already own if it hasn't been cleared yet?",
+      "answer": "",
+      "source_urls": [],
+      "tags": [
+        "Homeowners"
+      ]
+    },
+    {
+      "source_kind": "draft-faq-2026-11",
+      "source_id": "draft-faq-053",
+      "question": "Do you help first-time home builders understand the sequence of decisions?",
+      "answer": "",
+      "source_urls": [],
+      "tags": [
+        "Homeowners"
+      ]
+    },
+    {
+      "source_kind": "draft-faq-2026-11",
+      "source_id": "draft-faq-054",
+      "question": "Can you renovate an older Florida home while keeping some original character?",
+      "answer": "",
+      "source_urls": [],
+      "tags": [
+        "Homeowners"
+      ]
+    },
+    {
+      "source_kind": "draft-faq-2026-11",
+      "source_id": "draft-faq-055",
+      "question": "Do you handle additions that tie into an existing roof and exterior?",
+      "answer": "",
+      "source_urls": [],
+      "tags": [
+        "Homeowners"
+      ]
+    },
+    {
+      "source_kind": "draft-faq-2026-11",
+      "source_id": "draft-faq-056",
+      "question": "Can you show me example kitchens or bathrooms you have remodeled?",
+      "answer": "",
+      "source_urls": [],
+      "tags": [
+        "Homeowners"
+      ]
+    },
+    {
+      "source_kind": "draft-faq-2026-11",
+      "source_id": "draft-faq-057",
+      "question": "How do we compare the cost of adding on versus selling and building new?",
+      "answer": "",
+      "source_urls": [],
+      "tags": [
+        "Homeowners"
+      ]
+    },
+    {
+      "source_kind": "draft-faq-2026-11",
+      "source_id": "draft-faq-058",
+      "question": "Can we start with our own floor plan sketches rather than formal drawings?",
+      "answer": "",
+      "source_urls": [],
+      "tags": [
+        "Homeowners"
+      ]
+    },
+    {
+      "source_kind": "draft-faq-2026-11",
+      "source_id": "draft-faq-059",
+      "question": "Will you walk our lot before we commit to a project?",
+      "answer": "",
+      "source_urls": [],
+      "tags": [
+        "Homeowners"
+      ]
+    },
+    {
+      "source_kind": "draft-faq-2026-11",
+      "source_id": "draft-faq-060",
+      "question": "Can you tell us if a lot is suitable for a new home before we buy it?",
+      "answer": "",
+      "source_urls": [],
+      "tags": [
+        "Homeowners"
+      ]
+    },
+    {
+      "source_kind": "draft-faq-2026-11",
+      "source_id": "draft-faq-061",
+      "question": "Can you build a custom home on a narrow city lot with setback limits?",
+      "answer": "",
+      "source_urls": [],
+      "tags": [
+        "Homeowners"
+      ]
+    },
+    {
+      "source_kind": "draft-faq-2026-11",
+      "source_id": "draft-faq-062",
+      "question": "How long should we expect a typical whole-home renovation to take?",
+      "answer": "",
+      "source_urls": [],
+      "tags": [
+        "Homeowners"
+      ]
+    },
+    {
+      "source_kind": "draft-faq-2026-11",
+      "source_id": "draft-faq-063",
+      "question": "Can we stay in the house during a major renovation?",
+      "answer": "",
+      "source_urls": [],
+      "tags": [
+        "Homeowners"
+      ]
+    },
+    {
+      "source_kind": "draft-faq-2026-11",
+      "source_id": "draft-faq-064",
+      "question": "How do you protect finished rooms and belongings during a remodel?",
+      "answer": "",
+      "source_urls": [],
+      "tags": [
+        "Homeowners"
+      ]
+    },
+    {
+      "source_kind": "draft-faq-2026-11",
+      "source_id": "draft-faq-065",
+      "question": "What should we have ready for our first conversation about a new build?",
+      "answer": "",
+      "source_urls": [],
+      "tags": [
+        "Homeowners"
+      ]
+    },
+    {
+      "source_kind": "draft-faq-2026-11",
+      "source_id": "draft-faq-066",
+      "question": "Do you provide interior design help or should we bring our own designer?",
+      "answer": "",
+      "source_urls": [],
+      "tags": [
+        "Homeowners"
+      ]
+    },
+    {
+      "source_kind": "draft-faq-2026-11",
+      "source_id": "draft-faq-067",
+      "question": "Can you recommend local architects or designers for our project?",
+      "answer": "",
+      "source_urls": [],
+      "tags": [
+        "Homeowners"
+      ]
+    },
+    {
+      "source_kind": "draft-faq-2026-11",
+      "source_id": "draft-faq-068",
+      "question": "How do you handle wish-list changes once construction starts?",
+      "answer": "",
+      "source_urls": [],
+      "tags": [
+        "Homeowners"
+      ]
+    },
+    {
+      "source_kind": "draft-faq-2026-11",
+      "source_id": "draft-faq-069",
+      "question": "Do you build homes with aging-in-place features like wider doors?",
+      "answer": "",
+      "source_urls": [],
+      "tags": [
+        "Homeowners"
+      ]
+    },
+    {
+      "source_kind": "draft-faq-2026-11",
+      "source_id": "draft-faq-070",
+      "question": "Can you add a second story onto our single-story house?",
+      "answer": "",
+      "source_urls": [],
+      "tags": [
+        "Homeowners"
+      ]
+    },
+    {
+      "source_kind": "draft-faq-2026-11",
+      "source_id": "draft-faq-071",
+      "question": "What questions should we ask any builder before signing a contract?",
+      "answer": "",
+      "source_urls": [],
+      "tags": [
+        "Homeowners"
+      ]
+    },
+    {
+      "source_kind": "draft-faq-2026-11",
+      "source_id": "draft-faq-072",
+      "question": "Do you handle the permit paperwork for a home addition?",
+      "answer": "",
+      "source_urls": [],
+      "tags": [
+        "Homeowners"
+      ]
+    },
+    {
+      "source_kind": "draft-faq-2026-11",
+      "source_id": "draft-faq-073",
+      "question": "How do you sequence a kitchen remodel to reduce how long it is unusable?",
+      "answer": "",
+      "source_urls": [],
+      "tags": [
+        "Homeowners"
+      ]
+    },
+    {
+      "source_kind": "draft-faq-2026-11",
+      "source_id": "draft-faq-074",
+      "question": "Do you help us choose finishes and fixtures that fit our budget?",
+      "answer": "",
+      "source_urls": [],
+      "tags": [
+        "Homeowners"
+      ]
+    },
+    {
+      "source_kind": "draft-faq-2026-11",
+      "source_id": "draft-faq-075",
+      "question": "Can you build a home from photos and inspiration we've saved?",
+      "answer": "",
+      "source_urls": [],
+      "tags": [
+        "Homeowners"
+      ]
+    },
+    {
+      "source_kind": "draft-faq-2026-11",
+      "source_id": "draft-faq-076",
+      "question": "Do you renovate occupied office space while staff remain in the building?",
+      "answer": "",
+      "source_urls": [],
+      "tags": [
+        "Commercial clients"
+      ]
+    },
+    {
+      "source_kind": "draft-faq-2026-11",
+      "source_id": "draft-faq-077",
+      "question": "Can you handle a tenant improvement inside an existing retail shell?",
+      "answer": "",
+      "source_urls": [],
+      "tags": [
+        "Commercial clients"
+      ]
+    },
+    {
+      "source_kind": "draft-faq-2026-11",
+      "source_id": "draft-faq-078",
+      "question": "Do you build or renovate medical or dental offices?",
+      "answer": "",
+      "source_urls": [],
+      "tags": [
+        "Commercial clients"
+      ]
+    },
+    {
+      "source_kind": "draft-faq-2026-11",
+      "source_id": "draft-faq-079",
+      "question": "Can you phase a commercial renovation so our business stays open?",
+      "answer": "",
+      "source_urls": [],
+      "tags": [
+        "Commercial clients"
+      ]
+    },
+    {
+      "source_kind": "draft-faq-2026-11",
+      "source_id": "draft-faq-080",
+      "question": "Do you build restaurant or food-service spaces?",
+      "answer": "",
+      "source_urls": [],
+      "tags": [
+        "Commercial clients"
+      ]
+    },
+    {
+      "source_kind": "draft-faq-2026-11",
+      "source_id": "draft-faq-081",
+      "question": "Can you coordinate with our landlord's requirements for a retail build-out?",
+      "answer": "",
+      "source_urls": [],
+      "tags": [
+        "Commercial clients"
+      ]
+    },
+    {
+      "source_kind": "draft-faq-2026-11",
+      "source_id": "draft-faq-082",
+      "question": "Do you handle warehouse fit-outs and equipment coordination?",
+      "answer": "",
+      "source_urls": [],
+      "tags": [
+        "Commercial clients"
+      ]
+    },
+    {
+      "source_kind": "draft-faq-2026-11",
+      "source_id": "draft-faq-083",
+      "question": "Can you provide a project schedule before we sign an agreement?",
+      "answer": "",
+      "source_urls": [],
+      "tags": [
+        "Commercial clients"
+      ]
+    },
+    {
+      "source_kind": "draft-faq-2026-11",
+      "source_id": "draft-faq-084",
+      "question": "Can you review our architect's drawings before we apply for permits?",
+      "answer": "",
+      "source_urls": [],
+      "tags": [
+        "Commercial clients"
+      ]
+    },
+    {
+      "source_kind": "draft-faq-2026-11",
+      "source_id": "draft-faq-085",
+      "question": "How do you keep our staff informed about subcontractor access and scheduled work?",
+      "answer": "",
+      "source_urls": [],
+      "tags": [
+        "Commercial clients"
+      ]
+    },
+    {
+      "source_kind": "draft-faq-2026-11",
+      "source_id": "draft-faq-086",
+      "question": "Can you give a cost range for a small office renovation before detailed plans?",
+      "answer": "",
+      "source_urls": [],
+      "tags": [
+        "Commercial clients"
+      ]
+    },
+    {
+      "source_kind": "draft-faq-2026-11",
+      "source_id": "draft-faq-087",
+      "question": "Do you have experience upgrading existing buildings in occupied retail centers?",
+      "answer": "",
+      "source_urls": [],
+      "tags": [
+        "Commercial clients"
+      ]
+    },
+    {
+      "source_kind": "draft-faq-2026-11",
+      "source_id": "draft-faq-088",
+      "question": "Can you schedule work around our business hours or after hours?",
+      "answer": "",
+      "source_urls": [],
+      "tags": [
+        "Commercial clients"
+      ]
+    },
+    {
+      "source_kind": "draft-faq-2026-11",
+      "source_id": "draft-faq-089",
+      "question": "Do you build ground-up professional office buildings with site development included?",
+      "answer": "",
+      "source_urls": [],
+      "tags": [
+        "Commercial clients"
+      ]
+    },
+    {
+      "source_kind": "draft-faq-2026-11",
+      "source_id": "draft-faq-090",
+      "question": "Can you handle a commercial roof replacement as part of a renovation?",
+      "answer": "",
+      "source_urls": [],
+      "tags": [
+        "Commercial clients"
+      ]
+    },
+    {
+      "source_kind": "draft-faq-2026-11",
+      "source_id": "draft-faq-091",
+      "question": "Do you coordinate fencing, dumpster, and site logistics for commercial jobs?",
+      "answer": "",
+      "source_urls": [],
+      "tags": [
+        "Commercial clients"
+      ]
+    },
+    {
+      "source_kind": "draft-faq-2026-11",
+      "source_id": "draft-faq-092",
+      "question": "Can you help with commercial property owner or tenant approvals?",
+      "answer": "",
+      "source_urls": [],
+      "tags": [
+        "Commercial clients"
+      ]
+    },
+    {
+      "source_kind": "draft-faq-2026-11",
+      "source_id": "draft-faq-093",
+      "question": "Do you bid from our completed construction drawings?",
+      "answer": "",
+      "source_urls": [],
+      "tags": [
+        "Commercial clients"
+      ]
+    },
+    {
+      "source_kind": "draft-faq-2026-11",
+      "source_id": "draft-faq-094",
+      "question": "Do you provide cost tracking during commercial construction?",
+      "answer": "",
+      "source_urls": [],
+      "tags": [
+        "Commercial clients"
+      ]
+    },
+    {
+      "source_kind": "draft-faq-2026-11",
+      "source_id": "draft-faq-095",
+      "question": "How do you handle change orders on commercial jobs?",
+      "answer": "",
+      "source_urls": [],
+      "tags": [
+        "Commercial clients"
+      ]
+    },
+    {
+      "source_kind": "draft-faq-2026-11",
+      "source_id": "draft-faq-096",
+      "question": "Can you manage a project outside your core Central Florida counties?",
+      "answer": "",
+      "source_urls": [],
+      "tags": [
+        "Commercial clients"
+      ]
+    },
+    {
+      "source_kind": "draft-faq-2026-11",
+      "source_id": "draft-faq-097",
+      "question": "Do you construct automotive or industrial service buildings?",
+      "answer": "",
+      "source_urls": [],
+      "tags": [
+        "Commercial clients"
+      ]
+    },
+    {
+      "source_kind": "draft-faq-2026-11",
+      "source_id": "draft-faq-098",
+      "question": "Can you handle a tilt-up or metal building project?",
+      "answer": "",
+      "source_urls": [],
+      "tags": [
+        "Commercial clients"
+      ]
+    },
+    {
+      "source_kind": "draft-faq-2026-11",
+      "source_id": "draft-faq-099",
+      "question": "Do you coordinate fire alarm, sprinkler, and life-safety work?",
+      "answer": "",
+      "source_urls": [],
+      "tags": [
+        "Commercial clients"
+      ]
+    },
+    {
+      "source_kind": "draft-faq-2026-11",
+      "source_id": "draft-faq-100",
+      "question": "Do you provide as-built documentation at project handover?",
+      "answer": "",
+      "source_urls": [],
+      "tags": [
+        "Commercial clients"
+      ]
+    },
+    {
+      "source_kind": "draft-faq-2026-11",
+      "source_id": "draft-faq-101",
+      "question": "How do I prepare a realistic budget before contacting you?",
+      "answer": "",
+      "source_urls": [],
+      "tags": [
+        "Planning and budget"
+      ]
+    },
+    {
+      "source_kind": "draft-faq-2026-11",
+      "source_id": "draft-faq-102",
+      "question": "What project details help you give a more accurate estimate?",
+      "answer": "",
+      "source_urls": [],
+      "tags": [
+        "Planning and budget"
+      ]
+    },
+    {
+      "source_kind": "draft-faq-2026-11",
+      "source_id": "draft-faq-103",
+      "question": "When should we involve you if we are still choosing between renovating and building new?",
+      "answer": "",
+      "source_urls": [],
+      "tags": [
+        "Planning and budget"
+      ]
+    },
+    {
+      "source_kind": "draft-faq-2026-11",
+      "source_id": "draft-faq-104",
+      "question": "How do material choices affect the overall cost?",
+      "answer": "",
+      "source_urls": [],
+      "tags": [
+        "Planning and budget"
+      ]
+    },
+    {
+      "source_kind": "draft-faq-2026-11",
+      "source_id": "draft-faq-105",
+      "question": "Can you suggest cost-saving alternatives without cutting important scope?",
+      "answer": "",
+      "source_urls": [],
+      "tags": [
+        "Planning and budget"
+      ]
+    },
+    {
+      "source_kind": "draft-faq-2026-11",
+      "source_id": "draft-faq-106",
+      "question": "How far in advance should we plan a major home addition?",
+      "answer": "",
+      "source_urls": [],
+      "tags": [
+        "Planning and budget"
+      ]
+    },
+    {
+      "source_kind": "draft-faq-2026-11",
+      "source_id": "draft-faq-107",
+      "question": "Do you break estimates into line items or categories?",
+      "answer": "",
+      "source_urls": [],
+      "tags": [
+        "Planning and budget"
+      ]
+    },
+    {
+      "source_kind": "draft-faq-2026-11",
+      "source_id": "draft-faq-108",
+      "question": "What happens if we want to reduce scope after work starts?",
+      "answer": "",
+      "source_urls": [],
+      "tags": [
+        "Planning and budget"
+      ]
+    },
+    {
+      "source_kind": "draft-faq-2026-11",
+      "source_id": "draft-faq-109",
+      "question": "How do you handle allowance overages?",
+      "answer": "",
+      "source_urls": [],
+      "tags": [
+        "Planning and budget"
+      ]
+    },
+    {
+      "source_kind": "draft-faq-2026-11",
+      "source_id": "draft-faq-110",
+      "question": "Do you provide preliminary estimates before drawings are final?",
+      "answer": "",
+      "source_urls": [],
+      "tags": [
+        "Planning and budget"
+      ]
+    },
+    {
+      "source_kind": "draft-faq-2026-11",
+      "source_id": "draft-faq-111",
+      "question": "Can you help us separate must-have items from nice-to-haves when we are setting the project budget?",
+      "answer": "",
+      "source_urls": [],
+      "tags": [
+        "Planning and budget"
+      ]
+    },
+    {
+      "source_kind": "draft-faq-2026-11",
+      "source_id": "draft-faq-112",
+      "question": "How do you compare different material or system options for cost and longevity?",
+      "answer": "",
+      "source_urls": [],
+      "tags": [
+        "Planning and budget"
+      ]
+    },
+    {
+      "source_kind": "draft-faq-2026-11",
+      "source_id": "draft-faq-113",
+      "question": "Can you help us decide which upgrades provide the best long-term value?",
+      "answer": "",
+      "source_urls": [],
+      "tags": [
+        "Planning and budget"
+      ]
+    },
+    {
+      "source_kind": "draft-faq-2026-11",
+      "source_id": "draft-faq-114",
+      "question": "How do you plan the order of work for an addition to keep costs in check?",
+      "answer": "",
+      "source_urls": [],
+      "tags": [
+        "Planning and budget"
+      ]
+    },
+    {
+      "source_kind": "draft-faq-2026-11",
+      "source_id": "draft-faq-115",
+      "question": "What should we ask about a builder's estimate before comparing bids?",
+      "answer": "",
+      "source_urls": [],
+      "tags": [
+        "Planning and budget"
+      ]
+    },
+    {
+      "source_kind": "draft-faq-2026-11",
+      "source_id": "draft-faq-116",
+      "question": "Do you give estimates based on square footage?",
+      "answer": "",
+      "source_urls": [],
+      "tags": [
+        "Planning and budget"
+      ]
+    },
+    {
+      "source_kind": "draft-faq-2026-11",
+      "source_id": "draft-faq-117",
+      "question": "What information do you need before setting a construction schedule?",
+      "answer": "",
+      "source_urls": [],
+      "tags": [
+        "Planning and budget"
+      ]
+    },
+    {
+      "source_kind": "draft-faq-2026-11",
+      "source_id": "draft-faq-118",
+      "question": "How do permit fees affect the total project budget?",
+      "answer": "",
+      "source_urls": [],
+      "tags": [
+        "Planning and budget"
+      ]
+    },
+    {
+      "source_kind": "draft-faq-2026-11",
+      "source_id": "draft-faq-119",
+      "question": "Can you phase our project to match our financing or savings?",
+      "answer": "",
+      "source_urls": [],
+      "tags": [
+        "Planning and budget"
+      ]
+    },
+    {
+      "source_kind": "draft-faq-2026-11",
+      "source_id": "draft-faq-120",
+      "question": "What cost details should we confirm before signing a contract?",
+      "answer": "",
+      "source_urls": [],
+      "tags": [
+        "Planning and budget"
+      ]
+    },
+    {
+      "source_kind": "draft-faq-2026-11",
+      "source_id": "draft-faq-121",
+      "question": "How thick are ICF walls compared with standard wood-frame walls?",
+      "answer": "",
+      "source_urls": [],
+      "tags": [
+        "ICF"
+      ]
+    },
+    {
+      "source_kind": "draft-faq-2026-11",
+      "source_id": "draft-faq-122",
+      "question": "Do ICF walls change interior room dimensions or window sills?",
+      "answer": "",
+      "source_urls": [],
+      "tags": [
+        "ICF"
+      ]
+    },
+    {
+      "source_kind": "draft-faq-2026-11",
+      "source_id": "draft-faq-123",
+      "question": "Can I use impact windows and exterior doors with ICF walls?",
+      "answer": "",
+      "source_urls": [],
+      "tags": [
+        "ICF"
+      ]
+    },
+    {
+      "source_kind": "draft-faq-2026-11",
+      "source_id": "draft-faq-124",
+      "question": "Does ICF require different roof framing or trusses?",
+      "answer": "",
+      "source_urls": [],
+      "tags": [
+        "ICF"
+      ]
+    },
+    {
+      "source_kind": "draft-faq-2026-11",
+      "source_id": "draft-faq-125",
+      "question": "Can you attach siding, stone, or stucco to ICF walls?",
+      "answer": "",
+      "source_urls": [],
+      "tags": [
+        "ICF"
+      ]
+    },
+    {
+      "source_kind": "draft-faq-2026-11",
+      "source_id": "draft-faq-126",
+      "question": "Is an ICF basement practical in Florida?",
+      "answer": "",
+      "source_urls": [],
+      "tags": [
+        "ICF"
+      ]
+    },
+    {
+      "source_kind": "draft-faq-2026-11",
+      "source_id": "draft-faq-127",
+      "question": "Do I need a dehumidifier in an ICF home in Florida?",
+      "answer": "",
+      "source_urls": [],
+      "tags": [
+        "ICF"
+      ]
+    },
+    {
+      "source_kind": "draft-faq-2026-11",
+      "source_id": "draft-faq-128",
+      "question": "Can I remodel or add on to an existing ICF home later?",
+      "answer": "",
+      "source_urls": [],
+      "tags": [
+        "ICF"
+      ]
+    },
+    {
+      "source_kind": "draft-faq-2026-11",
+      "source_id": "draft-faq-129",
+      "question": "How do plumbers and electricians run lines in ICF walls?",
+      "answer": "",
+      "source_urls": [],
+      "tags": [
+        "ICF"
+      ]
+    },
+    {
+      "source_kind": "draft-faq-2026-11",
+      "source_id": "draft-faq-130",
+      "question": "Does ICF work with raised or pile foundations near the coast?",
+      "answer": "",
+      "source_urls": [],
+      "tags": [
+        "ICF"
+      ]
+    },
+    {
+      "source_kind": "draft-faq-2026-11",
+      "source_id": "draft-faq-131",
+      "question": "How do you keep concrete pours in ICF walls from bowing?",
+      "answer": "",
+      "source_urls": [],
+      "tags": [
+        "ICF"
+      ]
+    },
+    {
+      "source_kind": "draft-faq-2026-11",
+      "source_id": "draft-faq-132",
+      "question": "Can I use ICF for interior walls or just exterior walls?",
+      "answer": "",
+      "source_urls": [],
+      "tags": [
+        "ICF"
+      ]
+    },
+    {
+      "source_kind": "draft-faq-2026-11",
+      "source_id": "draft-faq-133",
+      "question": "Does ICF make it harder to find studs for hanging cabinets?",
+      "answer": "",
+      "source_urls": [],
+      "tags": [
+        "ICF"
+      ]
+    },
+    {
+      "source_kind": "draft-faq-2026-11",
+      "source_id": "draft-faq-134",
+      "question": "Can ICF walls be designed for wave and flood loads on a coastal lot?",
+      "answer": "",
+      "source_urls": [],
+      "tags": [
+        "ICF"
+      ]
+    },
+    {
+      "source_kind": "draft-faq-2026-11",
+      "source_id": "draft-faq-135",
+      "question": "Can I combine ICF walls with a metal roof?",
+      "answer": "",
+      "source_urls": [],
+      "tags": [
+        "ICF"
+      ]
+    },
+    {
+      "source_kind": "draft-faq-2026-11",
+      "source_id": "draft-faq-136",
+      "question": "How soon do you usually reply to a project inquiry?",
+      "answer": "",
+      "source_urls": [],
+      "tags": [
+        "Company and working together"
+      ]
+    },
+    {
+      "source_kind": "draft-faq-2026-11",
+      "source_id": "draft-faq-137",
+      "question": "Who will be our main contact during our project?",
+      "answer": "",
+      "source_urls": [],
+      "tags": [
+        "Company and working together"
+      ]
+    },
+    {
+      "source_kind": "draft-faq-2026-11",
+      "source_id": "draft-faq-138",
+      "question": "Do you provide a written agreement before work begins?",
+      "answer": "",
+      "source_urls": [],
+      "tags": [
+        "Company and working together"
+      ]
+    },
+    {
+      "source_kind": "draft-faq-2026-11",
+      "source_id": "draft-faq-139",
+      "question": "How do you handle concerns after construction is finished?",
+      "answer": "",
+      "source_urls": [],
+      "tags": [
+        "Company and working together"
+      ]
+    },
+    {
+      "source_kind": "draft-faq-2026-11",
+      "source_id": "draft-faq-140",
+      "question": "Can you keep us informed if we live out of state during the build?",
+      "answer": "",
+      "source_urls": [],
+      "tags": [
+        "Company and working together"
+      ]
+    },
+    {
+      "source_kind": "draft-faq-2026-11",
+      "source_id": "draft-faq-141",
+      "question": "Can we schedule a call to review the proposal together before we decide?",
+      "answer": "",
+      "source_urls": [],
+      "tags": [
+        "Company and working together"
+      ]
+    },
+    {
+      "source_kind": "draft-faq-2026-11",
+      "source_id": "draft-faq-142",
+      "question": "Can we speak with past clients about their experience with you?",
+      "answer": "",
+      "source_urls": [],
+      "tags": [
+        "Company and working together"
+      ]
+    },
+    {
+      "source_kind": "draft-faq-2026-11",
+      "source_id": "draft-faq-143",
+      "question": "How do you decide which subcontractors to use on a job?",
+      "answer": "",
+      "source_urls": [],
+      "tags": [
+        "Company and working together"
+      ]
+    },
+    {
+      "source_kind": "draft-faq-2026-11",
+      "source_id": "draft-faq-144",
+      "question": "Can you join design meetings before construction starts?",
+      "answer": "",
+      "source_urls": [],
+      "tags": [
+        "Company and working together"
+      ]
+    },
+    {
+      "source_kind": "draft-faq-2026-11",
+      "source_id": "draft-faq-145",
+      "question": "Can we buy our own fixtures and finishes for the project?",
+      "answer": "",
+      "source_urls": [],
+      "tags": [
+        "Company and working together"
+      ]
+    },
+    {
+      "source_kind": "draft-faq-2026-11",
+      "source_id": "draft-faq-146",
+      "question": "Will you walk us through the finished project before final payment?",
+      "answer": "",
+      "source_urls": [],
+      "tags": [
+        "Company and working together"
+      ]
+    },
+    {
+      "source_kind": "draft-faq-2026-11",
+      "source_id": "draft-faq-147",
+      "question": "Do you use a project management app or shared calendar during construction?",
+      "answer": "",
+      "source_urls": [],
+      "tags": [
+        "Company and working together"
+      ]
+    },
+    {
+      "source_kind": "draft-faq-2026-11",
+      "source_id": "draft-faq-148",
+      "question": "What should we do if we have questions after hours?",
+      "answer": "",
+      "source_urls": [],
+      "tags": [
+        "Company and working together"
+      ]
+    },
+    {
+      "source_kind": "draft-faq-2026-11",
+      "source_id": "draft-faq-149",
+      "question": "How do you handle cleanup and trash removal during the job?",
+      "answer": "",
+      "source_urls": [],
+      "tags": [
+        "Company and working together"
+      ]
+    },
+    {
+      "source_kind": "draft-faq-2026-11",
+      "source_id": "draft-faq-150",
+      "question": "Do you require a deposit, and how is that handled?",
+      "answer": "",
+      "source_urls": [],
+      "tags": [
+        "Company and working together"
+      ]
+    }
+  ]
+}

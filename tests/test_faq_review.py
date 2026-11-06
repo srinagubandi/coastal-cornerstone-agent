@@ -61,6 +61,19 @@ class TestFAQReview(unittest.TestCase):
         self.assertEqual(len(snapshot), 50)
         self.assertEqual(snapshot[0]["id"], "base-0")
 
+    def test_audit_list_returns_recent_events_without_draft_contents(self):
+        seed = self._generate_seed(1)
+        self.faq_review.import_questions(seed, actor="seed-test")
+        draft = self.faq_review.list_drafts()[0]
+        self.faq_review.save(draft["id"], {"revision": 1, "question": "Updated question?"}, "reviewer")
+        events = self.faq_review.audit_list()
+        self.assertTrue(events)
+        self.assertEqual(events[0]["action"], "save")
+        self.assertEqual(events[0]["actor"], "reviewer")
+        self.assertEqual(events[0]["draft_id"], draft["id"])
+        self.assertIsInstance(events[0]["metadata"], dict)
+        self.assertNotIn("question", events[0]["metadata"])
+
     def test_save_revision_conflict(self):
         seed = self._generate_seed(1)
         self.faq_review.import_questions(seed)
