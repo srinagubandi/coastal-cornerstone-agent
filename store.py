@@ -51,6 +51,13 @@ class Store:
                 attempted REAL,provider_id TEXT);
             CREATE TABLE IF NOT EXISTS sessions(token_hash TEXT PRIMARY KEY,role TEXT NOT NULL,
                 csrf TEXT NOT NULL,expires REAL NOT NULL);
+            CREATE TABLE IF NOT EXISTS notification_settings(
+                trigger TEXT PRIMARY KEY, enabled INTEGER NOT NULL DEFAULT 0,
+                recipients TEXT NOT NULL DEFAULT '[]', updated REAL NOT NULL);
+            CREATE TABLE IF NOT EXISTS notification_log(
+                id INTEGER PRIMARY KEY AUTOINCREMENT, trigger TEXT NOT NULL,
+                recipients TEXT NOT NULL, subject TEXT NOT NULL, status TEXT NOT NULL,
+                created REAL NOT NULL, provider_id TEXT, idempotency_key TEXT NOT NULL UNIQUE);
             """)
         os.chmod(self.path, 0o600)
         with self.transaction() as db:
@@ -169,6 +176,57 @@ class Store:
                   "inflight_micro_usd": sum(r["amount"] for r in rows if r["status"] == "pending")}
         result["remaining_micro_usd"] = max(0, MONTHLY_CAP - result["committed_micro_usd"])
         return result
+
+    def _ensure_notification_defaults(self):
+        defaults = {
+            "contact_form": (1, '["ben@cccbuild.com"]'),
+            "chat_ended": (0, "[]"),
+            "unanswered_question": (0, "[]"),
+            "safety_flag": (0, "[]"),
+            "rate_limit": (0, "[]"),
+            "monthly_faq_update": (0, "[]"),
+        }
+        now = time.time()
+        with self.transaction() as db:
+            for trigger, (enabled, recipients) in defaults.items():
+                db.execute(
+                    "INSERT OR IGNORE INTO notification_settings(trigger, enabled, recipients, updated) VALUES (?,?,?,?)",
+                    (trigger, enabled, recipients, now),
+                )
+
+    def get_notification_settings(self):
+        self._ensure_notification_defaults()
+        with self.connect() as db:
+            rows = db.execute("SELECT trigger, enabled, recipients, updated FROM notification_settings ORDER BY trigger").fetchall()
+        return [{**dict(row), "enabled": bool(row["enabled"]), "recipients": json.loads(row["recipients"])} for row in rows]
+
+    def set_notification_setting(self, trigger, enabled, recipients, now=None):
+        allowed = {"contact_form", "chat_ended", "unanswered_question", "safety_flag", "rate_limit", "monthly_faq_update"}
+        if trigger not in allowed or not isinstance(enabled, bool) or not isinstance(recipients, list) or len(recipients) > 4:
+            raise ValueError("Invalid notification setting")
+        clean = []
+        for value in recipients:
+            if not isinstance(value, str) or not re.fullmatch(r"[^@\s]{1,64}@(?:cccbuild\.com|srinagubandi\.com)", value, re.I):
+                raise ValueError("Recipients must use an approved company domain")
+            clean.append(value.lower())
+        with self.transaction() as db:
+            db.execute("UPDATE notification_settings SET enabled=?, recipients=?, updated=? WHERE trigger=?",
+                       (int(enabled), json.dumps(sorted(set(clean))), time.time() if now is None else float(now), trigger))
+            if db.total_changes != 1:
+                raise ValueError("Unknown notification setting")
+
+    def record_notification(self, trigger, recipients, subject, status, idempotency_key, provider_id=None, now=None):
+        with self.transaction() as db:
+            db.execute("""INSERT INTO notification_log(trigger, recipients, subject, status, created, provider_id, idempotency_key)
+                          VALUES (?,?,?,?,?,?,?)
+                          ON CONFLICT(idempotency_key) DO UPDATE SET status=excluded.status, provider_id=excluded.provider_id""",
+                       (trigger, json.dumps(recipients), subject[:200], status, time.time() if now is None else float(now), provider_id, idempotency_key))
+
+    def notification_deliveries(self, limit=50):
+        limit = max(1, min(int(limit), 100))
+        with self.connect() as db:
+            rows = db.execute("SELECT trigger, recipients, subject, status, created, provider_id, idempotency_key FROM notification_log ORDER BY created DESC LIMIT ?", (limit,)).fetchall()
+        return [{**dict(row), "recipients": json.loads(row["recipients"])} for row in rows]
 
     def cache_get(self, key, now=None):
         with self.connect() as db:

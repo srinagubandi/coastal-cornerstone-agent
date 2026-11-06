@@ -48,5 +48,12 @@ class NotificationTests(unittest.TestCase):
         self.service.update_setting('chat_ended', True, ['ben@cccbuild.com'])
         self.assertEqual(self.service.maybe_send('chat_ended', 'x', 'body', 'event-1')['status'], 'sent')
 
+    def test_service_works_with_production_base_store(self):
+        base_store = Store(Path(self.tmp.name) / 'base-store')
+        service = NotificationService(self.config, base_store, self.transport)
+        settings = service.settings()
+        self.assertTrue(any(row['trigger'] == 'contact_form' for row in settings))
+        self.assertEqual(service.deliveries(), [])
+
 
 if __name__ == '__main__': unittest.main()
