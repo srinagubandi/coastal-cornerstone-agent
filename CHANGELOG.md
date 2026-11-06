@@ -7,6 +7,7 @@
 - Fixed the confirmed production 503 by adding notification schema/accessors to the shared `Store` used by `Service`; verified in an isolated temporary SQLite reproduction and the full regression suite.
 - Added an authenticated `/dashboard/chat/<id>` detail route, dashboard-wide breadcrumbs, a three-column desktop conversation view with responsive stacking, and a compact conversation summary column. Legacy `#chat=<id>` links migrate safely to the new route without changing chat records or sending email.
 - Improved the dedicated chat-detail UX with wrapped question links, a back-to-dashboard link, Queue/Conversation/Summary jump navigation, keyboard-focusable anchor targets, and additional sticky-nav clearance. The navigation is hidden on ordinary dashboard sections.
+- Applied the dashboard-wide UI/UX pass: bounded the dedicated queue and summary columns, reduced its visible queue fields to readable time/question/status while retaining metadata in detail and summary, added progressive chat detail links, scoped queue scrolling, explicit UTC labels, Overview filter clearing and no-data/no-match states, accessible notification control names, and FAQ rejection confirmation.
 
 ## 1.0.0 — 2026-11-03
 

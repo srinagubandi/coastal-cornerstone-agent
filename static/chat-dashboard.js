@@ -88,7 +88,7 @@ const stamp = value => {
   } else if (typeof value === 'string') {
     time = new Date(value).getTime();
   }
-  return Number.isFinite(time) ? new Date(time).toUTCString() : 'Unavailable';
+  return Number.isFinite(time) ? new Date(time).toUTCString().replace('GMT', 'UTC') : 'Unavailable';
 };
 
 const human = value => {
@@ -181,7 +181,7 @@ const emailPairs = value => {
   return pairs.length ? pairs : [['Status', 'Not queued']];
 };
 
-function markSelection(){const buttons=ui.list.querySelectorAll('button[data-chat-id]');for(const button of buttons){const chatId=button.dataset.chatId;if(chatId===state.selected){button.setAttribute('aria-current','true');}else{button.setAttribute('aria-current','false');}}}
+function markSelection(){const links=ui.list.querySelectorAll('[data-chat-id]');for(const link of links){const chatId=link.dataset.chatId;if(chatId===state.selected){link.setAttribute('aria-current','true');}else{link.setAttribute('aria-current','false');}}}
 
 function renderList() {
   const query = ui.search.value.trim().toLowerCase();
@@ -209,23 +209,34 @@ function renderList() {
 
     if (query && !searchable.includes(query)) continue;
 
-    const btn = make('button', previewText, 'cc-chat-row-link');
-    btn.type = 'button';
+    const btn = make('a', previewText, 'cc-chat-row-link');
+    btn.href = '/dashboard/chat/' + id;
     btn.dataset.chatId = id;
     btn.setAttribute('aria-controls', 'chat-detail');
     btn.setAttribute('aria-current', String(id === state.selected));
 
     const questionCell = make('td');
+    questionCell.dataset.col = 'question';
     questionCell.appendChild(btn);
     const notificationText = emailPairs(chat.email_states).map(([label, text]) => `${label}: ${text}`).join(' · ');
     const row = make('tr');
+    const timeCell = make('td', stamp(chat.created));
+    timeCell.dataset.col = 'time';
+    const statusCell = make('td', human(chat.status));
+    statusCell.dataset.col = 'status';
+    const messagesCell = make('td', String(Math.max(0, chat.message_count || 0)));
+    messagesCell.dataset.col = 'messages';
+    const contactCell = make('td', contactPhrase);
+    contactCell.dataset.col = 'contact';
+    const notificationsCell = make('td', notificationText);
+    notificationsCell.dataset.col = 'notifications';
     row.append(
-      make('td', stamp(chat.created)),
+      timeCell,
       questionCell,
-      make('td', human(chat.status)),
-      make('td', String(Math.max(0, chat.message_count || 0))),
-      make('td', contactPhrase),
-      make('td', notificationText)
+      statusCell,
+      messagesCell,
+      contactCell,
+      notificationsCell
     );
     nodes.push(row);
 
@@ -328,7 +339,6 @@ function renderSideContext(data){
 }
 function reviewSection(review,id){
   const section=make('section','','cc-chat-review');
-  const nav=make('nav','Dashboard › Chats › Conversation','cc-breadcrumbs');nav.setAttribute('aria-label','Breadcrumb');
   const h4=make('h4','Review this conversation');
   const label=make('label','Classification');
   const select=document.createElement('select');select.id='chat-review-classification';select.name='classification';
@@ -337,7 +347,7 @@ function reviewSection(review,id){
   const answerLabel=make('label','Admin answer draft');const answer=document.createElement('textarea');answer.id='chat-review-answer';answer.maxLength=12000;answer.rows=5;answer.placeholder='Write an answer for review; this does not publish it.';answer.value=review?.answer_draft||'';answerLabel.append(answer);
   const noteLabel=make('label','Admin note');const note=document.createElement('textarea');note.id='chat-review-note';note.maxLength=2000;note.rows=3;note.placeholder='Why this classification or answer was chosen';note.value=review?.admin_note||'';noteLabel.append(note);
   const save=make('button','Save review','primary');save.type='button';save.addEventListener('click',async()=>{save.disabled=true;try{const response=await fetch('/private/api/dashboard/chats/'+id+'/review',{method:'POST',credentials:'same-origin',headers:{'Content-Type':'application/json','X-CSRF-Token':window.chatDashboardCsrf||''},body:JSON.stringify({classification:select.value,answer_draft:answer.value,admin_note:note.value})});if(response.status===401){location.replace('/dashboard/login#chat='+id);return}if(!response.ok)throw new Error('Review could not be saved.');const data=await response.json();save.textContent='Saved';setTimeout(()=>{save.textContent='Save review'},1200);if(state.chats){const row=state.chats.find(x=>x.id===id);if(row)row.classification=data.review.classification;renderList()}}catch(error){save.textContent=error.message;setTimeout(()=>{save.textContent='Save review'},1800)}finally{save.disabled=false}});
-  const status=make('p',review?.updated?'Last updated '+stamp(review.updated)+' by '+(review.updated_by||'admin'):'Not yet reviewed','muted');section.append(nav,h4,label,answerLabel,noteLabel,save,status);return section;
+  const status=make('p',review?.updated?'Last updated '+stamp(review.updated)+' by '+(review.updated_by||'admin'):'Not yet reviewed','muted');section.append(h4,label,answerLabel,noteLabel,save,status);return section;
 }
 function renderDetail(data){const h3=make('h3','Conversation '+validId(data.id),'chat-detail-title');h3.id='chat-detail-title';const summary=make('p','Status: '+human(data.status)+' · Created: '+stamp(data.created)+' · Last activity: '+stamp(data.last_seen)),notifications=make('section','','notifications'),h4=make('h4','Notification delivery'),dl=make('dl','','cc-chat-email'),pairs=emailPairs(data.email_states);for(const[kind,state]of pairs){const dt=make('dt',kind),dd=make('dd',state);dl.append(dt,dd)}notifications.append(h4,dl);const contact=contactSection(data.contact),messages=messageSection(data.messages),review=reviewSection(data.review,data.id);ui.detail.replaceChildren(h3,summary,review,contact,notifications,messages);renderSideContext(data)}
 function renderFaqList() {
@@ -395,6 +405,7 @@ async function selectFaq(value) {
     const actions = make('div', undefined, 'actions');
     const save = make('button', 'Save draft', 'ghost'); const ready = make('button', 'Mark ready for approval', 'primary'); const reject = make('button', 'Reject', 'ghost');
     const saveDraft = async stateValue => {
+      if (stateValue === 'rejected' && !window.confirm('Reject this FAQ draft? This keeps it private and removes it from the ready queue.')) return;
       for (const button of [save, ready, reject]) button.disabled = true;
       try {
         const response = await fetch('/private/api/dashboard/faq-review/drafts/' + id + '/save', {method: 'POST', credentials: 'same-origin', headers: {'Content-Type': 'application/json', 'X-CSRF-Token': window.chatDashboardCsrf || ''}, body: JSON.stringify({revision: data.revision, question: questionInput.value, answer: answerInput.value, tags: tagsInput.value.split(',').map(value => value.trim()).filter(Boolean), state: stateValue})});
@@ -559,8 +570,9 @@ ui.refresh.addEventListener('click',refreshChats);
 ui.search.addEventListener('input',renderList);
 ui.list.addEventListener('click',e=>{
   if(!(e.target instanceof Element))return;
-  const btn=e.target.closest('button[data-chat-id]');
+  const btn=e.target.closest('[data-chat-id]');
   if(btn&&ui.list.contains(btn)){
+    e.preventDefault();
     selectChat(btn.dataset.chatId,true);
   }
 });

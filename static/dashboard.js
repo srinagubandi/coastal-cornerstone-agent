@@ -45,12 +45,13 @@ function questions() {
   const search = $('search').value.toLocaleLowerCase(), outcome = $('outcome').value;
   const rows = state.events.filter(r => (outcome === 'all' || r.outcome === outcome) && [r.question, r.outcome, r.reason, ...r.faq_ids].join(' ').toLocaleLowerCase().includes(search));
   text('tablecount', rows.length + ' matching questions');
+  text('filter-summary', search || outcome !== 'all' ? `Filters: ${search ? 'search applied' : ''}${search && outcome !== 'all' ? ' · ' : ''}${outcome !== 'all' ? outcome.replaceAll('_', ' ') : ''}` : 'Showing all retained questions in this window.');
   $('questions').replaceChildren();
   for (const row of rows.slice(0, visible)) {
     const tr = node('tr'); const outcomeCell = node('td'); outcomeCell.append(node('span', row.outcome.replaceAll('_', ' '), 'badge'), node('small', row.reason.replaceAll('_', ' '), 'block muted'));
     tr.append(node('td', stamp(row.created)), node('td', row.question, 'questioncell'), node('td', row.channel), outcomeCell, node('td', row.faq_ids.join(', ') || '—'), node('td', (row.model_used || 'No model call') + ' · ' + usd(row.cost_micro))); $('questions').append(tr);
   }
-  if (!rows.length) { const row = node('tr'); const cell = node('td', 'No matching real incoming questions.'); cell.colSpan = 6; row.append(cell); $('questions').append(row); }
+  if (!rows.length) { const row = node('tr'); const cell = node('td', state.events.length ? 'No retained questions match these filters.' : 'No retained incoming questions in this window.'); cell.colSpan = 6; row.append(cell); $('questions').append(row); }
   $('more').hidden = rows.length <= visible;
 }
 function unknowns() {
@@ -95,6 +96,7 @@ async function download(format) {
 $('days').addEventListener('change', load);
 $('search').addEventListener('input', () => { visible = 200; questions(); });
 $('outcome').addEventListener('change', () => { visible = 200; questions(); });
+$('clear-filters').addEventListener('click', () => { $('search').value = ''; $('outcome').value = 'all'; visible = 200; questions(); $('search').focus(); });
 $('more').addEventListener('click', () => { visible += 200; questions(); });
 $('exportcsv').addEventListener('click', () => download('csv')); $('exportjson').addEventListener('click', () => download('json'));
 for (const button of document.querySelectorAll('[data-state]')) button.addEventListener('click', () => { queueState = button.dataset.state; for (const b of document.querySelectorAll('[data-state]')) b.setAttribute('aria-pressed', String(b === button)); unknowns(); });
@@ -115,9 +117,9 @@ function renderNotificationSettings(rows) {
   if (!notificationSettingsEl) return;
   notificationSettingsEl.replaceChildren();
   for (const row of rows || []) {
-    const article = node('article', undefined, 'reviewitem'); const label = node('label'); const checkbox = document.createElement('input'); checkbox.type = 'checkbox'; checkbox.checked = !!row.enabled; checkbox.disabled = row.trigger === 'contact_form'; label.append(checkbox, node('strong', row.trigger.replaceAll('_', ' ')));
-    const recipients = document.createElement('input'); recipients.type = 'text'; recipients.value = (row.recipients || []).join(', '); recipients.placeholder = 'name@cccbuild.com'; recipients.disabled = row.trigger === 'contact_form';
-    const save = node('button', 'Save', 'ghost'); save.type = 'button'; save.addEventListener('click', async () => { save.disabled = true; notificationMessage('Saving ' + row.trigger + '…'); try { const values = recipients.value.split(',').map(x => x.trim()).filter(Boolean); const response = await request('/private/api/dashboard/notifications/update', {method:'POST', headers:{'Content-Type':'application/json','X-CSRF-Token':csrf}, body:JSON.stringify({trigger:row.trigger, enabled:checkbox.checked, recipients:values})}); if (!response.ok) throw new Error('Setting could not be saved.'); notificationMessage('Saved ' + row.trigger + '.'); await loadNotifications(); } catch (error) { notificationMessage(error.message); } finally { save.disabled = false; } });
+    const article = node('article', undefined, 'reviewitem'); const label = node('label'); const checkbox = document.createElement('input'); checkbox.type = 'checkbox'; checkbox.checked = !!row.enabled; checkbox.disabled = row.trigger === 'contact_form'; checkbox.setAttribute('aria-label', 'Enable ' + row.trigger.replaceAll('_', ' ') + ' notifications'); label.append(checkbox, node('strong', row.trigger.replaceAll('_', ' ')));
+    const recipients = document.createElement('input'); recipients.type = 'text'; recipients.value = (row.recipients || []).join(', '); recipients.placeholder = 'name@cccbuild.com'; recipients.setAttribute('aria-label', 'Recipients for ' + row.trigger.replaceAll('_', ' ') + ' notifications'); recipients.disabled = row.trigger === 'contact_form';
+    const save = node('button', 'Save ' + row.trigger.replaceAll('_', ' '), 'ghost'); save.type = 'button'; save.addEventListener('click', async () => { save.disabled = true; notificationMessage('Saving ' + row.trigger + '…'); try { const values = recipients.value.split(',').map(x => x.trim()).filter(Boolean); const response = await request('/private/api/dashboard/notifications/update', {method:'POST', headers:{'Content-Type':'application/json','X-CSRF-Token':csrf}, body:JSON.stringify({trigger:row.trigger, enabled:checkbox.checked, recipients:values})}); if (!response.ok) throw new Error('Setting could not be saved.'); notificationMessage('Saved ' + row.trigger + '.'); await loadNotifications(); } catch (error) { notificationMessage(error.message); } finally { save.disabled = false; } });
     article.append(label, node('span', row.trigger === 'contact_form' ? ' Always on for contact follow-up.' : ' Optional trigger.', 'muted'), recipients, save); notificationSettingsEl.append(article);
   }
 }
