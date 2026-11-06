@@ -1,0 +1,40 @@
+Earlier successful test evidence retained; only owner-approved affected cases rerun.
+test_neutral_general_questions_answer_or_refer_and_chat_accepts (test_final_release_edges.FinalReleaseNeutralScopeTests.test_neutral_general_questions_answer_or_refer_and_chat_accepts) ... ok
+test_unsafe_group_comparison_outputs_with_word_quantities_fall_back (test_final_release_edges.FinalReleaseNeutralScopeTests.test_unsafe_group_comparison_outputs_with_word_quantities_fall_back) ... ok
+
+----------------------------------------------------------------------
+Ran 2 tests in 0.127s
+
+OK
+
+{
+  "positive_cases": [
+    {
+      "question": "Why does condensation form on windows?",
+      "answer": "General construction guidance: Several factors affect condensation, including ventilation and indoor humidity.",
+      "status": "answered",
+      "calls": 1
+    },
+    {
+      "question": "Why do windows get condensation?",
+      "answer": "General construction guidance: One common cause of window condensation is humid air meeting a colder surface.",
+      "status": "answered",
+      "calls": 1
+    },
+    {
+      "question": "What does project scope mean?",
+      "answer": "General construction guidance: The first consideration for a remodel is defining the project scope.",
+      "status": "answered",
+      "calls": 1
+    }
+  ],
+  "negative_rejected": [
+    "The work takes a week.",
+    "Use a few inches.",
+    "Allow half a foot.",
+    "Use one inch.",
+    "Add a quarter inch.",
+    "One amp is enough for this wiring."
+  ],
+  "production_calls": 0
+}

@@ -34,10 +34,10 @@ def is_faq_resource(path):
     return bool(FAQ_ID_RE.fullmatch(filename))
 
 TOOLS = [
-    {"name": "get_faq", "description": "Read source-verified, runtime-eligible curated FAQs. No private review questions.",
+    {"name": "get_faq", "description": "Read source-verified, runtime-eligible curated business FAQ answers. No private review questions.",
      "inputSchema": {"type": "object", "properties": {"id": {"type": "string", "maxLength": 100}}, "additionalProperties": False},
      "annotations": {"readOnlyHint": True, "destructiveHint": False, "openWorldHint": False}},
-    {"name": "ask_company_question", "description": "Read-only source-grounded company information; exact curated answers or a review fallback. No actions or commitments.",
+    {"name": "ask_company_question", "description": "Read-only source-grounded company information. Exact FAQ matches return verified business facts. General construction queries may return a bounded high-level general explanation explicitly labeled **General construction guidance**, business-topic and output safety checks only. No business commitments, price, schedule, or engineering guarantees. Non-invented fallback review.",
      "inputSchema": {"type": "object", "properties": {"question": {"type": "string", "minLength": 2, "maxLength": 1500}}, "required": ["question"], "additionalProperties": False},
      "annotations": {"readOnlyHint": True, "destructiveHint": False, "openWorldHint": False}}
 ]
@@ -76,7 +76,7 @@ class Service:
     def card(self):
         origin = self.config.public_origin
         return {"kind": "company-information", "version": "1.0.0", "name": "Coastal Cornerstone information agent",
-                "description": "Read-only source-verified public company information. No private systems, business commitments, booking, messaging, or arbitrary browsing.",
+                "description": "Read-only source-verified public company information with bounded general construction guidance. No private systems, business commitments, booking, messaging, or arbitrary browsing.",
                 "url": origin or None, "docs_url": origin + "/docs" if origin else "/docs", "endpoint": origin + "/ask" if origin else "/ask",
                 "mcp_endpoint": origin + "/mcp" if origin else "/mcp", "instruction_file": origin + "/docs" if origin else "/docs",
                 "integration_url": "https://cccbuild-3mhyn4jl.manus.space/ai/",
@@ -99,14 +99,14 @@ class Service:
         faq_schema = {"type": "object", "required": ["version", "business", "faqs"], "properties": {"version": {"type": "string"}, "business": {"type": "string"}, "faqs": {"type": "array", "items": {"type": "object", "required": ["id", "question", "answer", "source_urls", "status", "runtime_eligible"], "properties": {"id": {"type": "string"}, "question": {"type": "string"}, "answer": {"type": "string"}, "source_urls": {"type": "array", "items": {"type": "string", "format": "uri"}}, "tags": {"type": "array", "items": {"type": "string"}}, "status": {"const": "source_verified"}, "runtime_eligible": {"const": True}}}}}}
         faq_item_schema = {"type": "object", "required": ["id", "question", "answer", "source_urls", "status", "runtime_eligible"], "properties": {"id": {"type": "string"}, "question": {"type": "string"}, "answer": {"type": "string"}, "source_urls": {"type": "array", "items": {"type": "string", "format": "uri"}}, "tags": {"type": "array", "items": {"type": "string"}}, "status": {"const": "source_verified"}, "runtime_eligible": {"const": True}}}
         errors = {str(code): {"description": HTTPStatus(code).phrase} for code in (400, 411, 413, 415, 429, 503)}
-        paths = {"/ask": {"post": {"operationId": "askCompanyQuestion", "summary": "Source-grounded read-only question", "requestBody": {"required": True, "content": {"application/json": {"schema": TOOLS[1]["inputSchema"]}}}, "responses": {"200": {"description": "Curated answer or non-invented fallback", "content": {"application/json": {"schema": answer_schema}}}, **errors}}},
-                 "/faq": {"get": {"operationId": "getFaq", "responses": {"200": {"description": "Eligible source-verified snapshot", "content": {"application/json": {"schema": faq_schema}}}, "429": {"description": "Read rate limit"}}}},
+        paths = {"/ask": {"post": {"operationId": "askCompanyQuestion", "summary": "Source-grounded read-only question (FAQ or General Guidance)", "requestBody": {"required": True, "content": {"application/json": {"schema": TOOLS[1]["inputSchema"]}}}, "responses": {"200": {"description": "Curated business answer, validated general construction guidance, or non-invented fallback", "content": {"application/json": {"schema": answer_schema}}}, **errors}}},
+                 "/faq": {"get": {"operationId": "getFaq", "responses": {"200": {"description": "Eligible source-verified business FAQ snapshot", "content": {"application/json": {"schema": faq_schema}}}, "429": {"description": "Read rate limit"}}}},
                  "/mcp": {"post": {"operationId": "mcpTools", "description": "JSON-RPC 2.0 initialize, notifications/initialized, tools/list, tools/call. MCP 2025-03-26 tools subset; no SSE, full lifecycle, or A2A claim.", "requestBody": {"required": True, "content": {"application/json": {"schema": {"type": "object", "required": ["jsonrpc", "method"], "properties": {"jsonrpc": {"const": "2.0"}, "id": {"type": ["integer", "string", "null"]}, "method": {"type": "string"}, "params": {"type": "object"}}, "additionalProperties": False}}}}, "responses": {"200": {"description": "JSON-RPC result or error", "content": {"application/json": {"schema": {"type": "object", "required": ["jsonrpc", "id"], "properties": {"jsonrpc": {"const": "2.0"}, "id": {"type": ["integer", "string", "null"]}, "result": {}, "error": {"type": "object"}}}}}}, "204": {"description": "Notification accepted, no content"}, **errors}}}}
         for path in ("/health", "/agent-card.json", "/.well-known/agent-card.json", "/openapi.json", "/docs"):
             paths[path] = {"get": {"responses": {"200": {"description": "Public configuration/discovery"}, "429": {"description": "Read rate limit"}}}}
         paths["/faq/{id}"] = {
             "get": {
-                "summary": "Get FAQ HTML page",
+                "summary": "Get verified business FAQ HTML page",
                 "description": "Returns an HTML page for a specific FAQ record",
                 "parameters": [
                     {
@@ -134,7 +134,7 @@ class Service:
         }
         paths["/faq/{id}.json"] = {
             "get": {
-                "summary": "Get FAQ JSON data",
+                "summary": "Get verified business FAQ JSON data",
                 "description": "Returns JSON with public_faq for a specific FAQ record",
                 "parameters": [
                     {
@@ -190,7 +190,7 @@ class Service:
                     "429": {"description": "Too many requests"}
                 }
             }
-        return {"openapi": "3.1.0", "info": {"title": "Coastal Cornerstone public information agent", "version": "1.0.0", "description": "Public read-only FAQ API. Curated source answers only; no business commitments."},
+        return {"openapi": "3.1.0", "info": {"title": "Coastal Cornerstone public information agent", "version": "1.0.0", "description": "Public read-only FAQ API with bounded general construction guidance. Curated source answers for business facts; validated high-level explanations for general queries. No business commitments, price, schedule, or engineering guarantees."},
                 "servers": [{"url": self.config.public_origin or "/"}], "paths": paths}
 
     def mcp(self, body, client):
@@ -220,7 +220,7 @@ class Service:
         if method == "initialize":
             if set(params) - {"protocolVersion", "capabilities", "clientInfo"} or any(k in params and not isinstance(params[k], dict) for k in ("capabilities", "clientInfo")) or ("protocolVersion" in params and not isinstance(params["protocolVersion"], str)):
                 return rpc_error(rid, -32602, "Invalid initialization params"), 200
-            result = {"protocolVersion": "2025-03-26", "capabilities": {"tools": {"listChanged": False}}, "serverInfo": {"name": "coastal-cornerstone-information", "version": "1.0.0"}, "instructions": "Read-only tools; exact curated FAQs only. No full A2A or arbitrary actions."}
+            result = {"protocolVersion": "2025-03-26", "capabilities": {"tools": {"listChanged": False}}, "serverInfo": {"name": "coastal-cornerstone-information", "version": "1.0.0"}, "instructions": "Read-only tools; server-validated exact FAQ evidence or bounded high-level general construction guidance. No full A2A or arbitrary actions."}
         elif method == "tools/list":
             if params:
                 return rpc_error(rid, -32602, "Pagination and extra parameters are not supported"), 200

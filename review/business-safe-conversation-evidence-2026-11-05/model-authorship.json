@@ -1,0 +1,857 @@
+[
+  {
+    "path": "agent.py",
+    "source": "retained DeepSeek high complete prefix lines1-467 plus unchanged existing readiness",
+    "sha256": "c8bd66a41c977d663b89732171e51d1317e34b40b3758c74f680b4f89c06efb1"
+  },
+  [
+    "kimi-chat-response.json",
+    "chat_safety.py",
+    "9061149ea49c4379f6bb232470a8550dfe572da1baba3fc9eb168b6a3ef0fcff"
+  ],
+  [
+    "kimi-chat-response.json",
+    "chat_service.py",
+    "2350be7ec2b35848d1371f249ba04e9d26b9b126f40ed5a5a6025b3cd2d6b9d8"
+  ],
+  [
+    "kimi-chat-response.json",
+    "chat_service.py",
+    "be2547be8e7425ffe81b7885947c02c77bcdce057a714c112cc7d4e858484613"
+  ],
+  {
+    "path": "safety.py",
+    "source": "retainedhighDeepSeekprefix+Kimi1tail+Kimi3classification; retainedclient_ip/csvsafe; incompatibleKimi3validationandasknotapplied",
+    "sha256": "38c2a558270e4de30ead0b29556fdda1ef4dcace7d067385e7aeb95379053d2e"
+  },
+  [
+    "kimi-compatible-gates.json",
+    "agent.py",
+    "c2e783632cf96af1749a327e72946e8c7261f8075c6af24f4b61f29d209bcf3b"
+  ],
+  [
+    "kimi-tests1-compatible.json",
+    "tests/test_conversation.py",
+    "full"
+  ],
+  [
+    "kimi-tests1-compatible.json",
+    "chat_safety.py",
+    "3c9ee55e7cdba593ece4230337e077efd9607063a3f9abee7d8c1cf8473ed6a4"
+  ],
+  [
+    "kimi-tests1-compatible.json",
+    "chat_service.py",
+    "90f353b5fc4942ef8bbcb6b814c619aa1f97b65a0099219a15f5cd9e2f8edf7c"
+  ],
+  [
+    "kimi-tests1-compatible.json",
+    "tests/test_agent.py",
+    "8275ffeb29ee1dd0ac2e2cf912558eab4b81840dd5b026ccd0cd27c29693fc00"
+  ],
+  [
+    "kimi-tests1-compatible.json",
+    "tests/test_agent.py",
+    "64930f6609f484d89fa74e41f54c7063b8ca1521d16e6932581b1f87dd5644d0"
+  ],
+  [
+    "kimi-tests1-compatible.json",
+    "tests/test_agent.py",
+    "62c223ab25f0345c7c72f11895de9beeaea61e2e13e20e65e5480a9d378c717f"
+  ],
+  [
+    "kimi-tests1-compatible.json",
+    "tests/test_agent.py",
+    "397dccca9cbd4fd3e7a2e5cbd069be50d60a11d23d1804e2204c4d5f3df23c09"
+  ],
+  [
+    "kimi-tests1-compatible.json",
+    "tests/test_agent.py",
+    "d22663ed2b0cdb4e69dbb9de99dea221876a359c8bf28b526abe9238bd005294"
+  ],
+  [
+    "kimi-tests1-compatible.json",
+    "tests/test_agent.py",
+    "6c126b929571533865760a2f8a388588da365fa1daf7bfc5a64c63242a770ad7"
+  ],
+  [
+    "kimi-tests1-compatible.json",
+    "tests/test_agent.py",
+    "3d1c2ab0fbc9959428e3c6ade3dbc823d0d39fb6aab7bc14312e63c7c4cb467c"
+  ],
+  [
+    "kimi-docs-response.json",
+    "README.md",
+    "9ab6a8726d7d44a35e263555952067b591f5cf9ceccc3cd09fde2a9b88e52d31"
+  ],
+  [
+    "kimi-docs-response.json",
+    "README.md",
+    "be2f18912f0067fe918ae7eb543608ac65195a3268b74ce2a5abf982ba06417c"
+  ],
+  [
+    "kimi-docs-response.json",
+    "README.md",
+    "bc7856bd4cf140a29b521282a7d3cc1d8d3f3ef97b1df7c469df16b0f04e09de"
+  ],
+  [
+    "kimi-docs-response.json",
+    "docs/index.html",
+    "e678ebc89321b2e17f8d6651565495764ceba5b8009ad3f3963184aae1aa9ba1"
+  ],
+  [
+    "kimi-docs-response.json",
+    "docs/index.html",
+    "3eddc0f596d366e0cb75262fc18c365e5fd17190206ca239e4d72343240a1afd"
+  ],
+  [
+    "kimi-docs-response.json",
+    "docs/index.html",
+    "bc7ca74bb3f3add6299359d4c7ee15c27c696f7c5ab27080c3bf5f18bdc2b242"
+  ],
+  [
+    "kimi-docs-response.json",
+    "docs/operator-rules.md",
+    "4452734cc309550e1bd092ae7bdaef0c47a5b69b5ac6d6698c851a729d6e7afc"
+  ],
+  [
+    "kimi-docs-response.json",
+    "docs/review-workflow.md",
+    "0bacbb15197e78b597a8d6357be8c6ee6ca178c66aace4596528dc1103ae6994"
+  ],
+  [
+    "kimi-docs-response.json",
+    "app.py",
+    "86f46e58cb1253c6724378c89326cb061495239dd662ea837894f1411ffdc171"
+  ],
+  [
+    "kimi-docs-response.json",
+    "app.py",
+    "2c5f19d24d5d950c92dafbc790c8e7e6d77fdcc878f612a8bebebe4fe5c15b50"
+  ],
+  {
+    "response": "final-contract-path-mapped-response.json",
+    "path": "agent.py",
+    "kind": "unique exact replacement",
+    "old_sha256": "2a4a7265b47e4adaf9c49be3fab1aa686191af06977eda5473f89d29c103dd47"
+  },
+  {
+    "response": "final-contract-path-mapped-response.json",
+    "path": "safety.py",
+    "kind": "unique exact replacement",
+    "old_sha256": "ae66dfbfd0e5f19e9b973089779116e56160764a70625696e86778d620ab6570"
+  },
+  {
+    "response": "final-contract-path-mapped-response.json",
+    "path": "safety.py",
+    "kind": "unique exact replacement",
+    "old_sha256": "824c976e48cb61e3befc46b7e37ce31f574c1bbcf117bf89fa5bb5161acc58b1"
+  },
+  {
+    "response": "final-contract-path-mapped-response.json",
+    "path": "safety.py",
+    "kind": "unique exact replacement",
+    "old_sha256": "d613ea8d94b4742483e3ecbba8a7d25538037861a458ace078ba7bbf3ac8f904"
+  },
+  {
+    "response": "final-contract-path-mapped-response.json",
+    "path": "safety.py",
+    "kind": "unique exact replacement",
+    "old_sha256": "2d4c722062258ed110e3050b0a8ab5196a2f726da589515d36063165d48c8a95"
+  },
+  {
+    "response": "final-contract-path-mapped-response.json",
+    "path": "safety.py",
+    "kind": "unique exact replacement",
+    "old_sha256": "e48b27fb5bd2e48bb5dbb4e6a90a9973e209d56152544cd73ba6da2ce9c0bde2"
+  },
+  {
+    "response": "final-contract-path-mapped-response.json",
+    "path": "chat_service.py",
+    "kind": "unique exact replacement",
+    "old_sha256": "481db059fe1c148926940e334eb0a85451c4ceddeb37e8534ce22e4b4ca415d2"
+  },
+  {
+    "response": "final-contract-path-mapped-response.json",
+    "path": "tests/test_conversation.py",
+    "kind": "unique exact replacement",
+    "old_sha256": "5cb0ece555de85f109061cd03e587a32aceba1ef1718544be23b6aceb5c84572"
+  },
+  {
+    "response": "raw-function-response.json",
+    "path": "agent.py",
+    "kind": "unique exact replacement",
+    "old_sha256": "a876f53536da632917a8beacdb2c5130fe34d90b9a1312dc182d9d496eb4fdbe"
+  },
+  {
+    "response": "proof-function-response.json",
+    "path": "agent.py",
+    "kind": "unique exact replacement",
+    "old_sha256": "3caca749574d10e114561f66bd9068cd581fa045689279785d24f9b9948995e5"
+  },
+  {
+    "response": "proof-function-response.json",
+    "path": "agent.py",
+    "kind": "unique exact replacement",
+    "old_sha256": "30d9fd62bca7baab4975c019d322f416ebcaca3cce3c322045e8e3a8736ffd90"
+  },
+  {
+    "response": "response-function-response.json",
+    "path": "agent.py",
+    "kind": "unique exact replacement",
+    "old_sha256": "bdebbea8b1158c21da80a3e2cd94166f346a5ef6dcf48417f892da0f11ce1cd0"
+  },
+  {
+    "response": "truthful-general-public-docs-response.json",
+    "path": "README.md",
+    "kind": "unique exact replacement",
+    "old_sha256": "c9a4a2907f7dc8594359cf2f5027115c42e5751500c3f79544db11be9aab6618"
+  },
+  {
+    "response": "truthful-general-public-docs-response.json",
+    "path": "README.md",
+    "kind": "unique exact replacement",
+    "old_sha256": "894110cb458cd7fef930fcff553f8bb85f798bf66172c337fc3ea360c7876c1e"
+  },
+  {
+    "response": "truthful-general-public-docs-response.json",
+    "path": "README.md",
+    "kind": "unique exact replacement",
+    "old_sha256": "44ee2295921bc2c6a7d852d7c23ef62c58ded20be16b4fbeee1e585e8ccca54b"
+  },
+  {
+    "response": "truthful-general-public-docs-response.json",
+    "path": "docs/index.html",
+    "kind": "unique exact replacement",
+    "old_sha256": "39cfdf4eeff5a3c3d9adb5a3b88fdc2af5ead44f4c4c60df9d705d73c7f19e74"
+  },
+  {
+    "response": "truthful-general-public-docs-response.json",
+    "path": "docs/index.html",
+    "kind": "unique exact replacement",
+    "old_sha256": "eba74215b748ff6e47091c5d333a1261bba9052ae492a0bf49319a640509d66d"
+  },
+  {
+    "response": "truthful-general-public-docs-response.json",
+    "path": "docs/index.html",
+    "kind": "unique exact replacement",
+    "old_sha256": "9032e7583b6f45797b794ac817a227606cce819646baa5ae891b44a1b1aa213b"
+  },
+  {
+    "response": "truthful-general-public-docs-response.json",
+    "path": "docs/operator-rules.md",
+    "kind": "unique exact replacement",
+    "old_sha256": "adc0eab3976aa5485ccb74114a80b8a36621ee833b89b1f5bfdceb520f116daa"
+  },
+  {
+    "response": "truthful-general-public-docs-response.json",
+    "path": "docs/review-workflow.md",
+    "kind": "unique exact replacement",
+    "old_sha256": "deceb5137da890256ee829dcead69fb04bc90e4baa455be70084113c512c52e1"
+  },
+  {
+    "response": "truthful-general-public-docs-response.json",
+    "path": "app.py",
+    "kind": "unique exact replacement",
+    "old_sha256": "ad22c9c54c0afff1c72f93b781ba9a09b9da30883da9f7409a0c19a0be1e0569"
+  },
+  {
+    "response": "truthful-general-public-docs-response.json",
+    "path": "app.py",
+    "kind": "unique exact replacement",
+    "old_sha256": "8c36da3e7384ac193556684dc374fc5d96461b6048ba0f7d8ba366a49e49742d"
+  },
+  {
+    "response": "truthful-general-public-docs-response.json",
+    "path": "app.py",
+    "kind": "unique exact replacement",
+    "old_sha256": "e819a5be74ff07f105f44e7c555552823e542960be4e48e0787fdfe87f84dd3d"
+  },
+  {
+    "response": "truthful-general-public-docs-response.json",
+    "path": "app.py",
+    "kind": "unique exact replacement",
+    "old_sha256": "0157eda17be0c5cd39c79317befdb9b7806c5ab87f00898e7f0c614d952af16b"
+  },
+  {
+    "response": "truthful-general-public-docs-response.json",
+    "path": "app.py",
+    "kind": "unique exact replacement",
+    "old_sha256": "2b5f56bef08671625a46a4d4b24a46b71761f3ce8765f7a9dd957edba8d7dae8"
+  },
+  {
+    "response": "truthful-general-public-docs-response.json",
+    "path": "app.py",
+    "kind": "unique exact replacement",
+    "old_sha256": "d9988b9330a1510fd1e208d62fbe1c01b17888db037031d843b5d1a3a4a34c22"
+  },
+  {
+    "response": "truthful-general-public-docs-response.json",
+    "path": "app.py",
+    "kind": "unique exact replacement",
+    "old_sha256": "35187c8616284319cb453adf24de511c9f978b5d7c11530115a3fb1919f8e870"
+  },
+  {
+    "response": "truthful-general-public-docs-response.json",
+    "path": "app.py",
+    "kind": "unique exact replacement",
+    "old_sha256": "c1fe0d4ca976696779b7b37629cbc7662774f8d35e2039f61a03758611855e76"
+  },
+  {
+    "response": "truthful-general-public-docs-response.json",
+    "path": "app.py",
+    "kind": "unique exact replacement",
+    "old_sha256": "015306699a1d32ebad994fdf29592690269a3f8af8823ab6a274cc52b7cfe8c4"
+  },
+  {
+    "response": "truthful-general-public-docs-response.json",
+    "path": "app.py",
+    "kind": "unique exact replacement",
+    "old_sha256": "badd8010130a38695e3ab85b4a2aee1671b4da7c498ec621251cde5888639754"
+  },
+  {
+    "response": "tiny-repair-import-response.json",
+    "path": "agent.py",
+    "kind": "unique exact replacement",
+    "old_sha256": "b539eea00ec935bc4a80eae8ad8b7dc4cb1ef09023c1edd54cc158e0c4a5ac03"
+  },
+  {
+    "response": "tiny-repair-scope-response.json",
+    "path": "safety.py",
+    "kind": "unique exact replacement",
+    "old_sha256": "23343474b19f9374cf806102b0f44c5aecd0ead51a4574cbdb3015b803c45610"
+  },
+  {
+    "response": "tiny-repair-scope-response.json",
+    "path": "safety.py",
+    "kind": "unique exact replacement",
+    "old_sha256": "4b6d41dbbe3a2b8458df49b8239da2097cb133bfb7221f474ee912988b6f0863"
+  },
+  {
+    "response": "general-core-recovered-methods.json",
+    "path": "agent.py",
+    "kind": "unique exact replacement",
+    "old_sha256": "ebc1cdd0a36bdf20d18259e98f17cd1cd9f3d271f17272b960172660872baa60"
+  },
+  {
+    "response": "general-core-recovered-methods.json",
+    "path": "agent.py",
+    "kind": "unique exact replacement",
+    "old_sha256": "35aed6d574a41c6a8329ac315a71911d37e5a3e416f08e8ae618aadef1dec3c4"
+  },
+  {
+    "response": "general-core-recovered-methods.json",
+    "path": "agent.py",
+    "kind": "unique exact replacement",
+    "old_sha256": "acaf022ffe03f901758c16afc05336889118693d667882bff7f8ec5aa4d338ac"
+  },
+  {
+    "response": "narrow-general-validator-raw-response.json",
+    "path": "agent.py",
+    "kind": "unique exact replacement",
+    "old_sha256": "4fc1ebe7f07837ee34a5c47f139ab8dfc945384c44984d79743fd389d4edd018"
+  },
+  {
+    "response": "narrow-general-validator-raw-response.json",
+    "path": "agent.py",
+    "kind": "unique exact replacement",
+    "old_sha256": "55de04338d14b19b24af630269dd17d71f12b953cc97781a8768ce899792f0bd"
+  },
+  {
+    "response": "updated-private-plan-response.json",
+    "path": "review/business-safe-conversation-plan.md",
+    "kind": "complete model-authored review plan"
+  },
+  {
+    "response": "general-render-function-response.json",
+    "path": "agent.py",
+    "kind": "unique exact replacement",
+    "old_sha256": "c3df601a9b4743c05bc064a371d30d2442cc097ec634e195dfcdc85a198ea725"
+  },
+  {
+    "response": "general-render-function-response.json",
+    "path": "agent.py",
+    "kind": "unique exact replacement",
+    "old_sha256": "851ff51c9b96050cf5723be863f6ebd2e7cfa5d56f7efbe400748cca11c58ad6"
+  },
+  {
+    "response": "general-render-function-response.json",
+    "path": "agent.py",
+    "kind": "unique exact replacement",
+    "old_sha256": "49058d9e76ad5e26ceea7ce16e097885229d3051117062452135f88b4131a43e"
+  },
+  {
+    "response": "general-render-function-response.json",
+    "path": "agent.py",
+    "kind": "unique exact replacement",
+    "old_sha256": "ee5479d3898f84e547f667f0933735ec895eb190e04eb56c2dd7379f66f172d5"
+  },
+  {
+    "response": "general-render-function-response.json",
+    "path": "agent.py",
+    "kind": "unique exact replacement",
+    "old_sha256": "04742fead973700a475704d9b7285e69bc4c13e8f93cc1024a5e726d79031ad4"
+  },
+  {
+    "response": "general-render-function-response.json",
+    "path": "agent.py",
+    "kind": "unique exact replacement",
+    "old_sha256": "c0469bf775be9af2212597c324c4ba0a233893d3b0218b02f44975f853ae8fe3"
+  },
+  {
+    "response": "complete-validator-correction-response.json",
+    "path": "agent.py",
+    "kind": "unique exact replacement",
+    "old_sha256": "a64fa80eba5f2f510426480e6104c5d9e53eda7113ad6e7c342352b5f8ac9a08"
+  },
+  {
+    "response": "render-cache-general-only-repair-response.json",
+    "path": "agent.py",
+    "kind": "unique exact replacement",
+    "old_sha256": "c16a8ffcdc2169ba7a9e41be280b7abda4770329d4e0ba983a6495af2c820eb6"
+  },
+  {
+    "response": "render-cache-general-only-repair-response.json",
+    "path": "agent.py",
+    "kind": "unique exact replacement",
+    "old_sha256": "6153d679a9c4e6e8ddea2bf1b154745522fca89b9b7359a9b815504b38067bd5"
+  },
+  {
+    "response": "render-cache-general-only-repair-response.json",
+    "path": "agent.py",
+    "kind": "unique exact replacement",
+    "old_sha256": "5a331648bdab02000ea369cf06010506087adcc4a8c35f5dff0823bc0caaf571"
+  },
+  {
+    "response": "kimi-complete-validator-correction-response.json",
+    "path": "agent.py",
+    "kind": "unique exact replacement",
+    "old_sha256": "34df932f111243b2b81615ad8d133dcbeccb6283660c7b31feefb35e8bfdbd14"
+  },
+  {
+    "response": "kimi-complete-validator-correction-response.json",
+    "path": "agent.py",
+    "kind": "unique exact replacement",
+    "old_sha256": "3720a92848625e27ffdf7c356f8732c83081c2448e7611a18b58766427a390e6"
+  },
+  {
+    "response": "recovered-runtime-prompt-only.json",
+    "path": "agent.py",
+    "kind": "unique exact replacement",
+    "old_sha256": "4c740aafa9c3d1c6b789622e251c1cd329ef12a3b4c7d4069207b2ef44ac07ef"
+  },
+  {
+    "response": "final-small-materialize-mapped.json",
+    "path": "agent.py",
+    "kind": "unique exact replacement",
+    "old_sha256": "245186a57d4eba77cb73bf4a9dc9f19852ffd3107c1ccb6f936652ba65f45446"
+  },
+  {
+    "response": "final-small-materialize-mapped.json",
+    "path": "agent.py",
+    "kind": "unique exact replacement",
+    "old_sha256": "060229ae234770c96b97a439fcd9e4eee45488caf480ab3555a0e8ddf5a8294e"
+  },
+  {
+    "response": "final-small-materialize-mapped.json",
+    "path": "agent.py",
+    "kind": "unique exact replacement",
+    "old_sha256": "1ff6c13d47290a8e865226af9762b06c38bea44b71d6526123ad2fe57c35badb"
+  },
+  {
+    "response": "pro-final-chat-response.json",
+    "path": "chat_service.py",
+    "kind": "unique exact replacement",
+    "old_sha256": "c022a118714567c227efbd771c7a961fe80c171db7a3a61fd681cc3d191197ea"
+  },
+  {
+    "response": "pro-final-flow-response.json",
+    "path": "agent.py",
+    "kind": "unique exact replacement",
+    "old_sha256": "e8de39d9ba9cee8ade9d19c7fcb4c8afee500b7e3864c1c68246fa454e164723"
+  },
+  {
+    "response": "pro-final-flow-response.json",
+    "path": "agent.py",
+    "kind": "unique exact replacement",
+    "old_sha256": "d428910b230792fa0a44a3597c0b140f739fd579b605fbf61cb7afb26e0f6a4b"
+  },
+  {
+    "response": "pro-final-flow-response.json",
+    "path": "agent.py",
+    "kind": "unique exact replacement",
+    "old_sha256": "1e148ef1da319c74bb2aa66b2d1f996ba8672f7dc473a22274e7d0674165fb99"
+  },
+  {
+    "response": "pro-final-flow-response.json",
+    "path": "agent.py",
+    "kind": "unique exact replacement",
+    "old_sha256": "cdc126f0111ba83f5741e8905ca3a7800ffe1ddb712790f4a577de9c12d8dca9"
+  },
+  {
+    "response": "pro-final-flow-response.json",
+    "path": "agent.py",
+    "kind": "unique exact replacement",
+    "old_sha256": "2764f98160b17a236053d069a0756662b731d965770d5b7d7e5115ceec25982a"
+  },
+  {
+    "response": "pro-final-flow-response.json",
+    "path": "agent.py",
+    "kind": "unique exact replacement",
+    "old_sha256": "7eafa43ebb78f001425717e354da7d84a9f17c79eafe71acf7e84de3861912de"
+  },
+  {
+    "response": "pro-final-flow-response.json",
+    "path": "agent.py",
+    "kind": "unique exact replacement",
+    "old_sha256": "33a0bd6bf4f67526e1b0528552e64be255d649a5a16c167e267e5c5f254a8afd"
+  },
+  {
+    "response": "pro-final-flow-response.json",
+    "path": "agent.py",
+    "kind": "unique exact replacement",
+    "old_sha256": "4654a9603f54dc932a2ae79e5b5041eb600d295b2b93fed446fd5f126aec1611"
+  },
+  {
+    "response": "pro-final-flow-response.json",
+    "path": "agent.py",
+    "kind": "unique exact replacement",
+    "old_sha256": "5f016f8bdaf353e6e85d0ff7be9c554642e90df64bf89742c3520a18dd258a71"
+  },
+  {
+    "response": "general-finish-tests-response.json",
+    "path": "tests/test_generative_conversation.py",
+    "kind": "complete module"
+  },
+  {
+    "response": "mock-test-fixture-corrections-response.json",
+    "path": "tests/test_conversation.py",
+    "kind": "unique exact replacement",
+    "old_sha256": "8da1c4424b662aa8046478b180024b0cd9287c321b197580538b9c8d5daaa65f"
+  },
+  {
+    "response": "mock-test-fixture-corrections-response.json",
+    "path": "tests/test_generative_conversation.py",
+    "kind": "unique exact replacement",
+    "old_sha256": "c7d9544a707e2b67e741212e97c674ddee3b3cb5bf5b5e7c0817a2275f2250a2"
+  },
+  {
+    "response": "mock-test-fixture-corrections-response.json",
+    "path": "tests/test_generative_conversation.py",
+    "kind": "unique exact replacement",
+    "old_sha256": "12d8e73bff1283c975e259eb6688e7765bc9056369e50d24609a1a73c1df08e3"
+  },
+  {
+    "response": "mock-test-fixture-corrections-response.json",
+    "path": "tests/test_generative_conversation.py",
+    "kind": "unique exact replacement",
+    "old_sha256": "77253d656e0c529b292e0e3704b5ee8a9eb03d0d8bbad763f8d4b780e40fdeb2"
+  },
+  {
+    "response": "mock-test-fixture-corrections-response.json",
+    "path": "tests/test_generative_conversation.py",
+    "kind": "unique exact replacement",
+    "old_sha256": "7d7925475b5387bec3f86d04ddb37a3b9615ab54c82c68c963dfcedfb57185a9"
+  },
+  {
+    "response": "mock-test-fixture-corrections-response.json",
+    "path": "tests/test_generative_conversation.py",
+    "kind": "unique exact replacement",
+    "old_sha256": "52d1865d065dafae9d1b69eaf24b1ffa7726846d6bf1a3fda36ffa7be68ac018"
+  },
+  {
+    "response": "last-measured-proof-type-and-accounting-response.json",
+    "path": "agent.py",
+    "kind": "unique exact replacement",
+    "old_sha256": "683416710a4699a90f8e90ec54c25ff9af334f36957f23ef388a5cdef7384528"
+  },
+  {
+    "response": "last-measured-proof-type-and-accounting-response.json",
+    "path": "tests/test_generative_conversation.py",
+    "kind": "unique exact replacement",
+    "old_sha256": "a8f85f1a1e2470154e30561df51fd778d8116cdbdd6e3209f08158a5adf9de1f"
+  },
+  {
+    "response": "mapped-skeptic-root-safety-response.json",
+    "path": "tests/test_skeptic_regressions.py",
+    "kind": "complete module"
+  },
+  {
+    "response": "mapped-skeptic-root-safety-response.json",
+    "path": "safety.py",
+    "kind": "unique exact replacement",
+    "old_sha256": "fcbe26764acfae43aead125d4743bfc7d1e60d31f9fa75b792f7a949804f679b"
+  },
+  {
+    "response": "mapped-skeptic-root-safety-response.json",
+    "path": "safety.py",
+    "kind": "unique exact replacement",
+    "old_sha256": "a20018ad3f512b8cbc4ba1ed205c42d66380c3dcbf0a996b99e3c9f4798c8b63"
+  },
+  {
+    "response": "mapped-skeptic-root-safety-response.json",
+    "path": "safety.py",
+    "kind": "unique exact replacement",
+    "old_sha256": "f17d0a0b4de9f3c1ba48f3bb415bd10a7562129aff5d08732307a5d4a659f469"
+  },
+  {
+    "response": "mapped-skeptic-root-curated-response.json",
+    "path": "tests/test_curated_handoffs.py",
+    "kind": "complete module"
+  },
+  {
+    "response": "mapped-skeptic-root-curated-response.json",
+    "path": "agent.py",
+    "kind": "unique exact replacement",
+    "old_sha256": "9b2dd7473c8b01c4775d0dbeafa8e4057ca260fd74d3fc9c17ee3ec51ee252dc"
+  },
+  {
+    "response": "mapped-skeptic-root-curated-response.json",
+    "path": "agent.py",
+    "kind": "unique exact replacement",
+    "old_sha256": "9e228ec8aab66232c5406afac808453b008311b6b6fcdd9c5eda41a97bf9eae3"
+  },
+  {
+    "response": "mapped-skeptic-root-curated-response.json",
+    "path": "chat_service.py",
+    "kind": "unique exact replacement",
+    "old_sha256": "f402cc2a807cd619ddbede8dbf7c5366d3b3c4865d9b033812185e2ad75a564a"
+  },
+  {
+    "response": "mapped-source-documentation-consistency-response.json",
+    "path": "tests/test_source_consistency.py",
+    "kind": "complete module"
+  },
+  {
+    "response": "mapped-source-documentation-consistency-response.json",
+    "path": "agent.py",
+    "kind": "unique exact replacement",
+    "old_sha256": "7fc8bd171808a2e0e2c70ba48267cb4d772d0393bcde3bcc061dc7a4d869f684"
+  },
+  {
+    "response": "mapped-source-documentation-consistency-response.json",
+    "path": "docs/review-workflow.md",
+    "kind": "unique exact replacement",
+    "old_sha256": "df08a58181db8913a21e20766deae4f9ab5ae833209d23684a106d2c1ad93c69"
+  },
+  {
+    "response": "mapped-source-documentation-consistency-response.json",
+    "path": "README.md",
+    "kind": "unique exact replacement",
+    "old_sha256": "c111840830e93fa158facca0e50c61cac9ec03726549c98c9a848c3752ce785f"
+  },
+  {
+    "response": "skeptic-fixture-units-pump-edge-response.json",
+    "path": "tests/test_curated_handoffs.py",
+    "kind": "unique exact replacement",
+    "old_sha256": "f75fbe140a6e29d8c8a2cd97fc9de0ce590129d4d1f1fd26ab7f3d1ce390c586"
+  },
+  {
+    "response": "skeptic-fixture-units-pump-edge-response.json",
+    "path": "tests/test_curated_handoffs.py",
+    "kind": "unique exact replacement",
+    "old_sha256": "eae46eca5c7718bab2e712adcca733400ca81ec41771d3311e3ea6c95cc44060"
+  },
+  {
+    "response": "skeptic-fixture-units-pump-edge-response.json",
+    "path": "safety.py",
+    "kind": "unique exact replacement",
+    "old_sha256": "fb154ed9a28cab65e073da3681687f4f022924f4b0790b8abcd243b0b4c41eb4"
+  },
+  {
+    "response": "one-line-mocked-model-call-assertion-response.json",
+    "path": "tests/test_curated_handoffs.py",
+    "kind": "unique exact replacement",
+    "old_sha256": "729b6d0808c91de572aa4af1a3b127f964b0c93f2db229e817e83b0b12428357"
+  },
+  {
+    "response": "claude-blocker-scope-recovered-response.json",
+    "path": "tests/test_claude_scope_regressions.py",
+    "kind": "complete module"
+  },
+  {
+    "response": "claude-blocker-scope-recovered-response.json",
+    "path": "safety.py",
+    "kind": "unique exact replacement",
+    "old_sha256": "a531b04f4afa861828cf475214bd6532f69247eadd66c491b63a3a9453433370"
+  },
+  {
+    "response": "claude-blocker-scope-recovered-response.json",
+    "path": "safety.py",
+    "kind": "unique exact replacement",
+    "old_sha256": "567cb82449fe94ad23cf8e4256c52c3cfa82e22ba0ed2e0ab4dcd030c6413992"
+  },
+  {
+    "response": "claude-blocker-scope-recovered-response.json",
+    "path": "safety.py",
+    "kind": "unique exact replacement",
+    "old_sha256": "ac6f87fe224d21cf1123048ed4c4c3a9f2ee3dac5bbea83f829e9250fdb0fcb7"
+  },
+  {
+    "response": "claude-blocker-scope-recovered-response.json",
+    "path": "safety.py",
+    "kind": "unique exact replacement",
+    "old_sha256": "34131b37e1639ad26e51ca016a782cb55867a5e2d46494b91d9d1afecfb90be1"
+  },
+  {
+    "response": "claude-blocker-scope-recovered-response.json",
+    "path": "safety.py",
+    "kind": "unique exact replacement",
+    "old_sha256": "f1f5e915c870cbdb521daf21ff29c7d6bb75765a33853f5e05b896f5963f084a"
+  },
+  {
+    "response": "claude-blocker-docs-recovered-response.json",
+    "path": "README.md",
+    "kind": "unique exact replacement",
+    "old_sha256": "99bbe3b1d46860dafd28344eadb790ed6ff329786be95d95406692144480f221"
+  },
+  {
+    "response": "claude-blocker-docs-recovered-response.json",
+    "path": "README.md",
+    "kind": "unique exact replacement",
+    "old_sha256": "af8a1d7bb91d0d63f6fecf6c89732fad539851e19f19efe93ecd56254013fe22"
+  },
+  {
+    "response": "claude-blocker-docs-recovered-response.json",
+    "path": "README.md",
+    "kind": "unique exact replacement",
+    "old_sha256": "42ee29a9fff8870474bb558505794d741b6a6e85fdbe32478f6aeee15fcb8dd2"
+  },
+  {
+    "response": "claude-blocker-docs-recovered-response.json",
+    "path": "docs/review-workflow.md",
+    "kind": "unique exact replacement",
+    "old_sha256": "319ca7da4305750b99b87561642d7438e570605b54644de8b5b0059b780b883e"
+  },
+  {
+    "response": "claude-blocker-docs-recovered-response.json",
+    "path": "docs/review-workflow.md",
+    "kind": "unique exact replacement",
+    "old_sha256": "e73e80b18c339b62ea7234851a46fb7012aa0e8b60ac5bcab7f09126bd4928ee"
+  },
+  {
+    "response": "claude-blocker-docs-recovered-response.json",
+    "path": "docs/index.html",
+    "kind": "unique exact replacement",
+    "old_sha256": "bae3828f8655a950ba3845bd0c24ab8071d11568ff85b368df48781b7d913292"
+  },
+  {
+    "response": "claude-blocker-docs-recovered-response.json",
+    "path": "docs/index.html",
+    "kind": "unique exact replacement",
+    "old_sha256": "bf94c47955698f2a6467d9e5cb83ea3c1695d1fed2dc2a1139d60f07a78c58bf"
+  },
+  {
+    "response": "claude-blocker-docs-recovered-response.json",
+    "path": "docs/index.html",
+    "kind": "unique exact replacement",
+    "old_sha256": "b242a5f9529e6036a4715d4e4f44aca4f85ad94635f15e142bbf53c5d41d1086"
+  },
+  {
+    "response": "claude-blocker-docs-recovered-response.json",
+    "path": "docs/operator-rules.md",
+    "kind": "unique exact replacement",
+    "old_sha256": "b51400e7068fb580a666aa9e4dba98c9d85f0d127605e44b88ff1e1656a9d8eb"
+  },
+  {
+    "response": "claude-blocker-docs-recovered-response.json",
+    "path": "docs/operator-rules.md",
+    "kind": "unique exact replacement",
+    "old_sha256": "d7ff1e7c872c6e5a960a17bb3208ee0fe9ef773408216853afc7b7fbea539e15"
+  },
+  {
+    "response": "claude-blocker-docs-recovered-response.json",
+    "path": "docs/operator-rules.md",
+    "kind": "unique exact replacement",
+    "old_sha256": "7a2c6ee206a331750b7739fafece5cb6767b836738d05935707a824cd2cb4d99"
+  },
+  {
+    "response": "claude-blocker-output-recovered-response.json",
+    "path": "tests/test_realistic_general_outputs.py",
+    "kind": "complete module"
+  },
+  {
+    "response": "claude-blocker-output-recovered-response.json",
+    "path": "agent.py",
+    "kind": "unique exact replacement",
+    "old_sha256": "5aff8e3548a1f1e4b5a225bddc9cae7e85747ad336b6f1ff616b378960c224fb"
+  },
+  {
+    "response": "claude-blocker-output-recovered-response.json",
+    "path": "agent.py",
+    "kind": "unique exact replacement",
+    "old_sha256": "5116978f4fa6a1ab4b019da0bbb6ce40622bcc762fc8bf448af5233f7cf86576"
+  },
+  {
+    "response": "claude-blocker-output-recovered-response.json",
+    "path": "agent.py",
+    "kind": "unique exact replacement",
+    "old_sha256": "c4c93ba214c672f22cf3cf540c0f7d2f0b7d1c95dbfcfcf5accd1d4a66ba4a4f"
+  },
+  {
+    "response": "claude-blocker-output-recovered-response.json",
+    "path": "agent.py",
+    "kind": "unique exact replacement",
+    "old_sha256": "96c8ff5796af6776df6c8e3c34d7078ce474ea0927b7015af34c844d9a012e42"
+  },
+  {
+    "response": "claude-blocker-output-recovered-response.json",
+    "path": "agent.py",
+    "kind": "unique exact replacement",
+    "old_sha256": "6a300bf3b2d3d8ad22b90c8381ed279b8de6f24cc15ebd6a6f1208927212da1b"
+  },
+  {
+    "response": "claude-blocker-output-recovered-response.json",
+    "path": "agent.py",
+    "kind": "unique exact replacement",
+    "old_sha256": "8a3562c1600206c0d34871d7eac70a79210e0f6b71d60e30739c882269169bb6"
+  },
+  {
+    "response": "claude-blocker-output-recovered-response.json",
+    "path": "agent.py",
+    "kind": "unique exact replacement",
+    "old_sha256": "26151adb9cca40da26faf6a02ae838216164ca3cde95d4c37887647ba8935d43"
+  },
+  {
+    "response": "claude-blocker-output-recovered-response.json",
+    "path": "tests/test_generative_conversation.py",
+    "kind": "unique exact replacement",
+    "old_sha256": "f570d521724a335719e1422da3a086033b9f77a4b24f8e0a2320e4794cf16aaa"
+  },
+  {
+    "response": "claude-blocker-output-recovered-response.json",
+    "path": "tests/test_curated_handoffs.py",
+    "kind": "unique exact replacement",
+    "old_sha256": "a6b6d8e606d6aef94be84132807a62cbb0aea722b09db8265450338eeb532b3c"
+  },
+  {
+    "response": "last-regression-recovered-valid-tests-response.json",
+    "path": "tests/test_curated_handoffs.py",
+    "kind": "unique exact replacement",
+    "old_sha256": "c14181e6e85c47c3d4523f2f345d71c2e44c121d83694606931fae5166283099"
+  },
+  {
+    "response": "last-regression-recovered-valid-tests-response.json",
+    "path": "safety.py",
+    "kind": "unique exact replacement",
+    "old_sha256": "9cf53a78706286670b77ee0b946948ee717b4acc088c9313cc1d3496a53a57db"
+  },
+  {
+    "response": "last-regression-recovered-valid-tests-response.json",
+    "path": "safety.py",
+    "kind": "unique exact replacement",
+    "old_sha256": "e026406896354facf76cd6e386eb66baee8ea746e94ee3fda9882bbd8355e8a0"
+  },
+  {
+    "response": "last-regression-recovered-valid-tests-response.json",
+    "path": "safety.py",
+    "kind": "unique exact replacement",
+    "old_sha256": "cd7ce4465a8e3754d95df2b53aa4c8fae0eba40596e2195c50a8a94830460b2b"
+  },
+  {
+    "response": "last-regression-recovered-valid-tests-response.json",
+    "path": "tests/test_claude_scope_regressions.py",
+    "kind": "unique exact replacement",
+    "old_sha256": "7e1b0592a8098a74c1ce8a96318a40f1181990b8a5282516df565ca958e4184a"
+  }
+]

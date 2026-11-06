@@ -2,7 +2,7 @@
 
 ## Authoritative runtime snapshot
 
-Only entries with `status: source_verified` and literal `runtime_eligible: true` can run. `review_status: pending_client_review` is a separate client-review marker, not an instruction to generate or approve a claim. The parent-supplied snapshot contains 45 entries and remains unchanged by this implementation. The service never follows or fetches source URLs; it only validates and returns curated dataset citations.
+Only entries with `status: source_verified` and literal `runtime_eligible: true` can run. `review_status: pending_client_review` is a separate client-review marker, not an instruction to generate or approve a claim. The parent-supplied snapshot contains 50 approved entries and remains byte-unchanged by this implementation; the separate fixed catalog has 9 reviewed high-level construction guidance units. The LLM may select or reconstruct the 9 static guidance units verbatim; general_answer is independently model-written unreviewed text, heuristically validated, and not sourced from the topic-title catalog. It is explicitly labeled **General construction guidance** and is not a company promise or project engineering/safety/legal advice. The service never follows or fetches source URLs; it validates and returns curated dataset citations for FAQ answers, while general guidance is heuristic-checked model-written text.
 
 Schema:
 
@@ -24,7 +24,7 @@ Schema:
 }
 ```
 
-This illustrates structure only; it is not production company knowledge. Allowed source hosts are fixed to `cccbuild.com`, `www.cccbuild.com`, and `cccbuild-3mhyn4jl.manus.space`, with HTTP/HTTPS, no userinfo, standard ports, and no fragments. Sources must be explicit in the dataset; the model cannot add URLs. Invalid eligible entries fail the whole snapshot closed. Every FAQ ID is unique. Restart after an approved FAQ update; the complete file hash invalidates old selection-cache keys.
+This illustrates structure only; it is not production company knowledge. Allowed source hosts are fixed to `cccbuild.com`, `www.cccbuild.com`, and `cccbuild-3mhyn4jl.manus.space`, with HTTPS only, no userinfo, standard ports, and no fragments. Sources must be explicit in the dataset; the model cannot add URLs. Invalid eligible entries fail the whole snapshot closed. Every FAQ ID is unique. Restart after an approved FAQ update; the complete file hash invalidates old selection-cache keys.
 
 ## Review real unanswered questions
 

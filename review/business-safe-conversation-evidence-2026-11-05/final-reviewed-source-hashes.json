@@ -1,0 +1,20 @@
+{
+  "README.md": "a1237269d9f31232635cf4a6f0ebf8631f78efe6bc7651e41682a9b18efd82ec",
+  "agent.py": "0ecc57aff986f874e95d91b5e488265777cdd8ec5d4a07aebe2e7b30dbdaf168",
+  "app.py": "b73dce779103181c938fdf04c4e007a4bfbd82ad03e21a513108ef1db4346e9a",
+  "chat_safety.py": "8d1aa5d57a530d4e34ece5be3aa71599129147db2c225b2f19bb29a44745453b",
+  "chat_service.py": "60c54027819cd2c9fc6c11e16bf3395bb14095271d04a4218783d88dbda3da7b",
+  "docs/index.html": "8b9d907e069bd00fa6cd51494c690eb96be26508565974885eb1080ecbd0cc01",
+  "docs/operator-rules.md": "8eed5e6ed5db24271be1285ca8ac6ad5d6cb4ef2a1a1875ef53584d6dacd2dac",
+  "docs/review-workflow.md": "ecabb30ba6ca60e9bcf0dd8b87c2fe89e4636690450168c10461699d2bf9acc3",
+  "safety.py": "a613e99df152f1db86b51fc377bfcc14cf03fbe50573477ffa882bda340b7ee1",
+  "tests/test_agent.py": "56f2766675a5c5d8d9bf77be8d42e4fa562ded0d5bafa6a1e8e5a201c3ec9099",
+  "tests/test_claude_scope_regressions.py": "27e1d2813e0f93544da61d0514b074bfcdd325fc27d108b109c5b683757a2f37",
+  "tests/test_conversation.py": "3431adb6b441d7e02a5119b209c9e7f53293aa24ed75a4fcbeff077f1065484f",
+  "tests/test_curated_handoffs.py": "09698e38121494f50327ea54c00d432bd4237aa584c54042f47463d515b79d62",
+  "tests/test_generative_conversation.py": "13b0e609a96e89ac152cd5cd676c8591d8e20d30867cabb59cfdc9a8ff17b6b0",
+  "tests/test_realistic_general_outputs.py": "a18c47009da4457f48a8a2cde53218984263b1a037adda4debdff62ea860088a",
+  "tests/test_skeptic_regressions.py": "27a2ef6aab266d49c64c63fed29e6e649fbbae11d12ee0a0dc07b61f0711784e",
+  "tests/test_source_consistency.py": "db04123392b01f3f74612d7615595c5e300fc51d4b44a3ef0b19a34de290402a",
+  "tests/test_final_release_edges.py": "88823970b73d4aded3c56a58b70d87701066a5d90bd370518d82345453224a21"
+}

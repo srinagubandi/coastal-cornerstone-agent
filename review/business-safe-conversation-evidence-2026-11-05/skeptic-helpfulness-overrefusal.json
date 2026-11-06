@@ -1,0 +1,80 @@
+{
+  "reviewer": "helpfulness-overrefusal",
+  "model": "moonshotai/kimi-k3",
+  "effort": "high",
+  "source_hashes": {
+    "README.md": "e71a36d0152f0da2a7d43520c0309563f578a649bad0448dd8930546cf0f43fe",
+    "agent.py": "010887ce638d056b4c9ac621d7cf5b39a19890fac03c19a77ab3555e96956384",
+    "app.py": "7bcba8b2c630b163a7137fa690311e1242e07242782ca448e5b778435a7f946f",
+    "chat_safety.py": "126cd8f85e473b4e962d6b17e31c02e6a9c129d14d7eb9d6f143f3c31bf1e765",
+    "chat_service.py": "b5bf502599b952f88b9efb2d952b0fd610cac28add60e521b6f3dad8c1ef31bb",
+    "docs/index.html": "44dbc6ec154a80003132c0229fc84f27cad4b51d20ffa014b3f58e00474ab370",
+    "docs/operator-rules.md": "1582189de011214617894a5c138729cfd70a9f7c8210c0b6d7d253b55e435434",
+    "docs/review-workflow.md": "435b49372d0155cd97c6a17837305c9a1fbfcca58e31bf801982922aadc0b768",
+    "safety.py": "c87fff1ed9a72990147cd50ad1d99eae0622841a3476579b5bc9bff5866a378c",
+    "tests/test_agent.py": "56f2766675a5c5d8d9bf77be8d42e4fa562ded0d5bafa6a1e8e5a201c3ec9099",
+    "tests/test_conversation.py": "3431adb6b441d7e02a5119b209c9e7f53293aa24ed75a4fcbeff077f1065484f",
+    "tests/test_generative_conversation.py": "779880678960f4f1d5f8621c3b41bebe1d23d9b3fe6a33cc406f528d74d11846"
+  },
+  "review": {
+    "decision": "block",
+    "blocking_findings": [
+      {
+        "id": "B1",
+        "file": "agent.py, chat_service.py",
+        "issue": "Human-trigger classification pre-empts approved curated FAQ answers, making deliberately-aliased business FAQs unreachable (unnecessary refusal of approved company facts).",
+        "evidence": "safety.py HUMAN_TRIGGER_PATTERN includes 'bonded|insured|warranty|warranties'. Agent.ask() short-circuits kind=='human' to fallback before _answer() ever checks exact question/tag matches. ChatService._respond() branches on kind=='human' to HUMAN before _curated_ids(). Yet chat_service._curated_ids alias_map deliberately maps 'are you insured'->faq-032, 'do you have bonding capacity'->faq-048, 'are you bonded'->faq-048. A homeowner asking 'Are you bonded and insured?' is classified human and gets the generic HUMAN/FALLBACK even though the owner approved curated answers and added aliases. No test exercises an FAQ whose question text hits a human trigger; the fixture question 'What is the fixture service?' is benign, so this dead path is untested.",
+        "recommendation": "In Agent.ask() and ChatService._respond(), check normalized exact-question/unique-tag match (and the chat alias_map) BEFORE applying the human-trigger fallback. Exact curated answers are approved strings and serving them does not relax any safeguard; the human fallback should apply only when no approved match exists. Keep paid model path unchanged and keep the USD1/month cap.",
+        "regression_test": "Add a fixture FAQ with question 'Are you bonded and insured?' (status source_verified, runtime_eligible true) and assert agent.ask({question:'Are you bonded and insured?'}) returns status answered with the exact curated string and no provider call; assert ChatService._respond returns answered via _curated_ids for alias 'are you bonded'."
+      }
+    ],
+    "nonblocking_recommendations": [
+      {
+        "id": "N1",
+        "file": "agent.py",
+        "recommendation": "Reconsider the blanket numeral ban (r'[\\d$%]') in _validate_general_answer, e.g., permit numerals not adjacent to $, %, phone, or step patterns.",
+        "reason": "Useful tailored plain-language answers often need harmless numbers (measurements, counts, code-cycle references). Today any digit forces plan rejection and a needs_review fallback, degrading the novel-question value the feature exists for, as noted in the unnecessary-refusal review goal. This is safe-direction over-refusal, not an exploit."
+      },
+      {
+        "id": "N2",
+        "file": "chat_service.py vs agent.py",
+        "recommendation": "Align source URL validation: _approved requires sources startswith('https://') while agent.valid_source and docs/review-workflow.md allow http on approved hosts.",
+        "reason": "An approved FAQ with an http source URL would answer correctly over /ask but be silently downgraded to needs_help in chat. Either restrict valid_source to https everywhere or accept valid_source() result in chat; current behavior is an undocumented inconsistency, not a hole (chat direction is stricter)."
+      },
+      {
+        "id": "N3",
+        "file": "README.md",
+        "recommendation": "Update the final paragraph: tests are no longer 'planned'; 49 provider-mocked tests ran OK. Keep the honest caveats (no live provider, no browser QA) but remove the stale 'no pass counts asserted' line now contradicted by the recorded run.",
+        "reason": "Documentation should not understate or contradict actual verification state; the current wording conflicts with the supplied test transcript."
+      },
+      {
+        "id": "N4",
+        "file": "tests/test_generative_conversation.py, tests/test_conversation.py",
+        "recommendation": "Add end-to-end tests for the homeowner-usefulness cases: 'white roof vs black roof heat gain' reaching guidance-roof when no API key is configured; 'how long have you been doing this' answered from faq-002 while 'when was the company founded' falls back (40-years-team-experience vs company-age separation); 'what is your phone number/email' answered from faq-028; 'male vs female threaded fittings' and 'church facility remodel' classified safe and reaching guidance/model; WOSB and accessibility answered, not refused.",
+        "reason": "classify_question and the alias_map cover these in code, but only classify/screen parity is tested; the full ask/chat path for these exact ordinary questions is unverified, and B1 shows pre-emption bugs hide precisely here."
+      },
+      {
+        "id": "N5",
+        "file": "agent.py",
+        "recommendation": "Consider a narrow allowlist exception in _validate_general_answer's procedural-imperative regex so common safe verbs after enumeration words (e.g., 'Generally, use ...' mid-sentence is already allowed; sentence-initial 'Use' is not) are handled deliberately, and log the specific rejection reason in the private event for review tuning.",
+        "reason": "Legitimate high-level answers often begin sentences with 'Use' or 'Replace'; silent fallback with reason 'invalid_model_selection' hides how often validation, not the model, caused refusal. Observability aids review without relaxing output rules."
+      }
+    ],
+    "positive_evidence": [
+      "Novel general questions demonstrably reach the mocked LLM and return tailored validated text: test_real_general_answer_grounded_and_exact_faq_byte_identical shows a general_answer plan passing _validate_plan/_materialize_plan into the public answer labeled 'General construction guidance:', with empty faq_ids/sources, model_used=MODEL, and 200 microUSD settled.",
+      "Model general answers are NOT rejected by cache/proof reconstruction or ChatService: test_cached_general_validated_avoids_second_model_call proves validated plans are cached under catalog_hash and replayed without a second model call; test_forged_proofs_rejected_by_rebuild_and_chat_approval and test_raw_general_rejected_and_valid_general_only_proof_approved prove general-only proofs pass ChatService._approved while forged IDs, duplicated evidence, changed answers, and attacker sources return needs_help.",
+      "Legitimate sensitive-context terms are allowed while social judgments are blocked: test_unsafe_inputs_blocked_before_provider_and_legitimate_terms_allowed and test_classify_screen_contracts cover white/black roof colors, WOSB, accessibility/grab bars, male/female threaded fittings, sex bolts, church remodel; hateful/discriminatory, NSFW, injection, and credential cases fall back with zero provider calls.",
+      "Business-fact separation holds: generated answers containing 'CCC', 'we/our', prices, phone numbers, guarantees, engineering sizing, numbered steps, or legal-compliance claims are all rejected to FALLBACK (test_generated_general_rejects_company_facts_credentials_prices_engineering_promises); company facts flow only through approved evidence IDs.",
+      "No invented quotes/availability/engineering: unsupported and human-classified questions return FALLBACK/HUMAN without provider calls (test_unsupported_claims_stop_before_provider, test_unsafe_agent_questions_fallback_without_provider); HUMAN_SUFFIX makes no commitment.",
+      "No-API/exhausted-budget behavior is honest and useful: test_exhausted_budget_exact_and_static_guidance_free_without_model and test_exhausted_budget_never_calls_paid_model_but_exact_faq_still_works show exact FAQs and deterministic static guidance still serve with zero paid calls, novel queries degrade to fallback, and uncertain provider failures retain reservations within the USD1/month cap (test_uncertain_provider_failure_and_missing_cost_keep_reservation, StoreTests budget suite).",
+      "Professional concise fallbacks: FALLBACK and chat HUMAN strings are source-limited, contain no fabricated contact promises, and review queuing is bounded and deduplicated (StoreTests.test_daily_limit_and_review_dedup_caps).",
+      "49 provider-mocked tests pass with a network guard backstop forbidding real outbound calls."
+    ],
+    "limitations": [
+      "All model, pricing, and email traffic is mocked; real deepseek/deepseek-v4-flash schema compliance with the new conversation-plan JSON (general_answer key) and OpenRouter max_price routing is unverified, so live tailored-answer quality and real-world refusal rates are unknown.",
+      "The production 50-entry FAQ snapshot content was not supplied for review; alias_map targets (faq-001/002/003/004/028/029/032/046/047/048) cannot be confirmed against actual approved questions/answers, and B1's impact depends on real snapshot wording.",
+      "chat_http.py, chat_mail.py, network.py, dashboard.py, digest.py, faq_pages.py and the production data/faq.json were not in the supplied source; chat transport auth/CORS behavior is reviewed only through ChatService.",
+      "Regex classification (hate/NSFW/injection) is inherently evadable; tests cover listed cases only. README itself disclaims satisfaction/relevance guarantees; no live HTTPS, Railway volume, browser accessibility, or email delivery was asserted or tested."
+    ]
+  }
+}

@@ -1,0 +1,39 @@
+{
+  "decision": "approve",
+  "blocking_findings": [],
+  "nonblocking_findings": [
+    "Blocker 1 resolved (safety.py). The broad_hit exemption no longer uses physical_service. broad_service now requires a neutral predicate inside the matched sentence: better served/off with an aid, cannot do stairs, or should not be climbing stairs. It also requires that no listed pejorative appears there. Traced 'Disabled people are stupid and disgusting; what grab bar layout works?' and 'Elderly people are unfit/evil; walk-in shower ideas?' Both are blocked, because the semicolon keeps one context and no neutral predicate is found. Each returns NEUTRAL with review_queued false and no model or chat persistence. The cmp exemption still rejects bad/worse/smarter and 'better at/than'. A pejorative in a different sentence or more than 80 characters away is still blocked. The output gate inherits the same logic, so the quantity-bearing outputs fall back with one settlement.",
+    "Blocker 2 resolved (agent.py qty_pattern). one, first, second, few, several, couple, half and quarter now match only when an adjacent unit or time noun follows. Traced 'Several factors\u2026', 'One common cause\u2026', 'The first consideration\u2026' and 'a few options': none match. All 12 negative phrases are still caught.",
+    "The requested positive mocked tests for several/one/first were not committed; the test_realistic_general_outputs hash is unchanged. Add them as regression locks. They are not blocking because the code fix is verified by trace and the owner limited the scope.",
+    "Residual false positives in qty_pattern: 'a second opinion/factor' matches the unit 'second', and a bare 'third' rejects 'third-party'. Both occur post-call and fall back safely.",
+    "Residual false positive in the output gate: model text without any CONSTRUCTION_CONTEXT keyword is classified 'arbitrary off-topic' and rejected. Example: 'The first consideration is ventilation'. This is not newly introduced.",
+    "Residual regex gaps: a 'cannot do' pejorative placed together with 'cannot do stairs', and unlisted insults (useless, burden), route to Ben's queue rather than neutral. There is no model call and no generated text.",
+    "Routing is verified. Accessibility, safety, dimension and project-specific questions return FALLBACK/HUMAN with the verified phone, email and full contact URL, and make zero model calls. Hate, injection and off-topic questions get NEUTRAL with no queue on /ask, MCP and chat. The prior FALLBACK-for-blocked parity issue is fixed.",
+    "Other checks verified:",
+    "Company facts are served as verbatim FAQ text and sources.",
+    "Chat rebuilds the server-held proof and does not expose it.",
+    "There is exactly one reserve per paid call and exactly one settle on every post-reserve path.",
+    "The prompt grammar is fixed.",
+    "The referral chat test passes kind 'safe'; real screening yields 'human'. Both paths reach HUMAN, and the real human branch makes no model call.",
+    "Carried over: duplicate imports, the unused html variable in app.py, and a possibly unbound is_json in the /faq except path."
+  ],
+  "limitations": [
+    "Hand trace only, plus the supplied two-test output.",
+    "No live model, email or deployment evidence.",
+    "app.py and chat_safety.py hashes changed, but no diff was supplied. Their current auth, CSRF, private-route and contact paths were inspected and show no boundary regression.",
+    "The unchanged status of config, store, chat_store, chat_mail and chat_http is accepted from the preservation hashes.",
+    "Regex safety is not universal."
+  ],
+  "reviewed_scope": "Current agent.py: qty_pattern, the output gate, payload, ask/_answer routing, reserve/settle, and proof rebuild. Current safety.py classify_question, covering the protected-group, exemption and human routing logic. chat_safety.py screen_message and the NEUTRAL/HUMAN messages. Supplied ChatService message, _respond and _approved. The app.py request paths. The two committed test_final_release_edges methods and their output.",
+  "coverage": {
+    "prior_unchanged_full_review_coverage_retained": true,
+    "fresh_affected_files": [
+      "agent.py",
+      "app.py",
+      "chat_safety.py",
+      "safety.py"
+    ],
+    "fresh_tests": "owner-specific-handoff-tests.txt",
+    "no_full_suite_rerun": true
+  }
+}

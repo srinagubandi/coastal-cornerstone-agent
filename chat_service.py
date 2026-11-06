@@ -61,52 +61,43 @@ class ChatService:
             return {'error': 'Chat temporarily unavailable'}, 503
 
     def _approved(self, result):
+        H = ('needs_help', HUMAN, [], [])
         try:
-            if not isinstance(result, dict) or result.get('status') != 'answered':
-                return ('needs_help', HUMAN, [], [])
-            faq_ids = result.get('faq_ids')
-            if not isinstance(faq_ids, list) or not (1 <= len(faq_ids) <= 3):
-                return ('needs_help', HUMAN, [], [])
-            if len(set(faq_ids)) != len(faq_ids):
-                return ('needs_help', HUMAN, [], [])
-            selected_faqs = []
+            public = self.agent.rebuild_conversation(result)
+            if not isinstance(public, dict) or public.get('status') != 'answered':
+                return H
+            for k in ('status', 'answer', 'sources', 'faq_ids'):
+                if k in result and result[k] != public.get(k):
+                    return H
+            answer = public.get('answer')
+            if not isinstance(answer, str) or not answer.strip() or len(answer) > 12000:
+                return H
+            sources = public.get('sources')
+            if not isinstance(sources, list):
+                return H
+            for u in sources:
+                if not isinstance(u, str) or not u.startswith('https://') or not valid_source(u):
+                    return H
+            faq_ids = public.get('faq_ids')
+            if not isinstance(faq_ids, list) or len(faq_ids) > 3 or len(set(faq_ids)) != len(faq_ids):
+                return H
             for fid in faq_ids:
-                if not isinstance(fid, str):
-                    return ('needs_help', HUMAN, [], [])
-                faq = self.agent.faqs.get(fid)
-                if not faq:
-                    return ('needs_help', HUMAN, [], [])
-                if not (faq.get('status') == 'source_verified' and faq.get('runtime_eligible') is True):
-                    return ('needs_help', HUMAN, [], [])
-                answer = faq.get('answer')
-                if not isinstance(answer, str) or not answer:
-                    return ('needs_help', HUMAN, [], [])
-                source_urls = faq.get('source_urls')
-                if not isinstance(source_urls, list) or len(source_urls) == 0:
-                    return ('needs_help', HUMAN, [], [])
-                valid_urls = []
-                for u in source_urls:
-                    if not isinstance(u, str) or not u.startswith('https://'):
-                        return ('needs_help', HUMAN, [], [])
-                    if not valid_source(u):
-                        return ('needs_help', HUMAN, [], [])
-                    valid_urls.append(u)
-                selected_faqs.append((faq, answer, valid_urls))
-            answer_parts = [item[1] for item in selected_faqs]
-            combined = '\n\n'.join(answer_parts)
-            if len(combined) > 12000:
-                return ('needs_help', HUMAN, [], [])
-            seen = set()
-            sources = []
-            for item in selected_faqs:
-                for url in item[2]:
-                    if url not in seen:
-                        seen.add(url)
-                        sources.append(url)
-            ids_copy = list(faq_ids)
-            return ('answered', combined, sources, ids_copy)
+                faq = self.agent.faqs.get(fid) if isinstance(fid, str) else None
+                if not faq or faq.get('status') != 'source_verified' or faq.get('runtime_eligible') is not True:
+                    return H
+                if not isinstance(faq.get('answer'), str) or not faq['answer']:
+                    return H
+                urls = faq.get('source_urls')
+                if not isinstance(urls, list) or not urls:
+                    return H
+                for u in urls:
+                    if not isinstance(u, str) or not u.startswith('https://') or not valid_source(u):
+                        return H
+            if not faq_ids:
+                return ('answered', answer, list(sources), list(faq_ids))
+            return ('answered', answer, list(sources), list(faq_ids))
         except Exception:
-            return ('needs_help', HUMAN, [], [])
+            return H
 
     def message(self, sid, token, body, client, now=None):
         try:
@@ -250,19 +241,17 @@ class ChatService:
 
     def _respond(self, sid, op, text, kind, now=None):
         try:
-            ids = self._curated_ids(text)
+            ids = self._curated_ids(text) if kind != 'blocked' else []
             if ids and 'faq-027' in ids:
-                status = 'needs_help'
-                answer = HUMAN
-                sources = []
-                faq_ids = []
+                status, answer, sources, faq_ids = 'needs_help', HUMAN, [], []
             elif ids:
                 status, answer, sources, faq_ids = self._approved(self.agent.answered(ids))
             elif kind == 'human':
-                status = 'needs_help'
-                answer = HUMAN
-                sources = []
-                faq_ids = []
+                try:
+                    self.agent.fallback(text, 'project_specific_or_team_help')
+                except Exception:
+                    pass
+                status, answer, sources, faq_ids = 'needs_help', HUMAN, [], []
             else:
                 status, answer, sources, faq_ids = self._approved(self.agent._answer(text))
 

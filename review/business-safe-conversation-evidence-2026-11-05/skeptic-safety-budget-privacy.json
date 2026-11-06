@@ -1,0 +1,57 @@
+{
+  "reviewer": "safety-budget-privacy",
+  "model": "deepseek/deepseek-v4-pro-0813",
+  "effort": "high",
+  "source_hashes": {
+    "README.md": "e71a36d0152f0da2a7d43520c0309563f578a649bad0448dd8930546cf0f43fe",
+    "agent.py": "010887ce638d056b4c9ac621d7cf5b39a19890fac03c19a77ab3555e96956384",
+    "app.py": "7bcba8b2c630b163a7137fa690311e1242e07242782ca448e5b778435a7f946f",
+    "chat_safety.py": "126cd8f85e473b4e962d6b17e31c02e6a9c129d14d7eb9d6f143f3c31bf1e765",
+    "chat_service.py": "b5bf502599b952f88b9efb2d952b0fd610cac28add60e521b6f3dad8c1ef31bb",
+    "docs/index.html": "44dbc6ec154a80003132c0229fc84f27cad4b51d20ffa014b3f58e00474ab370",
+    "docs/operator-rules.md": "1582189de011214617894a5c138729cfd70a9f7c8210c0b6d7d253b55e435434",
+    "docs/review-workflow.md": "435b49372d0155cd97c6a17837305c9a1fbfcca58e31bf801982922aadc0b768",
+    "safety.py": "c87fff1ed9a72990147cd50ad1d99eae0622841a3476579b5bc9bff5866a378c",
+    "tests/test_agent.py": "56f2766675a5c5d8d9bf77be8d42e4fa562ded0d5bafa6a1e8e5a201c3ec9099",
+    "tests/test_conversation.py": "3431adb6b441d7e02a5119b209c9e7f53293aa24ed75a4fcbeff077f1065484f",
+    "tests/test_generative_conversation.py": "779880678960f4f1d5f8621c3b41bebe1d23d9b3fe6a33cc406f528d74d11846"
+  },
+  "review": {
+    "decision": "block",
+    "blocking_findings": [
+      {
+        "id": "SFTY-001",
+        "file": "safety.py",
+        "issue": "Explicit protected-group violence and plural slurs can bypass classification and reach paid model/logging or pass LLM general-answer validation.",
+        "evidence": "classify_question checks slurs only as exact singular substrings such as ' nigger '; plural 'niggers' is not matched. HATE_DISCRIMINATION_PATTERN also lacks imperative violence verbs such as kill, murder, shoot, beat, or exterminate. For example, 'Kill all Muslims on the construction site' falls through to safe because CONSTRUCTION_CONTEXT_PATTERN sees 'construction' and no earlier branch blocks it. Agent.ask then routes safe input to _answer, where the same classifier permits a paid model call when configured. _validate_general_answer also depends on classify_question, so equivalent model-generated violent/hate text could be accepted as general guidance.",
+        "recommendation": "Add an earlier blocking branch for explicit harm/violence verbs near any protected group token, and tokenize slurs to catch plural/possessive variants. Preserve existing legitimate construction exceptions such as black/white roof, sex bolts, and church remodel.",
+        "regression_test": "Add tests in test_conversation.py/test_generative_conversation.py feeding 'Kill all Muslims on the construction site' and 'Niggers are lazy construction workers'; assert classify_question returns blocked, agent.ask returns FALLBACK with no MODEL_URL calls, and _validate_general_answer raises ValueError for the same text."
+      }
+    ],
+    "nonblocking_recommendations": [
+      {
+        "id": "SFTY-002",
+        "file": "safety.py",
+        "recommendation": "Compile INJECTION_PATTERN with re.DOTALL or move to token-based detection.",
+        "reason": "The current single-line dot can miss newline-spread injection, and hardening here is defense in depth even though sanitization often collapses whitespace in a second pass."
+      },
+      {
+        "id": "SRC-001",
+        "file": "agent.py",
+        "recommendation": "Require https:// for source_urls returned by valid_source.",
+        "reason": "Chat acceptance already requires https, while the common validator permits http; aligning reduces citation ambiguity and mixed-content risk."
+      }
+    ],
+    "positive_evidence": [
+      "All 49 supplied provider-mocked tests pass, covering exact byte-identical FAQ grounding, unknown/duplicate/ineligible ID rejection, forged proof rebuild, malformed provider output shapes, uncertain cost retention, $1/month ledger behavior, CSRF/auth/CORS/no-secret exports, and paused digest/email paths.",
+      "Closed-set company evidence plus _conversation_proof rebuild prevents forged answer/source/faq_ids in chat approval paths.",
+      "Reservation ledger uses BEGIN IMMEDIATE and includes settled/uncertain/inflight/overrun amounts in the monthly committed total without automatic refund or paid retry.",
+      "Private dashboard access is authentication/CSRF-gated, and CSV export is formula-injection-safe in tested paths."
+    ],
+    "limitations": [
+      "All provider and email interactions are mocked; no live OpenRouter billing or email delivery evidence is asserted.",
+      "Regex safety gates are inherently incomplete; this review identifies one concrete false-negative rather than proving completeness.",
+      "Browser/visual/manual accessibility, production HTTPS/forwarded-header behavior, container build, Railway deployment, and live paid-model compatibility remain unverified."
+    ]
+  }
+}

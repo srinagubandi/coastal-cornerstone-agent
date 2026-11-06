@@ -1,0 +1,66 @@
+{
+  "decision": "resolved",
+  "unresolved_blockers": [],
+  "fixed_recommendations": {
+    "SFTY-001": "Explicit protected-group violence and plural/possessive slurs now blocked before construction scope; 5 added mocked safety tests.",
+    "SFTY-002": "Injection pattern now DOTALL; multiline regression passes.",
+    "SRC-001": "valid_source now HTTPS-only, approved 50 sources all HTTPS; source regression passes.",
+    "B1": "Unsafe raw screening stays first; exact approved FAQ/unique tags and chat curated aliases precede ordinary human-topic handoff; unknown project pricing still no model.",
+    "N2": "Same HTTPS-only source contract in common validator, chat and public review docs.",
+    "N3": "README now states mocked tests run; no stale planned/no-count sentence.",
+    "N4": "8 new mocked usefulness/handoff tests cover actual approved source strings, 40-year team experience not founding, contact/WOSB, roof colors and threaded fittings."
+  },
+  "deferred_nonblocking_recommendations": {
+    "N1": "Conservative initial release retains digit/$/% exclusion only for model-written general explanations. Approved company FAQ text still returns exact numbers including 40 years and public phone. Any relaxation needs focused factual/engineering guard tests, not a silent broadening.",
+    "N5": "Conservative initial release retains the no-procedural-installation imperative gate and existing private logging contract. Source-grounded company answers and nonprocedural general explanations work in mocks. Detailed rejection analytics/imperative allowlist is a separate future improvement, not needed to resolve the concrete blockers."
+  },
+  "focused_rechecks": {
+    "safety-budget-privacy": {
+      "decision": "approve",
+      "blocking_findings": [],
+      "recommendation_disposition": {
+        "SFTY-001": "Resolved: EXPLICIT_VIOLENCE_PROTECTED_PATTERN precedes construction context; SLUR_PATTERN includes plural/possessive variants; tests cover exact review cases and zero model calls.",
+        "SFTY-002": "Resolved: INJECTION_PATTERN compiled with re.DOTALL; multiline regression passes.",
+        "SRC-001": "Resolved: valid_source requires https; source regression passes."
+      },
+      "limitations": [
+        "71 provider-mocked tests pass; no live OpenRouter billing, email delivery, browser/visual accessibility, production HTTPS/forwarded-header, container build, Railway deployment, or paid-model compatibility evidence.",
+        "Regex safety gates remain inherently incomplete; no universal safety claim.",
+        "Deferred numeric/imperative relaxation is conservative and nonblocking."
+      ]
+    },
+    "helpfulness-overrefusal": {
+      "decision": "approve",
+      "blocking_findings": [],
+      "recommendation_disposition": {
+        "B1": "resolved: agent._answer() checks exact-question/unique-tag/ALIAS_FAQ_IDS matches before the kind=='human' fallback, and only after the blocked-classification short-circuit, so raw unsafe screening remains first while approved curated strings (faq-032/047/048) are served verbatim with no provider call; test_agent_serves_exact_human_trigger_faqs_without_model proves byte-exact answers and empty transport.calls. ChatService._respond() evaluates _curated_ids before the human branch (and only when kind!='blocked', so no curated bypass of unsafe queries); test_chat_curated_alias_serves_before_human covers 'are you bonded'/'are you insured' aliases; the deliberate faq-027 needs_help carve-out is retained and tested. Unknown human queries ('How much will my kitchen remodel cost?', 'When was the company founded?') still fall back with zero model calls, confirming unknown-humans-zeroLLM.",
+        "N1": "accepted deferral (nonblocking conservative choice): blanket [\\d$%] ban retained for model-written general text only; curated FAQ numerals unaffected; relaxation would need dedicated factual/engineering guard tests.",
+        "N2": "resolved: valid_source is now HTTPS-only on approved hosts; test_https_allowed_http_rejected_for_real_allowed_host passes; review-workflow.md states HTTPS-only; chat/agent contracts consistent.",
+        "N3": "resolved: README states provider-mocked tests run with results retained as release evidence and honestly disclaims live provider/browser/HTTPS assertions.",
+        "N4": "resolved: 8 new end-to-end usefulness/handoff tests plus realistic-output tests cover exact human-trigger FAQs, aliases, WOSB, contact, founding-vs-experience separation, roof colors, threaded fittings, church remodel; 71/71 pass.",
+        "N5": "accepted deferral (nonblocking): procedural-imperative gate retained unchanged; negative-case test proves engineered/imperative model output still rejected to FALLBACK."
+      },
+      "limitations": [
+        "All provider, pricing, and email traffic is mocked; live schema compliance, routing, and real refusal rates unverified.",
+        "B1 verification uses the supplied 8-entry fixture snapshot, not the production 50-entry data/faq.json; alias targets assume production wording matches.",
+        "chat_http.py, chat_mail.py, network.py, dashboard.py, digest.py, faq_pages.py not supplied; transport/auth reviewed only via ChatService.",
+        "Regex classification remains evadable; only listed cases tested. No live HTTPS, deployment, browser, or email-delivery evidence asserted or relied upon."
+      ]
+    }
+  },
+  "actual_test_file": "after-last-claude-regressions-tests.txt",
+  "tests_passed": 71,
+  "source_hashes": {
+    "agent.py": "24a92e761b55e53e326dc4e394bace9be9b8f73a09124558014534618dbc22f5",
+    "safety.py": "1b8a2f87066a3752adb0675b0916c5bf49bf12ad86e26d4b43583378d5c86eec",
+    "chat_service.py": "60c54027819cd2c9fc6c11e16bf3395bb14095271d04a4218783d88dbda3da7b",
+    "tests/test_skeptic_regressions.py": "27a2ef6aab266d49c64c63fed29e6e649fbbae11d12ee0a0dc07b61f0711784e",
+    "tests/test_curated_handoffs.py": "09698e38121494f50327ea54c00d432bd4237aa584c54042f47463d515b79d62",
+    "tests/test_source_consistency.py": "db04123392b01f3f74612d7615595c5e300fc51d4b44a3ef0b19a34de290402a"
+  },
+  "limitations": [
+    "All provider/email responses mocked; no real runtime model questions or emails",
+    "Regex safeguards are not proof of universal safety",
+    "Only runtime credential staged with owner approval; all other variables unchanged and USD1/month cap unchanged"
+  ]
+}

@@ -107,7 +107,7 @@ class GroundingTests(FixtureTest):
 
     def test_model_unknown_id_or_freeform_field_rejected(self):
         for mock in [MockTransport(["invented-id"]), MockTransport(extra={"answer": "Invented business claims"}), MockTransport(["test-1", "test-1"]), MockTransport(["ineligible"])]:
-            result, _ = self.agent(mock, True).ask({"question": "Different unmatched fixture inquiry " + str(len(self.store.summary()["events"]))}, str(id(mock)))
+            result, _ = self.agent(mock, True).ask({"question": "Different unmatched fixture business inquiry " + str(len(self.store.summary()["events"]))}, str(id(mock)))
             self.assertEqual(result["status"], "needs_review")
             self.assertEqual(result["answer"], FALLBACK)
             self.assertEqual(result["faq_ids"], [])
@@ -123,7 +123,7 @@ class GroundingTests(FixtureTest):
         self.assertEqual(mock.calls, [])
 
     def test_model_disabled_fallback_and_cache_avoids_repeat(self):
-        result, _ = self.agent().ask({"question": "A novel information request"}, "a")
+        result, _ = self.agent().ask({"question": "A novel business information request"}, "a")
         self.assertEqual(result["status"], "needs_review")
         mock = MockTransport()
         agent = self.agent(mock, True)
@@ -142,7 +142,7 @@ class GroundingTests(FixtureTest):
 
     def test_live_ceiling_and_lowered_cached_ceiling_fail_closed(self):
         mock = MockTransport(price="0.000000092")
-        result, _ = self.agent(mock, True).ask({"question": "Unmatched fixture request"}, "a")
+        result, _ = self.agent(mock, True).ask({"question": "Unmatched fixture business request"}, "a")
         self.assertEqual(result["status"], "needs_review")
         self.assertEqual([c[0] for c in mock.calls], [PRICING_URL])
         self.assertEqual(self.store.budget()["committed_micro_usd"], 0)
@@ -155,14 +155,14 @@ class GroundingTests(FixtureTest):
 
     def test_uncertain_provider_failure_and_missing_cost_keep_reservation(self):
         mock = MockTransport(fail=True)
-        result, _ = self.agent(mock, True).ask({"question": "A new fixture information request"}, "a")
+        result, _ = self.agent(mock, True).ask({"question": "A new fixture business information request"}, "a")
         budget = self.store.budget()
         self.assertEqual(result["status"], "needs_review")
         self.assertGreater(budget["uncertain_micro_usd"], 0)
         self.assertEqual(budget["committed_micro_usd"], budget["uncertain_micro_usd"])
         self.assertEqual(len([c for c in mock.calls if c[0] == MODEL_URL]), 1)
         agent = self.agent(MockTransport(cost="NaN"), True)
-        agent.ask({"question": "Another unknown fixture request"}, "b")
+        agent.ask({"question": "Another unknown fixture business request"}, "b")
         self.assertGreater(self.store.budget()["uncertain_micro_usd"], budget["uncertain_micro_usd"])
 
     def test_invalid_source_snapshot_unavailable(self):
@@ -177,7 +177,7 @@ class GroundingTests(FixtureTest):
         self.store.settle(rid)
         mock = MockTransport()
         agent = self.agent(mock, True)
-        result, _ = agent.ask({"question": "Novel unmatched fixture query"}, "a")
+        result, _ = agent.ask({"question": "Novel unmatched fixture business query"}, "a")
         self.assertEqual(result["status"], "needs_review")
         self.assertFalse(any(c[0] == MODEL_URL for c in mock.calls))
         known, _ = agent.ask({"question": "What is the fixture service?"}, "b")
@@ -283,7 +283,7 @@ class PrivacyAndAuthTests(FixtureTest):
         exported = json.dumps(self.store.summary())
         for value in ["alpha@example.com", "555-1234", "private.example", "192.0.2.1", "2001:db8", "privatecredential"]:
             self.assertNotIn(value, exported)
-        self.assertNotIn("alpha@example.com", json.dumps(mock.calls[-1][1]))
+        self.assertEqual(mock.calls, [])
         self.assertNotEqual(self.store.client_hash("192.0.2.1"), "192.0.2.1")
         self.assertEqual(Store(self.config.data_dir).client_hash("192.0.2.1"), self.store.client_hash("192.0.2.1"))
 

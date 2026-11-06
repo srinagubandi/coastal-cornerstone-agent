@@ -1,0 +1,8 @@
+Final owner-approved specific cases only; earlier successful suite evidence retained, not repeated.
+test_neutral_general_questions_answer_or_refer_and_chat_accepts (test_final_release_edges.FinalReleaseNeutralScopeTests.test_neutral_general_questions_answer_or_refer_and_chat_accepts) ... ok
+test_unsafe_group_comparison_outputs_with_word_quantities_fall_back (test_final_release_edges.FinalReleaseNeutralScopeTests.test_unsafe_group_comparison_outputs_with_word_quantities_fall_back) ... ok
+
+----------------------------------------------------------------------
+Ran 2 tests in 0.127s
+
+OK

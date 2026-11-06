@@ -18,7 +18,7 @@ def _clean(value, minimum, maximum):
     return value
 
 NEUTRAL = "Please ask about Coastal Cornerstone Construction and its published company information."
-HUMAN = "The company team can follow up on this business inquiry. Please complete the contact form; this chat cannot provide a quote, engineering advice, or a business commitment."
+HUMAN = 'If you need pricing, scheduling, engineering or specific accessibility details, you can reach us at (727) 771-5672 or email Ben at ben@cccbuild.com. You may also use our contact form at https://cccbuild-website-production.up.railway.app/contact/#contact-title to get in touch.'
 
 tp = TOKEN.pattern.lstrip('(?i)')
 CREDENTIAL_PATTERN = re.compile(r'(?i)('+tp+r'|password|credential|api\s+key|secret|access\s+token|bearer\s+token|sk-[a-z0-9_-]+|re_[a-z0-9_-]+|eyJ|BEGIN\s+PRIVATE\s+KEY)', re.IGNORECASE)
@@ -41,33 +41,25 @@ CONSTRUCTION_TOPIC_PATTERN = re.compile('(?i)\\b(builders?|foundations?|framing|
 STRUCTURAL_HELP_PATTERN = re.compile('\\b(structural\\s+(loads|calculations)|design\\b.*\\bload-bearing)\\b', re.IGNORECASE)
 
 def screen_message(body):
-    if not isinstance(body, dict) or set(body.keys()) != {'message'}:
-        return ('invalid', '')
-    msg = body['message']
-    cleaned = _clean(msg, 2, 1500)
-    if cleaned is None:
-        return ('invalid', '')
-    for pat in [CREDENTIAL_PATTERN, INJECTION_PATTERN, NSFW_PATTERN,
-                PRIVATE_DATA_PATTERN, OFFTOPIC_PATTERN]:
-        if pat.search(cleaned):
+    try:
+        if not isinstance(body, dict) or set(body.keys()) != {'message'} or not isinstance(body['message'], str):
+            return ('invalid', '')
+        raw = _clean(body['message'], 2, 1500)
+        if raw is None:
+            return ('invalid', '')
+        from safety import classify_question, sanitize_question
+        kind, _reason = classify_question(raw)
+        if kind == 'blocked':
             return ('blocked', '')
-    # profanity guard
-    import re
-    profanity_set = {'crap', 'fucking', 'bitch', 'bastard', 'asshole', 'shitty', 'damn', 'fuck', 'fucker', 'hell', 'shit'}
-    company_set = {'building', 'the', 'cornerstone', 'is', 'construction', 'build', 'these', 'that', 'this', 'ccc', 'company', 'a', 'coastal', 'you', 'those', 'your'}
-    tokens = [t.lower() for t in re.findall(r'\b\w+\b', cleaned)]
-    if tokens and any(t in profanity_set for t in tokens) and all(t in profanity_set or t in company_set for t in tokens):
-        return ('blocked', '')
-    if not (BUSINESS_PATTERN.search(cleaned) or GENERAL_COMPANY_PATTERN.search(cleaned) or HUMAN_HELP_PATTERN.search(cleaned) or CONSTRUCTION_TOPIC_PATTERN.search(cleaned) or STRUCTURAL_HELP_PATTERN.search(cleaned)):
-        if not re.fullmatch(r'(?i)(hi|hello|thanks|thank\s+you)[.!]?', cleaned):
-            return ('blocked', '')
-    redacted_text = redact(cleaned)
-    if not redacted_text or len(redacted_text) < 2 or len(redacted_text) > 1500 \
-            or not re.search(r'[A-Za-z]', redacted_text):
+        if kind not in ('human', 'safe'):
+            return ('invalid', '')
+        import re
+        cleaned = sanitize_question(raw)
+        if not cleaned or len(cleaned) < 2 or len(cleaned) > 1500 or not re.search(r'[A-Za-z]', cleaned):
+            return ('invalid', '')
+        return (kind, cleaned)
+    except Exception:
         return ('invalid', '')
-    if HUMAN_TRIGGER_PATTERN.search(cleaned) or HUMAN_HELP_PATTERN.search(cleaned) or STRUCTURAL_HELP_PATTERN.search(cleaned):
-        return ('human', redacted_text)
-    return ('safe', redacted_text)
 
 import re
 import unicodedata

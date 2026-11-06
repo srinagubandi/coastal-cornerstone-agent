@@ -1,0 +1,905 @@
+{
+  "cap_usd": "25",
+  "confirmed_usd": "8.7660151772",
+  "uncertain_reservations_usd": "1.5513485130",
+  "conservative_total_usd": "10.3173636902",
+  "runtime_monthly_cap_usd": "1",
+  "scope": "100-question draft and safeguarded conversational agent update",
+  "calls": [
+    {
+      "id": "81713e4819a74c3ca7d49840e21e8105",
+      "label": "openweight-100-additional-client-faq-questions",
+      "model": "deepseek/deepseek-v4-pro-0813",
+      "state": "completed",
+      "reserved_usd": "0.1957898019",
+      "cost_usd": "0.0603996",
+      "generation_id": "gen-1793924699-WUpFYvXGIq3hqOL677g3"
+    },
+    {
+      "id": "b5877eab457a45eea5cf72a5039f6d49",
+      "label": "agent-conversation-implementation-v1",
+      "model": "deepseek/deepseek-v4-pro-0813",
+      "state": "completed",
+      "reserved_usd": "0.2397930832",
+      "cost_usd": "0.1824516",
+      "generation_id": "gen-1793924887-5mxEzN8v9utp8cXvRUiA"
+    },
+    {
+      "id": "12dc363fab52475d81c0a87e99824571",
+      "label": "openweight-100-question-quality-review",
+      "model": "deepseek/deepseek-v4-pro-0813",
+      "state": "completed",
+      "reserved_usd": "0.0983531527",
+      "cost_usd": "0.049367901",
+      "generation_id": "gen-1793924953-FoXCvAPzznTOzmAo6oaG"
+    },
+    {
+      "id": "0af07060ccb144a9a9d80cf7a6407ac8",
+      "label": "agent-conversation-safety-continuation",
+      "model": "deepseek/deepseek-v4-pro-0813",
+      "state": "reserved",
+      "reserved_usd": "0.1464885389"
+    },
+    {
+      "id": "705560ee7e9d443f8d6b776fb1d4f326",
+      "label": "agent-conversation-agent-continuation",
+      "model": "deepseek/deepseek-v4-pro-0813",
+      "state": "reserved",
+      "reserved_usd": "0.1507091905"
+    },
+    {
+      "id": "ce134fb5dd774dfbb30c3e42c026e95d",
+      "label": "agent-conversation-public-docs-plan",
+      "model": "deepseek/deepseek-v4-pro-0813",
+      "state": "reserved",
+      "reserved_usd": "0.1526489998"
+    },
+    {
+      "id": "cdf83d4096ed4c45a43334ed04d7e891",
+      "label": "agent-conversation-safety-sequential-recovery",
+      "model": "deepseek/deepseek-v4-pro-0813",
+      "state": "completed",
+      "reserved_usd": "0.1465045142",
+      "cost_usd": "0.138896465",
+      "generation_id": "gen-1793925829-IfMiOoux3dGuciGHr5sH"
+    },
+    {
+      "id": "417efc1bee0549f396038e1c2c01889b",
+      "label": "agent-conversation-safety-tail-only",
+      "model": "deepseek/deepseek-v4-pro-0813",
+      "state": "reserved",
+      "reserved_usd": "0.2197622097"
+    },
+    {
+      "id": "753cb9fd81b34a45b59bbdc48fef87b2",
+      "label": "agent-kimi-recovery-safety-tail",
+      "model": "moonshotai/kimi-k3",
+      "state": "completed",
+      "reserved_usd": "0.4956171968",
+      "cost_usd": "0.0390061",
+      "generation_id": "gen-1793927007-KwjL9EFj9nsqw5SSwruI"
+    },
+    {
+      "id": "6dfa0844b6694b51972744b1d4c38c72",
+      "label": "agent-kimi-recovery-chat-functions",
+      "model": "moonshotai/kimi-k3",
+      "state": "completed",
+      "reserved_usd": "0.4952642816",
+      "cost_usd": "0.051895336",
+      "generation_id": "gen-1793927044-stUJAgcm0Z8EiiZBIFHx"
+    },
+    {
+      "id": "cb93b64d961f43ef8cd8ec22a0431d05",
+      "label": "agent-kimi-recovery-raw-gates",
+      "model": "moonshotai/kimi-k3",
+      "state": "completed",
+      "reserved_usd": "0.4948727168",
+      "cost_usd": "0.103296784",
+      "generation_id": "gen-1793927075-7ohyzteEg1snL90SKQpQ"
+    },
+    {
+      "id": "2f796a54a03648d1a96c9fdf0170f5ce",
+      "label": "agent-kimi-recovery-contract-safety-tests",
+      "model": "moonshotai/kimi-k3",
+      "state": "completed",
+      "reserved_usd": "0.4981826432",
+      "cost_usd": "0.289749504",
+      "generation_id": "gen-1793927109-4ymciM0YB2TTQOTjV0Vs"
+    },
+    {
+      "id": "e9362e89369d4c2598f7af90f078754e",
+      "label": "agent-kimi-recovery-grounding-accounting",
+      "model": "moonshotai/kimi-k3",
+      "state": "completed",
+      "reserved_usd": "0.4944490496",
+      "cost_usd": "0.4247712",
+      "generation_id": "gen-1793927136-YX6JxdQhhLPdkfJcTIzZ"
+    },
+    {
+      "id": "691b7409ca044cee8ef0c867af95e134",
+      "label": "agent-kimi-recovery-docs-descriptors",
+      "model": "moonshotai/kimi-k3",
+      "state": "completed",
+      "reserved_usd": "0.5026123520",
+      "cost_usd": "0.057997548",
+      "generation_id": "gen-1793927166-Pwxaixbgnl8FfDNARPnJ"
+    },
+    {
+      "id": "5f3d5d383d5f41fe8c42c0617870f9ab",
+      "label": "agent-kimi-recovery-final-contract-patch",
+      "model": "moonshotai/kimi-k3",
+      "state": "completed",
+      "reserved_usd": "0.5315711808",
+      "cost_usd": "0.187444468",
+      "generation_id": "gen-1793927445-P9unQvjxTsYx07azWb8t"
+    },
+    {
+      "id": "69b3370ebc1347f19fcbbd9667d25f93",
+      "label": "agent-kimi-focused-guards-v2",
+      "model": "moonshotai/kimi-k3",
+      "state": "reserved",
+      "reserved_usd": "0.7106479424"
+    },
+    {
+      "id": "e2ac6f236af943048248513fd896ed7e",
+      "label": "agent-high-function-raw",
+      "model": "deepseek/deepseek-v4-flash",
+      "state": "reserved",
+      "reserved_usd": "0.0049993944"
+    },
+    {
+      "id": "55e4be8ce4a84b5e94624d3aa812832f",
+      "label": "agent-high-function-raw-sse-v1",
+      "model": "deepseek/deepseek-v4-flash",
+      "state": "completed",
+      "reserved_usd": "0.0049993944",
+      "cost_usd": "0.004382105",
+      "generation_id": "gen-1793928399-yIsEaK6Hq1dCVdSAqnje"
+    },
+    {
+      "id": "48defff038134b7cbc87b353fe9c1ae2",
+      "label": "agent-high-function-raw-sse-v2-headroom",
+      "model": "deepseek/deepseek-v4-flash",
+      "state": "completed",
+      "reserved_usd": "0.0133149016",
+      "cost_usd": "0.0009038288",
+      "generation_id": "gen-1793928617-0DGpWRmClPbkdmD8kABy"
+    },
+    {
+      "id": "50a6caf2664e4789b7e5ffae38801e04",
+      "label": "agent-high-function-scope-sse-v2-headroom",
+      "model": "deepseek/deepseek-v4-flash",
+      "state": "uncertain-transport-failure",
+      "reserved_usd": "0.0150399249",
+      "generation_id": "gen-1793928774-kIF8S48KlgX15s1yUOGw"
+    },
+    {
+      "id": "028f0647ba634846bd0eedd0aa91fe96",
+      "label": "agent-high-function-response-sse-v2-headroom",
+      "model": "deepseek/deepseek-v4-flash",
+      "state": "completed",
+      "reserved_usd": "0.0136912776",
+      "cost_usd": "0.01733765",
+      "generation_id": "gen-1793928774-cb7JXqKF2405sehh6tRa"
+    },
+    {
+      "id": "76844e5c1a944ec199c991bc9b68da91",
+      "label": "agent-high-function-proof-sse-v2-headroom",
+      "model": "deepseek/deepseek-v4-flash",
+      "state": "completed",
+      "reserved_usd": "0.0136248112",
+      "cost_usd": "0.00783475",
+      "generation_id": "gen-1793928774-AmWcsdpzNLgZPctUHa4Y"
+    },
+    {
+      "id": "b2f25df5e7094e129e751f4bbe752434",
+      "label": "agent-high-truthful-llm-public-docs",
+      "model": "deepseek/deepseek-v4-flash",
+      "state": "completed",
+      "reserved_usd": "0.0178323145",
+      "cost_usd": "0.0114096",
+      "generation_id": "gen-1793928927-B7s3DrHZSXGayfO5yLce"
+    },
+    {
+      "id": "5a20e3a29fea4366bf42ea119cd3bd12",
+      "label": "agent-high-tiny-repair-import",
+      "model": "deepseek/deepseek-v4-flash",
+      "state": "completed",
+      "reserved_usd": "0.0132879747",
+      "cost_usd": "0.00028277",
+      "generation_id": "gen-1793929177-5MsLlnPB8qG0stCLRvpG"
+    },
+    {
+      "id": "cb7a7ab7ada74f38a002eb1f360ec689",
+      "label": "agent-high-tiny-repair-scope",
+      "model": "deepseek/deepseek-v4-flash",
+      "state": "completed",
+      "reserved_usd": "0.0138440302",
+      "cost_usd": "0.01037201",
+      "generation_id": "gen-1793929177-joOMFZvqiS36iO7LnfNp"
+    },
+    {
+      "id": "1579056492964f9b9f644ba034b46299",
+      "label": "agent-high-function-general-core-sse-v2-headroom",
+      "model": "deepseek/deepseek-v4-flash",
+      "state": "completed",
+      "reserved_usd": "0.0136077942",
+      "cost_usd": "0.01504449",
+      "generation_id": "gen-1793929710-a8Jj6PTqtf5DgTCwU2Iw"
+    },
+    {
+      "id": "c8f18f050c024f7797aa2540d6a0f8d9",
+      "label": "agent-high-narrow-general-validator-raw-gate",
+      "model": "deepseek/deepseek-v3.2",
+      "state": "completed",
+      "reserved_usd": "0.019938402",
+      "cost_usd": "0.00201448",
+      "generation_id": "gen-1793930924-s1hPRhcsUDEcao7OH4ZO"
+    },
+    {
+      "id": "7f45cb6f4ef041c1853649a05eb48910",
+      "label": "agent-high-truthful-private-review-plan",
+      "model": "deepseek/deepseek-v3.2",
+      "state": "completed",
+      "reserved_usd": "0.014468080",
+      "cost_usd": "0.000257",
+      "generation_id": "gen-1793930956-p21d8tqxWplhLJ3Rnlks"
+    },
+    {
+      "id": "7d308e87e72b4d6ead0b812304941bf7",
+      "label": "agent-high-function-general-render-sse-v2-headroom",
+      "model": "deepseek/deepseek-v3.2",
+      "state": "completed",
+      "reserved_usd": "0.016077116",
+      "cost_usd": "0.00118684",
+      "generation_id": "gen-1793930964-9mu0nK8M9icb33MxlHdt"
+    },
+    {
+      "id": "75a7354effce40459af4d79580152e7f",
+      "label": "agent-high-complete-validator-correction",
+      "model": "deepseek/deepseek-v3.2",
+      "state": "completed",
+      "reserved_usd": "0.014867336",
+      "cost_usd": "0.00081234",
+      "generation_id": "gen-1793930989-CxQPiZUFbaC6tOTlqTSz"
+    },
+    {
+      "id": "dcaa6f747eb94414b0961106d336a124",
+      "label": "agent-high-render-cache-general-only-repair",
+      "model": "deepseek/deepseek-v3.2",
+      "state": "completed",
+      "reserved_usd": "0.016194948",
+      "cost_usd": "0.00177044",
+      "generation_id": "gen-1793931049-TeKNx0tO21USZtkNXj9Z"
+    },
+    {
+      "id": "7c5e029468f8482aa1aa0e4d07c71085",
+      "label": "agent-high-function-general-flow-sse-v2-headroom",
+      "model": "deepseek/deepseek-v3.2",
+      "state": "completed",
+      "reserved_usd": "0.017479946",
+      "cost_usd": "0.00219862",
+      "generation_id": "gen-1793931055-iClavaS13pJFFU9aGqhY"
+    },
+    {
+      "id": "db0c0225362b47e2a471ea617666f01f",
+      "label": "agent-high-kimi-complete-validator-correction",
+      "model": "moonshotai/kimi-k3",
+      "state": "completed",
+      "reserved_usd": "0.5780674240",
+      "cost_usd": "0.208468036",
+      "generation_id": "gen-1793931069-cfrS7WfvH745n8tmJ5Ee"
+    },
+    {
+      "id": "2092fbed4dbe4968a2549971d8d003c1",
+      "label": "agent-high-final-small-materialize",
+      "model": "deepseek/deepseek-v3.2",
+      "state": "completed",
+      "reserved_usd": "0.015556882",
+      "cost_usd": "0.00072734",
+      "generation_id": "gen-1793931373-aZPOHdfsvZlzu2QmhFwR"
+    },
+    {
+      "id": "2b000cd31f614efb9b5a54c8cd0d5702",
+      "label": "agent-high-final-small-chat",
+      "model": "deepseek/deepseek-v3.2",
+      "state": "completed",
+      "reserved_usd": "0.016166634",
+      "cost_usd": "0.00065612",
+      "generation_id": "gen-1793931371-NDBcZhlyNimJzich7Ntz"
+    },
+    {
+      "id": "b5fe9fd85cc143419010585a07276254",
+      "label": "agent-high-final-small-flow",
+      "model": "deepseek/deepseek-v3.2",
+      "state": "completed",
+      "reserved_usd": "0.015975872",
+      "cost_usd": "0.00070298",
+      "generation_id": "gen-1793931371-Dpb7eqsxaL3SEoTBF5Lg"
+    },
+    {
+      "id": "cc18b619a429439cac23c46fc206f204",
+      "label": "agent-pro-high-final-chat-root-repair",
+      "model": "deepseek/deepseek-v4-pro-0813",
+      "state": "completed",
+      "reserved_usd": "0.1491080844",
+      "cost_usd": "0.02146032",
+      "generation_id": "gen-1793931497-mvUL1vCQtZzouBM0f9lA"
+    },
+    {
+      "id": "774b8de2cccf4ec9b5c4a90cc23758f5",
+      "label": "agent-pro-high-final-flow-root-repair",
+      "model": "deepseek/deepseek-v4-pro-0813",
+      "state": "completed",
+      "reserved_usd": "0.1490564196",
+      "cost_usd": "0.056766617",
+      "generation_id": "gen-1793931496-Ghnbk2bNc1CFNX4CrCec"
+    },
+    {
+      "id": "2edb67bb0b7e446ab9c1cf44ec92b136",
+      "label": "agent-high-general-finish-tests",
+      "model": "moonshotai/kimi-k3",
+      "state": "completed",
+      "reserved_usd": "0.5898371776",
+      "cost_usd": "0.052997668",
+      "generation_id": "gen-1793931579-lafP57KRye6vaY7XhjGz"
+    },
+    {
+      "id": "d2ae70468c3d41dd90834c12848a77f9",
+      "label": "agent-high-mock-test-fixture-api-corrections",
+      "model": "moonshotai/kimi-k3",
+      "state": "completed",
+      "reserved_usd": "0.5850541312",
+      "cost_usd": "0.066797531",
+      "generation_id": "gen-1793931769-4hdAV9nw8Vb8Dn5TSBJA"
+    },
+    {
+      "id": "cc6c0efd2f3445f7bb36752d4a590220",
+      "label": "agent-pro-high-last-measured-proof-type-and-accounting",
+      "model": "deepseek/deepseek-v4-pro-0813",
+      "state": "completed",
+      "reserved_usd": "0.1487770218",
+      "cost_usd": "0.038175937",
+      "generation_id": "gen-1793931933-PBfFzKXQJ4j8qg8FJDLw"
+    },
+    {
+      "id": "f89c0b1a4ab04a0cbc9fc7abc25b61ad",
+      "label": "agent-prelaunch-openweight-skeptic-helpfulness-overrefusal",
+      "model": "moonshotai/kimi-k3",
+      "state": "completed",
+      "reserved_usd": "0.6646530880",
+      "cost_usd": "0.257088",
+      "generation_id": "gen-1793932001-b1IbbOQ94vyExitbs4ck"
+    },
+    {
+      "id": "585393c903d74d4f93de3378a7b624c2",
+      "label": "agent-prelaunch-openweight-skeptic-safety-budget-privacy",
+      "model": "deepseek/deepseek-v4-pro-0813",
+      "state": "completed",
+      "reserved_usd": "0.1952982284",
+      "cost_usd": "0.112839488",
+      "generation_id": "gen-1793932000-GsIaccHBspG8D9oTcjCQ"
+    },
+    {
+      "id": "375ca58384364df5a2ee554e96dc8a02",
+      "label": "agent-pro-high-skeptic-root-curated",
+      "model": "deepseek/deepseek-v4-pro-0813",
+      "state": "completed",
+      "reserved_usd": "0.1570557395",
+      "cost_usd": "0.123578415",
+      "generation_id": "gen-1793932441-fgwvUchudCwiDXgd0Dem"
+    },
+    {
+      "id": "2c2ebb11b24a4a31b456bad5d831055a",
+      "label": "agent-pro-high-skeptic-root-safety",
+      "model": "deepseek/deepseek-v4-pro-0813",
+      "state": "completed",
+      "reserved_usd": "0.1518227524",
+      "cost_usd": "0.098963312",
+      "generation_id": "gen-1793932441-L7vzltAf9drpe1UZBi0u"
+    },
+    {
+      "id": "501eacc55c974c4782b43e5976c448aa",
+      "label": "agent-pro-high-source-and-documentation-consistency",
+      "model": "deepseek/deepseek-v4-pro-0813",
+      "state": "completed",
+      "reserved_usd": "0.1499112681",
+      "cost_usd": "0.03215655",
+      "generation_id": "gen-1793932559-8PeiPmeO84fmXum8mUKF"
+    },
+    {
+      "id": "7614306ccaa949b5bc36b1b9c17a34b8",
+      "label": "agent-pro-high-new-fixture-units-and-technical-pump-edge",
+      "model": "deepseek/deepseek-v4-pro-0813",
+      "state": "completed",
+      "reserved_usd": "0.1526851920",
+      "cost_usd": "0.027939935",
+      "generation_id": "gen-1793932974-Uxw2e2gGqSB25vJMCYTk"
+    },
+    {
+      "id": "2ab94d209a8b411f9a93894e6b7b14c5",
+      "label": "agent-high-one-line-mocked-model-call-assertion",
+      "model": "z-ai/glm-5",
+      "state": "completed",
+      "reserved_usd": "0.04302210",
+      "cost_usd": "0.0039333",
+      "generation_id": "gen-1793933158-a0rZMuXCCqxJKO6Hp14Y"
+    },
+    {
+      "id": "5bf700e8cf094b9cb006a7e58894bc0e",
+      "label": "agent-high-focused-skeptic-resolution-safety-budget-privacy",
+      "model": "deepseek/deepseek-v4-pro-0813",
+      "state": "completed",
+      "reserved_usd": "0.1554562834",
+      "cost_usd": "0.03579374",
+      "generation_id": "gen-1793933412-Iblh1xOMJIvzbak22CTV"
+    },
+    {
+      "id": "7a244ebdd32e4c178b21f993fd0598b3",
+      "label": "agent-high-focused-skeptic-resolution-helpfulness-overrefusal",
+      "model": "moonshotai/kimi-k3",
+      "state": "completed",
+      "reserved_usd": "0.5914877056",
+      "cost_usd": "0.013358176",
+      "generation_id": "gen-1793933412-WWF92PQAoCppTZ0CSAjz"
+    },
+    {
+      "id": "b9db2e10db1d4502afc0764db9558b9e",
+      "label": "claude-agent-conversation-final-actual-code-review",
+      "model": "anthropic/claude-opus-5.5",
+      "state": "completed",
+      "reserved_usd": "2.2451880",
+      "cost_usd": "0.973944",
+      "generation_id": "gen-1793933569-DKTNg9TyLchy0QEscgVG"
+    },
+    {
+      "id": "b9c808dc4f2a4296b5e3bd8c2b1084ed",
+      "label": "agent-pro-high-claude-blocker-scope",
+      "model": "deepseek/deepseek-v4-pro-0813",
+      "state": "completed",
+      "reserved_usd": "0.1526770344",
+      "cost_usd": "0.13304342",
+      "generation_id": "gen-1793934605-kR1058GvsJwONit7FVb3"
+    },
+    {
+      "id": "5d84f495403948afa7138ca81ad05c7d",
+      "label": "agent-pro-high-claude-blocker-docs",
+      "model": "deepseek/deepseek-v4-pro-0813",
+      "state": "completed",
+      "reserved_usd": "0.1520714459",
+      "cost_usd": "0.06295926",
+      "generation_id": "gen-1793934605-6wQdpZwqpUdzSIqRq94b"
+    },
+    {
+      "id": "9b883bb19f06411987a04e3f11742b0a",
+      "label": "agent-pro-high-claude-blocker-output",
+      "model": "deepseek/deepseek-v4-pro-0813",
+      "state": "completed",
+      "reserved_usd": "0.1581463653",
+      "cost_usd": "0.13810802",
+      "generation_id": "gen-1793935027-lH6QH4mKGUq6dhGuPyTu"
+    },
+    {
+      "id": "5e29f48412b44bf8808aca7e9f161768",
+      "label": "agent-pro-high-final-claude-regression-roots",
+      "model": "deepseek/deepseek-v4-pro-0813",
+      "state": "uncertain-transport-failure",
+      "reserved_usd": "0.1510523124",
+      "generation_id": "gen-1793935702-0JInSzAj4vCaaitxBSrt"
+    },
+    {
+      "id": "853f0b17672a4211a1b7b4c54f053db1",
+      "label": "agent-kimi-high-small-final-claude-regression-roots",
+      "model": "moonshotai/kimi-k2.5",
+      "state": "completed",
+      "reserved_usd": "0.10422940",
+      "cost_usd": "0.1021345",
+      "generation_id": "gen-1793936130-xfWxsWRksUS4zUACQVi1"
+    },
+    {
+      "id": "114ce4828e2f4122830f09b213a961c3",
+      "label": "agent-high-final-71test-skeptic-resolution-safety-budget-privacy",
+      "model": "deepseek/deepseek-v4-pro-0813",
+      "state": "completed",
+      "reserved_usd": "0.1617069311",
+      "cost_usd": "0.04107972",
+      "generation_id": "gen-1793937873-FWifVjSKI0CXma7WFhQt"
+    },
+    {
+      "id": "3cbc62e0153b45e18d8b3b7b3701ef4b",
+      "label": "agent-high-final-71test-skeptic-resolution-helpfulness-overrefusal",
+      "model": "moonshotai/kimi-k3",
+      "state": "completed",
+      "reserved_usd": "0.6031393984",
+      "cost_usd": "0.015366412",
+      "generation_id": "gen-1793937873-ztjqLYB044jERCeUliMg"
+    },
+    {
+      "id": "5cf45bb2f69a434c85d6f3f64337e861",
+      "label": "claude-agent-conversation-final-71test-actual-code-recheck",
+      "model": "anthropic/claude-opus-5.5",
+      "state": "completed",
+      "reserved_usd": "2.4964852",
+      "cost_usd": "1.04758",
+      "generation_id": "gen-1793937899-8UPvpyJ0fK0LBcR9aKGj"
+    },
+    {
+      "id": "42250d840acd4059a41e196596cb0892",
+      "label": "agent-high-final-function-gate-scope",
+      "model": "deepseek/deepseek-v4-flash",
+      "state": "completed",
+      "reserved_usd": "0.0095370275",
+      "cost_usd": "0.0038893484",
+      "generation_id": "gen-1793938581-LGR2dwnUpcYaNainH2u1"
+    },
+    {
+      "id": "02d5ae2e6b044fceb924bb78607c6133",
+      "label": "agent-high-final-function-gate-output",
+      "model": "deepseek/deepseek-v4-flash",
+      "state": "completed",
+      "reserved_usd": "0.0089250161",
+      "cost_usd": "0.00803135",
+      "generation_id": "gen-1793938788-u8looZFlutJwRH04Dm8b"
+    },
+    {
+      "id": "3fe4ab4dc23044e6a56948d2f31ff4e7",
+      "label": "agent-high-small-final-code-scope",
+      "model": "openai/gpt-oss-120b",
+      "state": "completed",
+      "reserved_usd": "0.0025554496",
+      "cost_usd": "0.00850795",
+      "generation_id": "gen-1793939019-HxvDOc9oZe5MvgEyRZiS"
+    },
+    {
+      "id": "d13192b4c6c04c3aa907b89ad318f333",
+      "label": "agent-high-small-final-code-output",
+      "model": "openai/gpt-oss-120b",
+      "state": "completed",
+      "reserved_usd": "0.0023616560",
+      "cost_usd": "0.003393992",
+      "generation_id": "gen-1793939019-IP08LetRqsaTzq9af0Sv"
+    },
+    {
+      "id": "a9b271a09e3340fc8ff895f399d7725a",
+      "label": "agent-high-tiny-scope-hate",
+      "model": "moonshotai/kimi-k2.5",
+      "state": "completed",
+      "reserved_usd": "0.06756035",
+      "cost_usd": "0.017461171",
+      "generation_id": "gen-1793939261-ZL9ufE4zXBoNpw0u1GyR"
+    },
+    {
+      "id": "8c5006d4efee491d89ee025543001620",
+      "label": "agent-high-tiny-scope-people",
+      "model": "moonshotai/kimi-k2.5",
+      "state": "completed",
+      "reserved_usd": "0.07077730",
+      "cost_usd": "0.0752585",
+      "generation_id": "gen-1793939261-merDFpgno2J8QW4HZSI0"
+    },
+    {
+      "id": "ef65fc82fd9c4226a43565ce5e789c0c",
+      "label": "agent-high-tiny-scope-religion",
+      "model": "moonshotai/kimi-k2.5",
+      "state": "completed",
+      "reserved_usd": "0.06703015",
+      "cost_usd": "0.037716",
+      "generation_id": "gen-1793939261-DQZvOkm5xNAAbtMadMBP"
+    },
+    {
+      "id": "e33f4a32836147c5bf42b2fef6bb2ca3",
+      "label": "agent-high-public-check-claim-phrase",
+      "model": "openai/gpt-oss-120b",
+      "state": "completed",
+      "reserved_usd": "0.0008034576",
+      "cost_usd": "0.00017165",
+      "generation_id": "gen-1793940243-j7YqW6CkJ7DAyl8rsWjd"
+    },
+    {
+      "id": "2a7ffcd1b369407d9bc557d3653e37d6",
+      "label": "agent-high-final-output-two-inserted-checks",
+      "model": "openai/gpt-oss-120b",
+      "state": "completed",
+      "reserved_usd": "0.0012157904",
+      "cost_usd": "0.00125485",
+      "generation_id": "gen-1793940614-GugY0CIZfnRdjw8723Mc"
+    },
+    {
+      "id": "35418aaedba74f3b9f8425755debf8f3",
+      "label": "agent-high-final-tiny-vocab",
+      "model": "openai/gpt-oss-120b",
+      "state": "completed",
+      "reserved_usd": "0.0010671232",
+      "cost_usd": "0.00012777",
+      "generation_id": "gen-1793940761-rhQViz3uQ7WOQUcPQVSB"
+    },
+    {
+      "id": "e38f2e2416b54cb2b722843feaf88559",
+      "label": "agent-high-final-tiny-quantity",
+      "model": "openai/gpt-oss-120b",
+      "state": "completed",
+      "reserved_usd": "0.0010873280",
+      "cost_usd": "0.0040261",
+      "generation_id": "gen-1793940761-DQpUEFzcWRvHbsrQJn0G"
+    },
+    {
+      "id": "9d8348f078414072ba9c8676a38b0ebd",
+      "label": "agent-high-professional-output-only-guard",
+      "model": "openai/gpt-oss-120b",
+      "state": "completed",
+      "reserved_usd": "0.0008075760",
+      "cost_usd": "0.00041065",
+      "generation_id": "gen-1793940936-iCJW0GH5ObHwfBvyxzUW"
+    },
+    {
+      "id": "087ed9b36f5946f78d032f327c043f54",
+      "label": "agent-high-structured-final-quantity",
+      "model": "deepseek/deepseek-v4-flash",
+      "state": "completed",
+      "reserved_usd": "0.0049297248",
+      "cost_usd": "0.0108147",
+      "generation_id": "gen-1793941043-rLPj7enYfDxh0J9oNcl0"
+    },
+    {
+      "id": "0b99f3234a1c45558d5e7a71e1680f95",
+      "label": "agent-high-structured-final-vocab",
+      "model": "deepseek/deepseek-v4-flash",
+      "state": "completed",
+      "reserved_usd": "0.0048526478",
+      "cost_usd": "4.188e-05",
+      "generation_id": "gen-1793941043-FuSoUVFuGfI0RnkVBz8b"
+    },
+    {
+      "id": "0ebdd7310a6048f397dbe13ef8a038cd",
+      "label": "agent-high-tiny-quantity-suffix-only",
+      "model": "deepseek/deepseek-v4-flash",
+      "state": "completed",
+      "reserved_usd": "0.0024909885",
+      "cost_usd": "0",
+      "generation_id": "gen-1793941365-ADNqqSlRF7iw577WfYjH"
+    },
+    {
+      "id": "2e4462173ba84b3fb1bbb96909625eba",
+      "label": "agent-high-one-regex-suffix-fragment",
+      "model": "openai/gpt-oss-120b",
+      "state": "completed",
+      "reserved_usd": "0.0008046720",
+      "cost_usd": "0.00146335",
+      "generation_id": "gen-1793941557-cXImJqDz3NCn9ayJlbrh"
+    },
+    {
+      "id": "b0e88cf430a14aeca2e12626ddf0c6d1",
+      "label": "agent-high-correct-entire-optional-suffix-groups",
+      "model": "openai/gpt-oss-120b",
+      "state": "completed",
+      "reserved_usd": "0.0008038096",
+      "cost_usd": "0.0009374",
+      "generation_id": "gen-1793941617-zQoaDtsciZX1S5aO32Hr"
+    },
+    {
+      "id": "c3cceedf5b8c4147880876f5fbb4871e",
+      "label": "claude-agent-last-final-focused-guards-71suite-85edges",
+      "model": "anthropic/claude-opus-5.5",
+      "state": "completed",
+      "reserved_usd": "1.0585828",
+      "cost_usd": "0.484332",
+      "generation_id": "gen-1793941650-MVQlkTkBDLdPefA2zUjE"
+    },
+    {
+      "id": "7c5e29e83a804de7a4e0fa48b8ae3ddc",
+      "label": "agent-high-last-concrete-review-numbers",
+      "model": "deepseek/deepseek-v4-pro-0813",
+      "state": "completed",
+      "reserved_usd": "0.1086640929",
+      "cost_usd": "0.0370839",
+      "generation_id": "gen-1793942162-3CcBhS6oSIahkeH1SMcw"
+    },
+    {
+      "id": "6d66650956f8410c8092511940f1da15",
+      "label": "agent-high-last-concrete-review-scope",
+      "model": "deepseek/deepseek-v4-pro-0813",
+      "state": "completed",
+      "reserved_usd": "0.1094761140",
+      "cost_usd": "0.09804776",
+      "generation_id": "gen-1793942162-TPwK5f3fctjGYcG9HQTg"
+    },
+    {
+      "id": "b3a97e85b2214582a2bc1f0902d117ab",
+      "label": "agent-high-last-concrete-review-tests",
+      "model": "deepseek/deepseek-v4-pro-0813",
+      "state": "completed",
+      "reserved_usd": "0.1127826612",
+      "cost_usd": "0.10670031",
+      "generation_id": "gen-1793942162-4oRyZuhxca8JpLPDqT9T"
+    },
+    {
+      "id": "b090fea1343848cfbb43f81ea3b18c2f",
+      "label": "agent-high-business-referral-call-email-ben",
+      "model": "openai/gpt-oss-120b",
+      "state": "completed",
+      "reserved_usd": "0.0008081568",
+      "cost_usd": "0.0009426",
+      "generation_id": "gen-1793942219-F5bAY5nzWehNSStJMXYW"
+    },
+    {
+      "id": "2cac50c2e9d14afb845d1619aa737aee",
+      "label": "agent-high-five-small-scope-condition-expressions",
+      "model": "openai/gpt-oss-120b",
+      "state": "completed",
+      "reserved_usd": "0.0011481536",
+      "cost_usd": "0.0028722",
+      "generation_id": "gen-1793942612-yEia7pWzNB9woDLmsr6Y"
+    },
+    {
+      "id": "02f1a62bde544bc7b19a1b3005ea1a58",
+      "label": "agent-high-one-committed-numeric-output-test-method",
+      "model": "openai/gpt-oss-120b",
+      "state": "completed",
+      "reserved_usd": "0.0011630256",
+      "cost_usd": "0.001374724",
+      "generation_id": "gen-1793942730-LtFGPn4BAQ6yYifFqPQf"
+    },
+    {
+      "id": "11ad7998abb64a9cbc268f4e556ff081",
+      "label": "agent-high-kimi-only-sensitive-classifier-region",
+      "model": "moonshotai/kimi-k3",
+      "state": "completed",
+      "reserved_usd": "0.5648291968",
+      "cost_usd": "0.0558828",
+      "generation_id": "gen-1793942844-SXR4UKzxx5MaeTlHPZVX"
+    },
+    {
+      "id": "11fcbd4fffbd4ee6b1b3bbda35d18608",
+      "label": "agent-high-kimi-explicit-slur-vs-soft-context-block",
+      "model": "moonshotai/kimi-k3",
+      "state": "completed",
+      "reserved_usd": "0.5645180992",
+      "cost_usd": "0.0548796",
+      "generation_id": "gen-1793943039-OHqRrslLXCULIaprjizq"
+    },
+    {
+      "id": "7754f121beda40b08ce81e7434bb1083",
+      "label": "agent-high-targeted-only-comparator",
+      "model": "moonshotai/kimi-k3",
+      "state": "completed",
+      "reserved_usd": "0.5635301056",
+      "cost_usd": "0.0631566",
+      "generation_id": "gen-1793943282-t9jZN2D5mPfHuNJS3l7U"
+    },
+    {
+      "id": "d1f3cf79a4644f989cf020af027fb22d",
+      "label": "agent-high-targeted-only-newtest",
+      "model": "moonshotai/kimi-k3",
+      "state": "completed",
+      "reserved_usd": "0.5643060544",
+      "cost_usd": "0.29208795",
+      "generation_id": "gen-1793943282-eMtYuWMvkMHnAskOqLMZ"
+    },
+    {
+      "id": "86f84e2474584e10884bd60ce1c87439",
+      "label": "agent-high-targeted-newtest-and-canonical-subject-pattern",
+      "model": "moonshotai/kimi-k3",
+      "state": "completed",
+      "reserved_usd": "0.5634515392",
+      "cost_usd": "0.105963102",
+      "generation_id": "gen-1793943737-YPap81KIQpF7z9ndOPmQ"
+    },
+    {
+      "id": "ff8a4d372fa14e4db0e5c6019ebdec6e",
+      "label": "agent-high-targeted-newtest-and-canonical-subject-methods",
+      "model": "moonshotai/kimi-k3",
+      "state": "completed",
+      "reserved_usd": "0.5657738944",
+      "cost_usd": "0.121053616",
+      "generation_id": "gen-1793943736-44BOK3xjU7CNDq3A9YKS"
+    },
+    {
+      "id": "2ab501eaaa3e41e5a57e1beda019b82c",
+      "label": "agent-high-only-two-failed-test-interfaces",
+      "model": "moonshotai/kimi-k3",
+      "state": "completed",
+      "reserved_usd": "0.5693490880",
+      "cost_usd": "0.082037704",
+      "generation_id": "gen-1793943937-hYdsZ2VKE3rMAimQWa7R"
+    },
+    {
+      "id": "e4cc2b049fa44c608b7ac21756592758",
+      "label": "agent-high-only-planning-and-four-new-assertions",
+      "model": "moonshotai/kimi-k3",
+      "state": "completed",
+      "reserved_usd": "0.5672751040",
+      "cost_usd": "0.082471348",
+      "generation_id": "gen-1793944289-5bxyuvGOdsdHBaHPqDCB"
+    },
+    {
+      "id": "4189e692ad2647a6899a1ef6eb516225",
+      "label": "claude-final-only-affected-guards-and-targeted-retests",
+      "model": "anthropic/claude-opus-5.5",
+      "state": "completed",
+      "reserved_usd": "1.2863840",
+      "cost_usd": "0.452516",
+      "generation_id": "gen-1793944459-J8QUf5v2uZ7CbVG6AuHT"
+    },
+    {
+      "id": "647112e8cf0744c4b4978f046fe10a46",
+      "label": "agent-high-approved-handoff-specific-routing",
+      "model": "moonshotai/kimi-k3",
+      "state": "completed",
+      "reserved_usd": "0.5681822080",
+      "cost_usd": "0.42318225",
+      "generation_id": "gen-1793944969-iLXWV55VIjOBcbv4z9nR"
+    },
+    {
+      "id": "288d9b00f76d49b88d80863901a39f4d",
+      "label": "agent-high-only-new-demonstrated-quantity",
+      "model": "moonshotai/kimi-k3",
+      "state": "completed",
+      "reserved_usd": "0.2829586496",
+      "cost_usd": "0.03765705",
+      "generation_id": "gen-1793945335-sFvemETZ5YzwwAXoirFS"
+    },
+    {
+      "id": "38f3a02ff7404191b209356489738e99",
+      "label": "agent-high-approved-handoff-specific-contact-neutral",
+      "model": "moonshotai/kimi-k3",
+      "state": "completed",
+      "reserved_usd": "0.2857355072",
+      "cost_usd": "0.0350259",
+      "generation_id": "gen-1793945385-rwvvUmPcq4G4R6n208w5"
+    },
+    {
+      "id": "8557876d53f643999d929d8a8ce2213f",
+      "label": "agent-high-one-line-match-and-unit-data",
+      "model": "moonshotai/kimi-k3",
+      "state": "completed",
+      "reserved_usd": "0.2113660032",
+      "cost_usd": "0.00772635",
+      "generation_id": "gen-1793945593-Jr64wzacyizEMUHs44Aa"
+    },
+    {
+      "id": "cf639dd06539485096bd26f7176cb002",
+      "label": "agent-high-only-owner-specific-handoff-cases",
+      "model": "moonshotai/kimi-k3",
+      "state": "completed",
+      "reserved_usd": "0.4259627328",
+      "cost_usd": "0.071228004",
+      "generation_id": "gen-1793945601-jzC4nwQ4AJ6sNGYackvb"
+    },
+    {
+      "id": "33cf325abcef4683a49026aee4b20f33",
+      "label": "pro-high-one-specific-method-test_neutral_general_questions_answer_or_refer_and_chat_accepts",
+      "model": "deepseek/deepseek-v4-pro-0813",
+      "state": "completed",
+      "reserved_usd": "0.1093656465",
+      "cost_usd": "0.079371327",
+      "generation_id": "gen-1793945785-MV6Yl7LvByfN6379IJ5F"
+    },
+    {
+      "id": "5f115117dd5042e8949ec3535e555be1",
+      "label": "pro-high-one-specific-method-test_unsafe_group_comparison_outputs_with_word_quantities_fall_back",
+      "model": "deepseek/deepseek-v4-pro-0813",
+      "state": "completed",
+      "reserved_usd": "0.1094600254",
+      "cost_usd": "0.058286544",
+      "generation_id": "gen-1793945785-ghS6c4kIz2PKGqUZR70V"
+    },
+    {
+      "id": "f21fd2e0ada349299f6a5ae03e71e524",
+      "label": "agent-high-tiny-real-contact-test-data-and-scope-phrase",
+      "model": "moonshotai/kimi-k3",
+      "state": "completed",
+      "reserved_usd": "0.2114352768",
+      "cost_usd": "0.00247065",
+      "generation_id": "gen-1793946087-MqTMJZldQMvH3EvEjFm7"
+    },
+    {
+      "id": "341f1d3f337f45ec99d2866add23e9fc",
+      "label": "claude-final-approved-handoff-actual-code-specific-evidence",
+      "model": "anthropic/claude-opus-5.5",
+      "state": "completed",
+      "reserved_usd": "1.1019712",
+      "cost_usd": "0.508456",
+      "generation_id": "gen-1793946115-baAm7BxRbzSxUkiCJfcn"
+    }
+  ]
+}
