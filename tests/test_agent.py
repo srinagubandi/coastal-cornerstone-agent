@@ -546,6 +546,18 @@ class HTTPTests(FixtureTest):
         self.assertEqual(self.request("POST", "/private/api/dashboard/logout", {}, {**headers, "Origin": self.config.public_origin, "X-CSRF-Token": csrf})[0], 200)
         self.assertEqual(self.request("GET", "/private/api/dashboard/summary", headers=headers)[0], 401)
 
+    def test_http_dedicated_chat_route_is_private(self):
+        chat_id = "a" * 32
+        status, _, headers = self.request("GET", "/dashboard/chat/" + chat_id)
+        self.assertEqual(status, 302)
+        self.assertEqual(headers["Location"], "/dashboard/login")
+        cookie, _ = self.login()
+        status, body, headers = self.request("GET", "/dashboard/chat/" + chat_id, headers={"Cookie": cookie})
+        self.assertEqual(status, 200)
+        self.assertIn(b"dashboard-breadcrumbs", body if isinstance(body, bytes) else b"")
+        self.assertEqual(headers["Referrer-Policy"], "no-referrer")
+        self.assertEqual(self.request("GET", "/dashboard/chat/not-a-chat")[0], 404)
+
     def test_http_login_role_and_rate_limit(self):
         status, body, h = self.request("GET", "/private/api/dashboard/login-state")
         headers = {"Cookie": h["Set-Cookie"].split(";", 1)[0], "Origin": self.config.public_origin, "X-CSRF-Token": body["csrf"]}

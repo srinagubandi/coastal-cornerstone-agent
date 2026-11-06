@@ -478,7 +478,8 @@ class Handler(BaseHTTPRequestHandler):
                 return self.respond(401, {'error': 'Authentication required'})
             ctype = "text/css; charset=utf-8" if path.endswith(".css") else "text/javascript; charset=utf-8"
             return self.respond(200, (ROOT / "static" / assets[path]).read_bytes(), ctype)
-        if path in {"/dashboard", "/dashboard/", "/dashboard/login"}:
+        is_chat_detail_route = re.fullmatch(r"/dashboard/chat/[0-9a-fA-F]{32}", path) is not None
+        if path in {"/dashboard", "/dashboard/", "/dashboard/login"} or is_chat_detail_route:
             if not s.dashboard.enabled:
                 return self.respond(503, {"error": "Private dashboard is not configured"})
             if path != "/dashboard/login" and not self.session():

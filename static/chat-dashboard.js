@@ -27,6 +27,9 @@ const ui = {
   search: document.getElementById('chat-search'),
   list: document.getElementById('chat-list'),
   detail: document.getElementById('chat-detail'),
+  sideContext: document.getElementById('chat-side-context'),
+  breadcrumbs: document.getElementById('dashboard-breadcrumbs'),
+  breadcrumbCurrent: document.getElementById('dashboard-breadcrumb-current'),
   status: document.getElementById('chat-status'),
   refresh: document.getElementById('chat-refresh')
 };
@@ -61,6 +64,22 @@ const hashId = () => {
   const match = location.hash.match(/^#chat=([0-9a-f]{32})$/i);
   return match ? match[1].toLowerCase() : '';
 };
+
+const routeId = () => {
+  const match = location.pathname.match(/^\/dashboard\/chat\/([0-9a-f]{32})$/i);
+  return match ? match[1].toLowerCase() : '';
+};
+
+const detailRoute = () => Boolean(routeId());
+
+function setBreadcrumb(label) {
+  if (ui.breadcrumbCurrent) ui.breadcrumbCurrent.textContent = label;
+}
+
+function applyDetailRouteMode() {
+  document.body.classList.toggle('cc-dashboard-detail-route', detailRoute());
+  setBreadcrumb(detailRoute() ? 'Conversation' : 'Overview');
+}
 
 const stamp = value => {
   let time = NaN;
@@ -289,12 +308,23 @@ function messageSection(messages) {
   return section;
 }
 
-function detailPlaceholder(message){const h3=make('h3','Conversation','chat-detail-title');h3.id='chat-detail-title';const p=make('p',message,'cc-chat-empty');ui.detail.replaceChildren(h3,p)}
+function detailPlaceholder(message){const h3=make('h3','Conversation','chat-detail-title');h3.id='chat-detail-title';const p=make('p',message,'cc-chat-empty');ui.detail.replaceChildren(h3,p);if(ui.sideContext)ui.sideContext.replaceChildren(make('h3','Conversation summary'),make('p',message,'cc-chat-empty'))}
 function revealDetail(){
   if (!ui.detail || typeof ui.detail.scrollIntoView !== 'function') return;
   const rect = ui.detail.getBoundingClientRect();
   const visible = rect.top >= 0 && rect.bottom <= window.innerHeight;
   if (!visible) ui.detail.scrollIntoView({behavior:'smooth', block:'start'});
+}
+function renderSideContext(data){
+  if(!ui.sideContext)return;
+  const dl=make('dl');
+  const fields=[['Status',human(data.status)],['Created',stamp(data.created)],['Last activity',stamp(data.last_seen)],['Messages',String(Array.isArray(data.messages)?data.messages.length:0)]];
+  for(const [label,value] of fields)dl.append(make('dt',label),make('dd',value));
+  const contact=data.contact&&typeof data.contact==='object'&&!Array.isArray(data.contact)?data.contact:null;
+  if(contact)dl.append(make('dt','Contact'),make('dd',contact.name||contact.email||contact.phone||'Details submitted'));
+  const notifications=emailPairs(data.email_states).map(([label,value])=>label+': '+value).join(' · ');
+  dl.append(make('dt','Notifications'),make('dd',notifications));
+  ui.sideContext.replaceChildren(make('h3','Conversation summary'),dl);
 }
 function reviewSection(review,id){
   const section=make('section','','cc-chat-review');
@@ -309,7 +339,7 @@ function reviewSection(review,id){
   const save=make('button','Save review','primary');save.type='button';save.addEventListener('click',async()=>{save.disabled=true;try{const response=await fetch('/private/api/dashboard/chats/'+id+'/review',{method:'POST',credentials:'same-origin',headers:{'Content-Type':'application/json','X-CSRF-Token':window.chatDashboardCsrf||''},body:JSON.stringify({classification:select.value,answer_draft:answer.value,admin_note:note.value})});if(response.status===401){location.replace('/dashboard/login#chat='+id);return}if(!response.ok)throw new Error('Review could not be saved.');const data=await response.json();save.textContent='Saved';setTimeout(()=>{save.textContent='Save review'},1200);if(state.chats){const row=state.chats.find(x=>x.id===id);if(row)row.classification=data.review.classification;renderList()}}catch(error){save.textContent=error.message;setTimeout(()=>{save.textContent='Save review'},1800)}finally{save.disabled=false}});
   const status=make('p',review?.updated?'Last updated '+stamp(review.updated)+' by '+(review.updated_by||'admin'):'Not yet reviewed','muted');section.append(nav,h4,label,answerLabel,noteLabel,save,status);return section;
 }
-function renderDetail(data){const h3=make('h3','Conversation '+validId(data.id),'chat-detail-title');h3.id='chat-detail-title';const summary=make('p','Status: '+human(data.status)+' · Created: '+stamp(data.created)+' · Last activity: '+stamp(data.last_seen)),notifications=make('section','','notifications'),h4=make('h4','Notification delivery'),dl=make('dl','','cc-chat-email'),pairs=emailPairs(data.email_states);for(const[kind,state]of pairs){const dt=make('dt',kind),dd=make('dd',state);dl.append(dt,dd)}notifications.append(h4,dl);const contact=contactSection(data.contact),messages=messageSection(data.messages),review=reviewSection(data.review,data.id);ui.detail.replaceChildren(h3,summary,review,contact,notifications,messages)}
+function renderDetail(data){const h3=make('h3','Conversation '+validId(data.id),'chat-detail-title');h3.id='chat-detail-title';const summary=make('p','Status: '+human(data.status)+' · Created: '+stamp(data.created)+' · Last activity: '+stamp(data.last_seen)),notifications=make('section','','notifications'),h4=make('h4','Notification delivery'),dl=make('dl','','cc-chat-email'),pairs=emailPairs(data.email_states);for(const[kind,state]of pairs){const dt=make('dt',kind),dd=make('dd',state);dl.append(dt,dd)}notifications.append(h4,dl);const contact=contactSection(data.contact),messages=messageSection(data.messages),review=reviewSection(data.review,data.id);ui.detail.replaceChildren(h3,summary,review,contact,notifications,messages);renderSideContext(data)}
 function renderFaqList() {
   const query = ui.faqSearch.value.trim().toLowerCase();
   const items = state.faqItems.filter(item => {
@@ -410,6 +440,7 @@ async function loadAdmin(force = false) {
 
 function setTab(tab, focus = false) {
   const chats = tab === 'chats', faq = tab === 'faq', admin = tab === 'admin', notifications = tab === 'notifications';
+  if (!detailRoute()) setBreadcrumb(chats ? 'Chats' : faq ? 'FAQ Review' : admin ? 'Admin' : notifications ? 'Notifications' : 'Overview');
   ui.overviewTab.setAttribute('aria-selected', String(!chats && !faq && !admin && !notifications));
   ui.chatsTab.setAttribute('aria-selected', String(chats));
   ui.faqTab.setAttribute('aria-selected', String(faq));
@@ -464,9 +495,12 @@ async function selectChat(value, updateHash = true) {
   const id = validId(value);
   if (!id) return;
   state.selected = id;
+  if (updateHash) {
+    history.pushState(null, '', '/dashboard/chat/' + id);
+    applyDetailRouteMode();
+  }
   setTab('chats');
   markSelection();
-  if (updateHash) history.replaceState(null, '', location.pathname + location.search + '#chat=' + id);
   const epoch = ++state.detailEpoch;
   ui.detail.setAttribute('aria-busy', 'true');
   detailPlaceholder('Loading conversation');
@@ -505,8 +539,10 @@ async function refreshChats(){
 }
 
 function followHash(){
-  const id=hashId();
+  const id=routeId()||hashId();
   if(id){
+    if(!routeId()) history.replaceState(null,'','/dashboard/chat/'+id);
+    applyDetailRouteMode();
     selectChat(id,false);
   }else{
     state.selected='';
@@ -514,6 +550,7 @@ function followHash(){
     ui.detail.setAttribute('aria-busy','false');
     detailPlaceholder('No conversation selected');
     markSelection();
+    applyDetailRouteMode();
     setTab('overview');
   }
 }
@@ -556,6 +593,6 @@ ui.adminAuditRefresh.addEventListener('click',()=>loadAdmin(true));
 
 window.addEventListener('hashchange',followHash);
 
-if(hashId())followHash();
-else setTab('overview');
+if(routeId() || hashId())followHash();
+else { applyDetailRouteMode(); setTab('overview'); }
 })();

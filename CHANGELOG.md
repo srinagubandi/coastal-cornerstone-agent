@@ -5,6 +5,7 @@
 - Restored the private FAQ review audit read path and packaged the approved 100-question review seed for idempotent production startup import. Questions remain private drafts and are not runtime FAQ answers until human approval and publication.
 - Added focused regression coverage for audit-event serialization. Notification settings and deliveries remain read-only during validation; no test email is sent by this change.
 - Fixed the confirmed production 503 by adding notification schema/accessors to the shared `Store` used by `Service`; verified in an isolated temporary SQLite reproduction and the full regression suite.
+- Added an authenticated `/dashboard/chat/<id>` detail route, dashboard-wide breadcrumbs, a three-column desktop conversation view with responsive stacking, and a compact conversation summary column. Legacy `#chat=<id>` links migrate safely to the new route without changing chat records or sending email.
 
 ## 1.0.0 — 2026-11-03
 

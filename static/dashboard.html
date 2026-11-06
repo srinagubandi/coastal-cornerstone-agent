@@ -3,7 +3,7 @@
 <script defer src="/static/chat-dashboard.js"></script>
 </head>
 <body><a class="skip" href="#main">Skip to dashboard</a><header class="topbar"><a class="brand" href="/dashboard">Coastal <span>Cornerstone</span><small>PRIVATE QUESTION INTELLIGENCE</small></a><nav aria-label="Account"><span class="account">Sri · Administrator</span><button id="logout" class="ghost">Sign out</button></nav></header>
-<main id="main" class="workspace"><div class="cc-dashboard-tabs" role="tablist" aria-label="Dashboard sections">
+<main id="main" class="workspace"><nav id="dashboard-breadcrumbs" class="cc-breadcrumbs cc-dashboard-breadcrumbs" aria-label="Breadcrumb"><ol><li><a href="/dashboard/">Dashboard</a></li><li id="dashboard-breadcrumb-current" aria-current="page">Overview</li></ol></nav><div class="cc-dashboard-tabs" role="tablist" aria-label="Dashboard sections">
   <button id="overview-tab" role="tab" aria-controls="overview-panel" aria-selected="true" tabindex="0" type="button">Overview</button>
 		  <button id="chats-tab" role="tab" aria-controls="chats-panel" aria-selected="false" tabindex="-1" type="button">Chats</button>
 		  <button id="faq-tab" role="tab" aria-controls="faq-panel" aria-selected="false" tabindex="-1" type="button">FAQ Review</button>
@@ -68,6 +68,7 @@
       <h3 id="chat-detail-title">Conversation</h3>
       <p class="cc-chat-empty">Select a chat to view its saved messages and contact details.</p>
     </article>
+    <aside id="chat-side-context" class="cc-chat-side-context" aria-label="Conversation summary"><h3>Conversation summary</h3><p class="cc-chat-empty">Select a chat to view status, contact, and notification details.</p></aside>
   </div>
 </section>
 
