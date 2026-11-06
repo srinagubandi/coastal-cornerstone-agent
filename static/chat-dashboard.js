@@ -7,6 +7,17 @@ const ui = {
   notificationsTab: document.getElementById('notifications-tab'),
   overviewPanel: document.getElementById('overview-panel'),
   chatsPanel: document.getElementById('chats-panel'),
+  faqTab: document.getElementById('faq-tab'),
+  faqPanel: document.getElementById('faq-panel'),
+  faqStatus: document.getElementById('faq-status'),
+  faqCount: document.getElementById('faq-count'),
+  faqSearch: document.getElementById('faq-search'),
+  faqList: document.getElementById('faq-list'),
+  faqRefresh: document.getElementById('faq-refresh'),
+  faqDetail: document.getElementById('faq-detail'),
+  faqDetailTitle: document.getElementById('faq-detail-title'),
+  faqDetailBody: document.getElementById('faq-detail-body'),
+  faqDetailClose: document.getElementById('faq-detail-close'),
   notificationsPanel: document.getElementById('notifications-panel'),
   search: document.getElementById('chat-search'),
   list: document.getElementById('chat-list'),
@@ -23,6 +34,8 @@ const state = {
   chats: [],
   selected: '',
   listLoaded: false,
+  faqLoaded: false,
+  faqItems: [],
   listEpoch: 0,
   detailEpoch: 0
 };
@@ -285,23 +298,80 @@ function reviewSection(review,id){
   const status=make('p',review?.updated?'Last updated '+stamp(review.updated)+' by '+(review.updated_by||'admin'):'Not yet reviewed','muted');section.append(nav,h4,label,answerLabel,noteLabel,save,status);return section;
 }
 function renderDetail(data){const h3=make('h3','Conversation '+validId(data.id),'chat-detail-title');h3.id='chat-detail-title';const summary=make('p','Status: '+human(data.status)+' · Created: '+stamp(data.created)+' · Last activity: '+stamp(data.last_seen)),notifications=make('section','','notifications'),h4=make('h4','Notification delivery'),dl=make('dl','','cc-chat-email'),pairs=emailPairs(data.email_states);for(const[kind,state]of pairs){const dt=make('dt',kind),dd=make('dd',state);dl.append(dt,dd)}notifications.append(h4,dl);const contact=contactSection(data.contact),messages=messageSection(data.messages),review=reviewSection(data.review,data.id);ui.detail.replaceChildren(h3,summary,review,contact,notifications,messages)}
+function renderFaqList() {
+  const query = ui.faqSearch.value.trim().toLowerCase();
+  const items = state.faqItems.filter(item => {
+    const text = [item.id, item.question, item.answer, item.state, item.category, item.source].filter(Boolean).join(' ').toLowerCase();
+    return !query || text.includes(query);
+  });
+  ui.faqCount.textContent = `${items.length} of ${state.faqItems.length} drafts`;
+  const rows = items.map(item => {
+    const row = make('tr');
+    const question = make('button', item.question || 'Untitled question', 'cc-chat-row-link');
+    question.type = 'button'; question.dataset.faqId = validId(item.id) || '';
+    const questionCell = make('td'); questionCell.appendChild(question);
+    row.append(questionCell, make('td', human(item.state || 'draft')), make('td', item.answer ? 'Answer drafted' : 'Needs answer'), make('td', item.source || item.source_url || 'Private draft'), make('td', stamp(item.updated || item.created)));
+    return row;
+  });
+  if (!rows.length) { const row = make('tr'); const cell = make('td', query ? 'No FAQ drafts match this search.' : 'No FAQ drafts loaded.', 'cc-chat-empty'); cell.colSpan = 5; row.appendChild(cell); rows.push(row); }
+  ui.faqList.replaceChildren(...rows);
+}
+
+async function loadFaq(force = false) {
+  if (!force && state.faqLoaded) return;
+  ui.faqStatus.textContent = 'Loading private FAQ drafts…';
+  try {
+    const data = await getPrivate('/private/api/dashboard/faq-review/drafts');
+    if (!Array.isArray(data.items)) throw new Error('Invalid FAQ review response');
+    state.faqItems = data.items;
+    state.faqLoaded = true;
+    renderFaqList();
+    ui.faqStatus.textContent = 'Drafts are private until an Admin deliberately publishes an approved version.';
+  } catch (error) {
+    ui.faqStatus.textContent = error.message;
+    ui.faqCount.textContent = 'Load failed';
+  }
+}
+
+async function selectFaq(value) {
+  const id = validId(value);
+  if (!id) return;
+  ui.faqDetail.hidden = false;
+  ui.faqDetailTitle.textContent = 'FAQ draft';
+  ui.faqDetailBody.replaceChildren(make('p', 'Loading draft…', 'muted'));
+  try {
+    const data = await getPrivate('/private/api/dashboard/faq-review/drafts/' + id);
+    const question = make('h3', data.question || 'Untitled question');
+    const stateLine = make('p', 'Status: ' + human(data.state || 'draft'), 'badge');
+    const answer = make('p', data.answer || 'No answer drafted yet.', 'cc-chat-message-text');
+    const source = make('p', 'Source: ' + (data.source || data.source_url || 'Private draft'), 'muted');
+    ui.faqDetailBody.replaceChildren(question, stateLine, answer, source, make('p', 'Editing and approval controls will appear here in the next review micro-task.', 'notice'));
+  } catch (error) {
+    ui.faqDetailBody.replaceChildren(make('p', error.message, 'notice'));
+  }
+}
+
 function setTab(tab, focus = false) {
-  const chats = tab === 'chats', notifications = tab === 'notifications';
-  ui.overviewTab.setAttribute('aria-selected', String(!chats && !notifications));
+  const chats = tab === 'chats', faq = tab === 'faq', notifications = tab === 'notifications';
+  ui.overviewTab.setAttribute('aria-selected', String(!chats && !faq && !notifications));
   ui.chatsTab.setAttribute('aria-selected', String(chats));
+  ui.faqTab.setAttribute('aria-selected', String(faq));
   ui.notificationsTab.setAttribute('aria-selected', String(notifications));
-  ui.overviewTab.tabIndex = !chats && !notifications ? 0 : -1;
+  ui.overviewTab.tabIndex = !chats && !faq && !notifications ? 0 : -1;
   ui.chatsTab.tabIndex = chats ? 0 : -1;
+  ui.faqTab.tabIndex = faq ? 0 : -1;
   ui.notificationsTab.tabIndex = notifications ? 0 : -1;
-  ui.overviewPanel.hidden = chats || notifications;
+  ui.overviewPanel.hidden = chats || faq || notifications;
   ui.chatsPanel.hidden = !chats;
+  ui.faqPanel.hidden = !faq;
   ui.notificationsPanel.hidden = !notifications;
   if (focus) {
-    (notifications ? ui.notificationsTab : chats ? ui.chatsTab : ui.overviewTab).focus();
+    (notifications ? ui.notificationsTab : faq ? ui.faqTab : chats ? ui.chatsTab : ui.overviewTab).focus();
   }
   if (chats && !state.listLoaded && ui.list.getAttribute('aria-busy') !== 'true') {
     loadList();
   }
+  if (faq) loadFaq();
 }
 
 async function loadList(force = false) {
@@ -396,7 +466,7 @@ ui.list.addEventListener('click',e=>{
 });
 
 function onTabKey(e,tab){
-  const tabs=['overview','chats','notifications'], index=tabs.indexOf(tab);
+  const tabs=['overview','chats','faq','notifications'], index=tabs.indexOf(tab);
   switch(e.key){
     case'ArrowRight':setTab(tabs[(index+1)%tabs.length],true);e.preventDefault();break;
     case'ArrowLeft':setTab(tabs[(index+tabs.length-1)%tabs.length],true);e.preventDefault();break;
@@ -407,10 +477,16 @@ function onTabKey(e,tab){
 
 ui.overviewTab.addEventListener('keydown',e=>onTabKey(e,'overview'));
 ui.chatsTab.addEventListener('keydown',e=>onTabKey(e,'chats'));
+ui.faqTab.addEventListener('keydown',e=>onTabKey(e,'faq'));
 ui.notificationsTab.addEventListener('keydown',e=>onTabKey(e,'notifications'));
 ui.overviewTab.addEventListener('click',()=>setTab('overview',true));
 ui.chatsTab.addEventListener('click',()=>setTab('chats',true));
+ui.faqTab.addEventListener('click',()=>setTab('faq',true));
 ui.notificationsTab.addEventListener('click',()=>setTab('notifications',true));
+ui.faqRefresh.addEventListener('click',()=>loadFaq(true));
+ui.faqSearch.addEventListener('input',renderFaqList);
+ui.faqList.addEventListener('click',e=>{if(!(e.target instanceof Element))return;const btn=e.target.closest('button[data-faq-id]');if(btn)selectFaq(btn.dataset.faqId);});
+ui.faqDetailClose.addEventListener('click',()=>{ui.faqDetail.hidden=true;ui.faqSearch.focus();});
 
 window.addEventListener('hashchange',followHash);
 

@@ -5,7 +5,8 @@
 <body><a class="skip" href="#main">Skip to dashboard</a><header class="topbar"><a class="brand" href="/dashboard">Coastal <span>Cornerstone</span><small>PRIVATE QUESTION INTELLIGENCE</small></a><nav aria-label="Account"><span class="account">Sri · Administrator</span><button id="logout" class="ghost">Sign out</button></nav></header>
 <main id="main" class="workspace"><div class="cc-dashboard-tabs" role="tablist" aria-label="Dashboard sections">
   <button id="overview-tab" role="tab" aria-controls="overview-panel" aria-selected="true" tabindex="0" type="button">Overview</button>
-	  <button id="chats-tab" role="tab" aria-controls="chats-panel" aria-selected="false" tabindex="-1" type="button">Chats</button>
+		  <button id="chats-tab" role="tab" aria-controls="chats-panel" aria-selected="false" tabindex="-1" type="button">Chats</button>
+		  <button id="faq-tab" role="tab" aria-controls="faq-panel" aria-selected="false" tabindex="-1" type="button">FAQ Review</button>
 	  <button id="notifications-tab" role="tab" aria-controls="notifications-panel" aria-selected="false" tabindex="-1" type="button">Notifications</button>
 </div>
 <section id="overview-panel" role="tabpanel" aria-labelledby="overview-tab" tabindex="0">
@@ -18,6 +19,13 @@
 <section class="panel"><div class="sectionhead"><h2>Unknown question review</h2><span class="badge">Never auto-approved</span></div><div class="tabs" role="group" aria-label="Review queue filter"><button data-state="all" aria-pressed="true">All retained</button><button data-state="pending" aria-pressed="false">Pending</button><button data-state="digest_pending" aria-pressed="false">Digest reserved</button><button data-state="sent" aria-pressed="false">Digest sent</button></div><div id="unknowns" class="reviewlist"></div><p class="muted">Review source evidence and edit the approved FAQ file through the operator workflow. This dashboard does not approve facts or trigger emails.</p></section>
 <div class="twocol"><section class="panel"><h2>Cited source usage</h2><div id="sources" class="sourcelist"></div></section><section class="panel"><h2>Optional source review draft</h2><div id="report"></div></section></div>
 <footer class="privatefooter"><h2>What these logs mean</h2><p id="privacy"></p><p id="retention"></p><p>There is no synthetic traffic or historical demo activity. An empty dashboard means no retained questions have arrived. A channel label is not a verified AI identity.</p></footer>
+</section>
+
+<section id="faq-panel" role="tabpanel" aria-labelledby="faq-tab" tabindex="0" hidden>
+  <div class="pagehead"><div><p class="eyebrow">PRIVATE CONTENT REVIEW</p><h1>FAQ Review</h1><p class="muted">Review the 100-question draft before any answer becomes public.</p></div><div class="actions"><button id="faq-refresh" class="ghost" type="button">Refresh queue</button></div></div>
+  <p id="faq-status" class="notice" role="status" aria-live="polite">Open FAQ Review to load private drafts.</p>
+  <section class="panel"><div class="sectionhead"><h2>Approval queue</h2><span id="faq-count" class="badge">Not loaded</span></div><div class="filters"><label for="faq-search">Search questions<input id="faq-search" type="search" placeholder="Search question, category, or status"></label></div><div class="cc-chat-table-wrap" tabindex="0" role="region" aria-label="FAQ approval queue"><table class="cc-chat-table"><caption class="sr-only">Private FAQ draft approval queue</caption><thead><tr><th scope="col">Question</th><th scope="col">Status</th><th scope="col">Answer</th><th scope="col">Source</th><th scope="col">Updated</th></tr></thead><tbody id="faq-list"><tr><td colspan="5" class="cc-chat-empty">No drafts loaded.</td></tr></tbody></table></div></section>
+  <article id="faq-detail" class="panel" hidden><div class="sectionhead"><h2 id="faq-detail-title">FAQ draft</h2><button id="faq-detail-close" class="ghost" type="button">Back to queue</button></div><div id="faq-detail-body"></div></article>
 </section>
 
 <section id="notifications-panel" role="tabpanel" aria-labelledby="notifications-tab" tabindex="0" hidden>
@@ -38,11 +46,6 @@
     <button id="chat-refresh" type="button" class="ghost">Refresh chats</button>
   </div>
   <p id="chat-status" class="cc-chat-status" role="status" aria-live="polite" aria-atomic="true">Open Chats to load retained conversations.</p>
-  <section class="panel cc-review-queue-panel" aria-labelledby="faq-review-title">
-    <div class="sectionhead"><h3 id="faq-review-title">FAQ review queue</h3><span id="faq-review-count" class="badge">Not loaded</span></div>
-    <p id="faq-review-status" class="muted">Draft questions are private and cannot answer visitors until approved.</p>
-    <ol id="faq-review-list" class="reviewlist"><li class="cc-chat-empty">Open Chats to load the review queue.</li></ol>
-  </section>
   <div class="cc-chat-layout">
     <section class="cc-chat-queue" aria-labelledby="chat-queue-title">
       <div class="sectionhead"><h3 id="chat-queue-title">Conversation queue</h3><span class="badge">Click a question to open</span></div>
