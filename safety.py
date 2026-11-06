@@ -245,7 +245,7 @@ def classify_question(raw):
     if OFFTOPIC_PATTERN.search(t):
         return 'blocked', 'off-topic'
     neutral_context = legit_sex or any(w in n for w in (' homeowner ',' service ',' ada ',' disabled access ',' accessible fitting ',' accessible fittings ',' threaded fitting ',' threaded fittings '))
-    construction = CONSTRUCTION_CONTEXT_PATTERN.search(t) or neutral_context
+    construction = CONSTRUCTION_CONTEXT_PATTERN.search(t) or neutral_context or re.search(r'\b(?:miami|square\s+feet?|square\s+footage|per\s+square\s+foot)\b', t, re.IGNORECASE)
     profanity = any(' ' + w + ' ' in n for w in ('damn','hell','crap','shit','fuck','fucking','bitch','asshole','bastard','pissed','sucks','wtf'))
     if profanity and not construction:
         return 'blocked', 'pure abuse'
