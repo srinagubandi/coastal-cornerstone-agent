@@ -11,6 +11,8 @@ import threading
 from config import ADMIN_EMAIL, RECIPIENT
 from safety import csv_safe, redact
 
+ADMIN_ROLES = frozenset({'admin', 'ben'})
+
 
 def _decode(value):
     return base64.b64decode(value.encode("ascii"), validate=True)
@@ -181,11 +183,11 @@ class Dashboard:
         return self.notifications.deliveries() if self.notifications else []
 
     def update_notification(self, trigger, enabled, recipients, role):
-        if role != 'admin':
+        if role not in ADMIN_ROLES:
             raise PermissionError('Administrator access required')
         return self.notifications.update_setting(trigger, enabled, recipients)
 
     def send_notification_test(self, session_key, role):
-        if role != 'admin':
+        if role not in ADMIN_ROLES:
             raise PermissionError('Administrator access required')
         return self.notifications.send_test(session_key)

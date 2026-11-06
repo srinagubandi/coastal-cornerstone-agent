@@ -609,14 +609,14 @@ class Handler(BaseHTTPRequestHandler):
         if path.startswith('/private/api/dashboard/chats/') and path.endswith('/review'):
             return self.respond(410, {'error': 'This endpoint has been removed. Please use the new FAQ review system.'})
         if path == '/private/api/dashboard/notifications/update':
-            if session['role'] != 'admin' or not isinstance(body, dict) or set(body) != {'trigger', 'enabled', 'recipients'}:
+            if session['role'] not in ('admin', 'ben') or not isinstance(body, dict) or set(body) != {'trigger', 'enabled', 'recipients'}:
                 return self.respond(403, {'error': 'Administrator access required'})
             try:
                 return self.respond(200, {'settings': s.dashboard.update_notification(body['trigger'], body['enabled'], body['recipients'], session['role'])})
             except (ValueError, TypeError):
                 return self.respond(400, {'error': 'Invalid notification setting'})
         if path == '/private/api/dashboard/notifications/test':
-            if session['role'] != 'admin' or body != {}:
+            if session['role'] not in ('admin', 'ben') or body != {}:
                 return self.respond(403, {'error': 'Administrator access required'})
             result = s.dashboard.send_notification_test(session.get('token', self.cookie('ccc_session') or ''), session['role'])
             if result.get('status') == 'rate_limited':
