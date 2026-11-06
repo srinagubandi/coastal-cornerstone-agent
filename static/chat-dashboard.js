@@ -290,6 +290,12 @@ function messageSection(messages) {
 }
 
 function detailPlaceholder(message){const h3=make('h3','Conversation','chat-detail-title');h3.id='chat-detail-title';const p=make('p',message,'cc-chat-empty');ui.detail.replaceChildren(h3,p)}
+function revealDetail(){
+  if (!ui.detail || typeof ui.detail.scrollIntoView !== 'function') return;
+  const rect = ui.detail.getBoundingClientRect();
+  const visible = rect.top >= 0 && rect.bottom <= window.innerHeight;
+  if (!visible) ui.detail.scrollIntoView({behavior:'smooth', block:'start'});
+}
 function reviewSection(review,id){
   const section=make('section','','cc-chat-review');
   const nav=make('nav','Dashboard › Chats › Conversation','cc-breadcrumbs');nav.setAttribute('aria-label','Breadcrumb');
@@ -471,10 +477,12 @@ async function selectChat(value, updateHash = true) {
     if (validId(data.id) !== id || !Array.isArray(data.messages)) throw new Error('Invalid conversation detail');
     renderDetail(data);
     setStatus('Conversation loaded');
+    revealDetail();
   } catch (error) {
     if (epoch === state.detailEpoch && state.selected === id) {
       detailPlaceholder('This conversation is unavailable. It may have expired.');
       setStatus(error.message, true);
+      revealDetail();
     }
   } finally {
     if (epoch === state.detailEpoch) ui.detail.setAttribute('aria-busy', 'false');
