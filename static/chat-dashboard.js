@@ -342,10 +342,32 @@ async function selectFaq(value) {
   try {
     const data = await getPrivate('/private/api/dashboard/faq-review/drafts/' + id);
     const question = make('h3', data.question || 'Untitled question');
-    const stateLine = make('p', 'Status: ' + human(data.state || 'draft'), 'badge');
-    const answer = make('p', data.answer || 'No answer drafted yet.', 'cc-chat-message-text');
+    const stateLine = make('p', 'Status: ' + human(data.state || 'new'), 'badge');
+    const questionLabel = make('label', 'Question');
+    const questionInput = document.createElement('textarea'); questionInput.rows = 3; questionInput.value = data.question || ''; questionLabel.appendChild(questionInput);
+    const answerLabel = make('label', 'Answer draft');
+    const answerInput = document.createElement('textarea'); answerInput.rows = 8; answerInput.value = data.answer || ''; answerLabel.appendChild(answerInput);
+    const tagsLabel = make('label', 'Tags (comma-separated)');
+    const tagsInput = document.createElement('input'); tagsInput.type = 'text'; tagsInput.value = Array.isArray(data.tags) ? data.tags.join(', ') : ''; tagsLabel.appendChild(tagsInput);
     const source = make('p', 'Source: ' + (data.source || data.source_url || 'Private draft'), 'muted');
-    ui.faqDetailBody.replaceChildren(question, stateLine, answer, source, make('p', 'Editing and approval controls will appear here in the next review micro-task.', 'notice'));
+    const actions = make('div', undefined, 'actions');
+    const save = make('button', 'Save draft', 'ghost'); const ready = make('button', 'Mark ready for approval', 'primary'); const reject = make('button', 'Reject', 'ghost');
+    const saveDraft = async stateValue => {
+      for (const button of [save, ready, reject]) button.disabled = true;
+      try {
+        const response = await fetch('/private/api/dashboard/faq-review/drafts/' + id + '/save', {method: 'POST', credentials: 'same-origin', headers: {'Content-Type': 'application/json', 'X-CSRF-Token': window.chatDashboardCsrf || ''}, body: JSON.stringify({revision: data.revision, question: questionInput.value, answer: answerInput.value, tags: tagsInput.value.split(',').map(value => value.trim()).filter(Boolean), state: stateValue})});
+        if (response.status === 401) { location.replace('/dashboard/login'); return; }
+        if (!response.ok) { const body = await response.json().catch(() => ({})); throw new Error(body.error || 'FAQ draft could not be saved.'); }
+        ui.faqStatus.textContent = stateValue === 'ready' ? 'Draft marked ready for approval.' : stateValue === 'rejected' ? 'Draft rejected.' : 'Draft saved.';
+        await loadFaq(true);
+        await selectFaq(id);
+      } catch (error) { ui.faqStatus.textContent = error.message; } finally { for (const button of [save, ready, reject]) button.disabled = false; }
+    };
+    save.addEventListener('click', () => saveDraft(data.state || 'in_progress'));
+    ready.addEventListener('click', () => saveDraft('ready'));
+    reject.addEventListener('click', () => saveDraft('rejected'));
+    actions.append(save, ready, reject);
+    ui.faqDetailBody.replaceChildren(question, stateLine, questionLabel, answerLabel, tagsLabel, source, actions);
   } catch (error) {
     ui.faqDetailBody.replaceChildren(make('p', error.message, 'notice'));
   }
