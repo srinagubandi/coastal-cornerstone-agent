@@ -91,6 +91,17 @@ class TestChatCaptureReview(unittest.TestCase):
     def _send(self, message):
         return self.service.message(self.sid, self.token, {'message': message}, self.client_ip)
 
+    def test_direct_company_answers_cover_reported_questions(self):
+        answer, status = self.service._direct_company_answer('What does a typical project cost per square foot?')
+        self.assertEqual(status, 'answered')
+        self.assertIn("don't publish a standard cost per square foot", answer)
+        answer, status = self.service._direct_company_answer('Do you work in Miami?')
+        self.assertEqual(status, 'answered')
+        self.assertIn('outside our service area', answer)
+        answer, status = self.service._direct_company_answer('How do I get a quote?')
+        self.assertEqual(status, 'needs_help')
+        self.assertIn('contact form', answer)
+
     def test_blocked_message_captured(self):
         # Send a message that will be blocked by safety (e.g., NSFW)
         resp, code = self._send('pornography is bad')

@@ -251,7 +251,7 @@ class ChatService:
             if kind == 'blocked' or greeting_re.match(text):
                 return {
                     'status': 'ignored',
-                    'answer': self._blocked_answer(body['message']) if kind == 'blocked' else 'Hi! How can we help you with Coastal Cornerstone Construction today?',
+                    'answer': self._blocked_answer(body['message']) if kind == 'blocked' else "Hi, I'm Coastal Cornerstone Construction's assistant. Ask me about our services, the areas we serve, ICF construction, our experience, or how to get a quote. For anything specific to your project, you can reach Ben at ben@cccbuild.com or (727) 771-5672.",
                     'sources': [],
                     'faq_ids': [],
                     'session_status': session_status,
@@ -301,6 +301,10 @@ class ChatService:
                 if normalize(faq_data['question']) == norm:
                     return [faq_id]
         alias_map = {
+            "what construction services does coastal cornerstone construction offer": "faq-001",
+            "where are you located and what areas do you serve": "faq-004",
+            "are you licensed and insured": "faq-032",
+            "do you do icf construction and what is it": "faq-010",
             "where are you located": "faq-003",
             "what is your address": "faq-003",
             "tell me about ccc": "faq-001",
@@ -377,11 +381,26 @@ class ChatService:
                 return [faq_id]
         return []
 
+    def _direct_company_answer(self, text):
+        """Return exact, evidence-backed answers for high-value company intents."""
+        normalized = re.sub(r'[^a-z0-9]+', ' ', text.casefold()).strip()
+        if re.search(r'\b(?:quote|estimate|discuss my project|how do i get a quote)\b', normalized) and 'per square foot' not in normalized:
+            return HUMAN, 'needs_help'
+        if re.search(r'\b(?:cost|price|pricing|rate|per square foot|price list)\b', normalized):
+            return ("We don't publish a standard cost per square foot, because the price depends on the type of work, the design, and the site conditions. The way to get a real number is to talk through your project with us — call or text (727) 771-5672, email Ben at ben@cccbuild.com, or use the contact form on our Contact page with the project location and type of work, and we can discuss cost estimates from there. One published figure: ICF construction typically runs about 15–20% above conventional construction.", 'answered')
+        if re.search(r'\bmiami\b', normalized):
+            return ("No — Miami is outside our service area. We're based in Clearwater and serve most of Central Florida, from Gainesville to Venice, with a primary focus on Hillsborough, Pinellas, Pasco, Hernando, and Citrus counties. If your project is near the edge of that area, it's worth a quick call to (727) 771-5672 to confirm.", 'answered')
+        return None
+
     def _respond(self, sid, op, text, kind, now=None, timing=None):
         try:
             answer_started = time.perf_counter()
+            direct = self._direct_company_answer(text) if kind != 'blocked' else None
             ids = self._curated_ids(text) if kind != 'blocked' else []
-            if ids and 'faq-027' in ids:
+            if direct:
+                answer, status = direct
+                sources, faq_ids = [], []
+            elif ids and 'faq-027' in ids:
                 status, answer, sources, faq_ids = 'needs_help', HUMAN, [], []
             elif ids:
                 status, answer, sources, faq_ids = self._approved(self.agent.answered(ids))
