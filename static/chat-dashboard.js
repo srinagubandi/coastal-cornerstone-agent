@@ -27,7 +27,7 @@ const ui = {
   search: document.getElementById('chat-search'),
   list: document.getElementById('chat-list'),
   detail: document.getElementById('chat-detail'),
-  sideContext: document.getElementById('chat-side-context'),
+  sideContext: document.getElementById('chat-summary'),
   breadcrumbs: document.getElementById('dashboard-breadcrumbs'),
   breadcrumbCurrent: document.getElementById('dashboard-breadcrumb-current'),
   status: document.getElementById('chat-status'),
@@ -590,6 +590,8 @@ ui.faqSearch.addEventListener('input',renderFaqList);
 ui.faqList.addEventListener('click',e=>{if(!(e.target instanceof Element))return;const btn=e.target.closest('button[data-faq-id]');if(btn)selectFaq(btn.dataset.faqId);});
 ui.faqDetailClose.addEventListener('click',()=>{ui.faqDetail.hidden=true;ui.faqSearch.focus();});
 ui.adminAuditRefresh.addEventListener('click',()=>loadAdmin(true));
+const jumpNav=document.getElementById('chat-jump-nav');
+if(jumpNav)jumpNav.addEventListener('click',event=>{if(!(event.target instanceof Element))return;const link=event.target.closest('a[href^="#chat-"]');if(!link)return;const target=document.querySelector(link.getAttribute('href'));if(target)requestAnimationFrame(()=>target.focus({preventScroll:true}));});
 
 window.addEventListener('hashchange',followHash);
 

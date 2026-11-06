@@ -43,8 +43,9 @@
 
 <section id="chats-panel" role="tabpanel" aria-labelledby="chats-tab" tabindex="0" hidden>
   <div class="cc-chat-header">
-    <h2>Private chats</h2>
+    <div class="cc-chat-header-row"><div><h2>Private chats</h2>
     <p class="muted">Read-only business conversations shared with the company team. Records are retained for 30 days.</p>
+    </div><a class="cc-back-link" href="/dashboard/">← Back to dashboard</a></div>
   </div>
   <div class="cc-chat-controls">
     <label for="chat-search">Search chats
@@ -53,8 +54,9 @@
     <button id="chat-refresh" type="button" class="ghost">Refresh chats</button>
   </div>
   <p id="chat-status" class="cc-chat-status" role="status" aria-live="polite" aria-atomic="true">Open Chats to load retained conversations.</p>
+  <nav id="chat-jump-nav" class="cc-chat-jump-nav" aria-label="Conversation sections"><a href="#chat-queue">Queue</a><a href="#chat-detail">Conversation</a><a href="#chat-summary">Summary</a></nav>
   <div class="cc-chat-layout">
-    <section class="cc-chat-queue" aria-labelledby="chat-queue-title">
+    <section id="chat-queue" class="cc-chat-queue" aria-labelledby="chat-queue-title" tabindex="-1">
       <div class="sectionhead"><h3 id="chat-queue-title">Conversation queue</h3><span class="badge">Click a question to open</span></div>
       <div class="cc-chat-table-wrap" tabindex="0" role="region" aria-label="Conversation queue table">
         <table class="cc-chat-table">
@@ -68,7 +70,7 @@
       <h3 id="chat-detail-title">Conversation</h3>
       <p class="cc-chat-empty">Select a chat to view its saved messages and contact details.</p>
     </article>
-    <aside id="chat-side-context" class="cc-chat-side-context" aria-label="Conversation summary"><h3>Conversation summary</h3><p class="cc-chat-empty">Select a chat to view status, contact, and notification details.</p></aside>
+    <aside id="chat-summary" class="cc-chat-side-context" aria-label="Conversation summary" tabindex="-1"><h3>Conversation summary</h3><p class="cc-chat-empty">Select a chat to view status, contact, and notification details.</p></aside>
   </div>
 </section>
 
