@@ -111,7 +111,7 @@ def test_handle_get_audit(handler, admin_session, mock_service):
     mock_service.faq_review.audit_list.return_value = [{'action': 'create'}]
     admin_faq_http.handle_get(handler, '/audit', admin_session)
     assert handler.response_status == 200
-    assert handler.response_body == [{'action': 'create'}]
+    assert handler.response_body == {'items': [{'action': 'create'}]}
 
 
 def test_handle_get_review_queue_list(handler, admin_session, mock_service):

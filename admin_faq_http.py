@@ -130,7 +130,7 @@ def handle_get(handler, path, session):
             metadata = review.audit_list()
         except Exception as exc:
             return _handle_exception(handler, exc)
-        handler.respond(200, metadata)
+        handler.respond(200, {'items': metadata})
         return True
 
     # /review-queue
