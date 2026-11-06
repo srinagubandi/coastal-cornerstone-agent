@@ -5,8 +5,9 @@ import json
 
 from chat_store import ChatStore
 from chat_mail import ChatMail
-from chat_safety import screen_message, validate_contact, NEUTRAL, HUMAN
+from chat_safety import screen_message, validate_contact, NEUTRAL, PROHIBITED_DECLINE, OFF_TOPIC_DECLINE, HUMAN
 from agent import valid_source
+from safety import classify_question
 
 class ChatService:
     def __init__(self, config, store, agent, transport=None):
@@ -40,32 +41,43 @@ class ChatService:
             return self.chats.auth(sid, token, now)
         return None
 
+    def _blocked_answer(self, raw_text):
+        try:
+            _kind, reason = classify_question(raw_text)
+            if reason in ('religious or political debate', 'hateful or discriminatory judgment', 'sexual content', 'explicit slur or abuse'):
+                return PROHIBITED_DECLINE
+            if reason in ('off-topic', 'arbitrary off-topic'):
+                return OFF_TOPIC_DECLINE
+        except Exception:
+            pass
+        return NEUTRAL
+
 
     def create(self, client, now=None):
         try:
             if not getattr(self.config, 'chat_enabled', False):
-                return ({'error': 'Chat unavailable'}, 404)
+                return ({'error': 'Our virtual assistant is temporarily unavailable. For immediate assistance, please call (727) 771-5672, email ben@cccbuild.com, or use the public contact form on our website.'}, 404)
             self.chats.prune(now)
             allowed, retry = self.chats.rate(client, 'create', now)
             if not allowed:
-                return ({'error': 'Too many requests', 'retry_after': retry}, 429)
+                return ({'error': "We've received several messages from you in a short period. To ensure a smooth experience for everyone, please wait a moment before sending another message.", 'retry_after': retry}, 429)
             chat = self.chats.create(client, now)
             if chat is None:
-                return ({'error': 'Chat capacity reached'}, 429)
+                return ({'error': 'Our chat is currently handling more conversations than usual. Please try again shortly, or call (727) 771-5672, email ben@cccbuild.com, or use the public contact form.'}, 429)
             return (chat, 201)
         except Exception:
-            return ({'error': 'Chat temporarily unavailable'}, 503)
+            return ({'error': "Our chat service is temporarily unable to connect. Please call (727) 771-5672, email ben@cccbuild.com, or use the public contact form on our website. We're happy to assist you directly."}, 503)
 
     def snapshot(self, sid, token, now=None):
         try:
             if not getattr(self.config, 'chat_enabled', False):
-                return ({'error': 'Chat unavailable'}, 404)
+                return ({'error': 'Our virtual assistant is temporarily unavailable. For immediate assistance, please call (727) 771-5672, email ben@cccbuild.com, or use the public contact form on our website.'}, 404)
             if self._auth(sid, token, now) is None:
-                return ({'error': 'Unauthorized'}, 401)
+                return ({'error': "Your chat session has expired or is no longer available. Please start a new chat or contact us directly by calling (727) 771-5672, emailing ben@cccbuild.com, or using the public contact form."}, 401)
             self.chats.finalize_due(self.mail.make_payload, now)
             public = self.chats.snapshot(sid)
             if not public:
-                return {'error': 'Unauthorized'}, 401
+                return {'error': "Your chat session has expired or is no longer available. Please start a new chat or contact us directly by calling (727) 771-5672, emailing ben@cccbuild.com, or using the public contact form."}, 401
             return {
                 'session_id': public['session_id'],
                 'status': public['status'],
@@ -74,7 +86,7 @@ class ChatService:
                 'inactivity_seconds': 900
             }, 200
         except Exception:
-            return {'error': 'Chat temporarily unavailable'}, 503
+            return {'error': "Our chat service is temporarily unable to connect. Please call (727) 771-5672, email ben@cccbuild.com, or use the public contact form on our website. We're happy to assist you directly."}, 503
 
     def _approved(self, result):
         H = ('needs_help', HUMAN, [], [])
@@ -118,14 +130,14 @@ class ChatService:
     def message(self, sid, token, body, client, now=None):
         try:
             if not getattr(self.config, 'chat_enabled', False):
-                return {'error': 'Chat unavailable'}, 404
+                return {'error': 'Our virtual assistant is temporarily unavailable. For immediate assistance, please call (727) 771-5672, email ben@cccbuild.com, or use the public contact form on our website.'}, 404
             kind, text = screen_message(body)
             if kind == 'invalid' or (kind != 'blocked' and not text):
-                return {'error': 'Invalid message'}, 400
+                return {'error': "We couldn't understand that message. Please enter a question about Coastal Cornerstone Construction or try again."}, 400
             raw_text = body['message']
             auth = self._auth(sid, token, now)
             if auth is None:
-                return {'error': 'Unauthorized'}, 401
+                return {'error': "Your chat session has expired or is no longer available. Please start a new chat or contact us directly by calling (727) 771-5672, emailing ben@cccbuild.com, or using the public contact form."}, 401
             # Check ignore
             normalized = self.chats._normalize(raw_text)
             if self.chats.is_ignored(normalized):
@@ -176,28 +188,28 @@ class ChatService:
                     pass
             return response, status_code
         except Exception:
-            return {'error': 'Chat temporarily unavailable'}, 503
+            return {'error': "Our chat service is temporarily unable to connect. Please call (727) 771-5672, email ben@cccbuild.com, or use the public contact form on our website. We're happy to assist you directly."}, 503
 
     def _message(self, sid, token, body, client, now=None):
         try:
             if not getattr(self.config, 'chat_enabled', False):
-                return {'error': 'Chat unavailable'}, 404
+                return {'error': 'Our virtual assistant is temporarily unavailable. For immediate assistance, please call (727) 771-5672, email ben@cccbuild.com, or use the public contact form on our website.'}, 404
             kind, text = screen_message(body)
             if kind == 'invalid' or (kind != 'blocked' and not text):
-                return {'error': 'Invalid message'}, 400
+                return {'error': "We couldn't understand that message. Please enter a question about Coastal Cornerstone Construction or try again."}, 400
             auth = self._auth(sid, token, now)
             if auth is None:
-                return {'error': 'Unauthorized'}, 401
+                return {'error': "Your chat session has expired or is no longer available. Please start a new chat or contact us directly by calling (727) 771-5672, emailing ben@cccbuild.com, or using the public contact form."}, 401
             auth_status = auth.get('status', 'active')
             session_status = 'ended' if auth_status in ('ending','ended') else 'active'
             allowed, retry = self.chats.rate(client, 'message', now)
             if not allowed:
-                return {'error': 'Rate limit exceeded', 'retry_after': retry}, 429
+                return {'error': "We've received several messages from you in a short period. To ensure a smooth experience for everyone, please wait a moment before sending another message.", 'retry_after': retry}, 429
             greeting_re = re.compile(r'^\s*(hi|hello|thanks|thank\s?you)\s*[!?.]*\s*$', re.IGNORECASE)
             if kind == 'blocked' or greeting_re.match(text):
                 return {
                     'status': 'ignored',
-                    'answer': NEUTRAL if kind == 'blocked' else 'Hi! How can we help you with Coastal Cornerstone Construction today?',
+                    'answer': self._blocked_answer(text) if kind == 'blocked' else 'Hi! How can we help you with Coastal Cornerstone Construction today?',
                     'sources': [],
                     'faq_ids': [],
                     'session_status': session_status,
@@ -206,18 +218,18 @@ class ChatService:
             op, reason = self.chats.begin_message(sid, text, now)
             if not op:
                 if reason in ('missing', 'expired'):
-                    return {'error': 'Session expired or invalid'}, 401
+                    return {'error': "Your chat session has expired or is no longer available. Please start a new chat or contact us directly by calling (727) 771-5672, emailing ben@cccbuild.com, or using the public contact form."}, 401
                 elif reason == 'ended':
-                    return {'error': 'Chat ended; start a new chat'}, 409
+                    return {'error': 'This chat has ended. Please start a new chat or contact us directly.'}, 409
                 elif reason == 'turn_limit':
-                    return {'error': 'Chat message limit reached'}, 409
+                    return {'error': 'This chat has reached its message limit. Please start a new chat or contact us directly.'}, 409
                 elif reason == 'busy':
-                    return {'error': 'A message is already processing'}, 409
+                    return {'error': "I'm still working through your previous message. Please allow a moment before sending another. If you need help now, call (727) 771-5672, email ben@cccbuild.com, or use the public contact form."}, 409
                 else:
-                    return {'error': 'Chat temporarily unavailable'}, 503
+                    return {'error': "Our chat service is temporarily unable to connect. Please call (727) 771-5672, email ben@cccbuild.com, or use the public contact form on our website. We're happy to assist you directly."}, 503
             return self._respond(sid, op, text, kind, now)
         except Exception:
-            return {'error': 'Chat temporarily unavailable'}, 503
+            return {'error': "Our chat service is temporarily unable to connect. Please call (727) 771-5672, email ben@cccbuild.com, or use the public contact form on our website. We're happy to assist you directly."}, 503
 
     def _curated_ids(self, text):
         from safety import normalize
@@ -355,37 +367,37 @@ class ChatService:
     def contact(self, sid, token, body, client, now=None):
         try:
             if not getattr(self.config, 'chat_enabled', False):
-                return {'error': 'Chat unavailable'}, 404
+                return {'error': 'Our virtual assistant is temporarily unavailable. For immediate assistance, please call (727) 771-5672, email ben@cccbuild.com, or use the public contact form on our website.'}, 404
             validated, reason = validate_contact(body)
             if validated is None:
-                return {'error': 'Contact form not accepted'}, 400
+                return {'error': "We couldn't process your form submission because some required information was missing or invalid. Please review your entries and try again."}, 400
             if self._auth(sid, token, now) is None:
-                return {'error': 'Unauthorized'}, 401
+                return {'error': "Your chat session has expired or is no longer available. Please start a new chat or contact us directly by calling (727) 771-5672, emailing ben@cccbuild.com, or using the public contact form."}, 401
             allowed, retry = self.chats.rate(client, 'contact', now)
             if not allowed:
-                return {'error': 'Rate limit exceeded', 'retry_after': retry}, 429
+                return {'error': "We've received several messages from you in a short period. To ensure a smooth experience for everyone, please wait a moment before sending another message.", 'retry_after': retry}, 429
             result = self.chats.put_contact(sid, validated, self.mail.make_payload, now)
             if result in ('accepted', 'duplicate'):
                 return {'ok': True, 'contact_received': True}, 200
             if result == 'conflict':
-                return {'error': 'Contact already received'}, 409
+                return {'error': "We've already received contact details for this chat. If you need to add anything, please call (727) 771-5672 or email ben@cccbuild.com."}, 409
             if result in ('missing', 'expired'):
-                return {'error': 'Unauthorized'}, 401
-            return {'error': 'Chat temporarily unavailable'}, 503
+                return {'error': "Your chat session has expired or is no longer available. Please start a new chat or contact us directly by calling (727) 771-5672, emailing ben@cccbuild.com, or using the public contact form."}, 401
+            return {'error': "Our chat service is temporarily unable to connect. Please call (727) 771-5672, email ben@cccbuild.com, or use the public contact form on our website. We're happy to assist you directly."}, 503
         except Exception:
-            return {'error': 'Chat temporarily unavailable'}, 503
+            return {'error': "Our chat service is temporarily unable to connect. Please call (727) 771-5672, email ben@cccbuild.com, or use the public contact form on our website. We're happy to assist you directly."}, 503
 
     def end(self, sid, token, now=None):
         try:
             if not getattr(self.config, 'chat_enabled', False):
-                return ({'error': 'Chat unavailable'}, 404)
+                return ({'error': 'Our virtual assistant is temporarily unavailable. For immediate assistance, please call (727) 771-5672, email ben@cccbuild.com, or use the public contact form on our website.'}, 404)
             if self._auth(sid, token, now) is None:
-                return ({'error': 'Unauthorized'}, 401)
+                return ({'error': "Your chat session has expired or is no longer available. Please start a new chat or contact us directly by calling (727) 771-5672, emailing ben@cccbuild.com, or using the public contact form."}, 401)
             if not self.chats.request_end(sid, self.mail.make_payload, now):
-                return ({'error': 'Unauthorized'}, 401)
+                return ({'error': "Your chat session has expired or is no longer available. Please start a new chat or contact us directly by calling (727) 771-5672, emailing ben@cccbuild.com, or using the public contact form."}, 401)
             return ({'ok': True, 'status': 'ended'}, 200)
         except Exception:
-            return ({'error': 'Chat temporarily unavailable'}, 503)
+            return ({'error': "Our chat service is temporarily unable to connect. Please call (727) 771-5672, email ben@cccbuild.com, or use the public contact form on our website. We're happy to assist you directly."}, 503)
 
     def update_entry(self, entry_id, classification, revision, actor, now=None):
         return self.chats.update_entry(entry_id, classification, revision, actor, now)

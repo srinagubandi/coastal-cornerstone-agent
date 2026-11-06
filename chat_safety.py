@@ -18,6 +18,8 @@ def _clean(value, minimum, maximum):
     return value
 
 NEUTRAL = "Please ask about Coastal Cornerstone Construction and its published company information."
+PROHIBITED_DECLINE = "I'm unable to respond to requests regarding race, sex, religion, or political opinions. If you have a construction-related question, I'm happy to help with that."
+OFF_TOPIC_DECLINE = "I'm here to help with Coastal Cornerstone Construction's services, projects, and related inquiries. Your question falls outside that scope. If you have a construction-related need, please reach out directly."
 HUMAN = 'If you need pricing, scheduling, engineering or specific accessibility details, you can reach us at (727) 771-5672 or email Ben at ben@cccbuild.com. You may also use our contact form at https://cccbuild-website-production.up.railway.app/contact/#contact-title to get in touch.'
 
 tp = TOKEN.pattern.lstrip('(?i)')
