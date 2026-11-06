@@ -151,6 +151,16 @@ class TestChatCaptureReview(unittest.TestCase):
         visitor_entry = [e for e in entries if e['role'] == 'visitor'][0]
         self.assertEqual(visitor_entry['text'], 'What is your pricing?')
 
+    def test_duplicate_request_id_does_not_create_second_turn(self):
+        body = {'message': 'What does CCC do?', 'request_id': '01234567-89ab-cdef-0123-456789abcdef'}
+        first, first_code = self.service.message(self.sid, self.token, body, self.client_ip)
+        second, second_code = self.service.message(self.sid, self.token, body, self.client_ip)
+        self.assertEqual(first_code, 200)
+        self.assertEqual(second_code, 409)
+        self.assertIn('already being processed', second['error'])
+        detail = self.chat_store.private_detail(self.sid)
+        self.assertEqual(len([e for e in detail['entries'] if e['role'] == 'visitor']), 1)
+
     def test_sensitive_classification(self):
         resp, code = self._send('my email is test@example.com and password is secret')
         self.assertEqual(code, 200)

@@ -136,6 +136,10 @@ class ChatStore:
             for trigger, (enabled, recipients) in defaults.items():
                 db.execute('INSERT OR IGNORE INTO notification_settings(trigger, enabled, recipients, updated) VALUES (?,?,?,?)',
                            (trigger, enabled, recipients, now))
+            columns = {row['name'] for row in db.execute('PRAGMA table_info(chat_messages)').fetchall()}
+            if 'client_request_id' not in columns:
+                db.execute('ALTER TABLE chat_messages ADD COLUMN client_request_id TEXT')
+            db.execute('CREATE UNIQUE INDEX IF NOT EXISTS idx_chat_messages_client_request ON chat_messages(session_id, client_request_id) WHERE client_request_id IS NOT NULL')
 
     def get_notification_settings(self):
         with self.store.connect() as db:
@@ -545,6 +549,12 @@ class ChatStore:
             )
             return cursor.lastrowid
 
+    def has_request_id(self, sid, client_request_id):
+        if not client_request_id:
+            return False
+        with self.store.connect() as db:
+            return db.execute('SELECT 1 FROM chat_messages WHERE session_id=? AND client_request_id=? LIMIT 1', (sid, client_request_id)).fetchone() is not None
+
     def update_entry(self, entry_id, classification, revision, actor, now=None):
         allowed = {'unreviewed', 'ignore', 'needs_answer', 'faq_candidate', 'sensitive_private'}
         if classification not in allowed:
@@ -580,7 +590,7 @@ class ChatStore:
         with self.store.transaction() as db:
             db.execute('UPDATE chat_entries SET outcome=? WHERE id=?', (outcome, entry_id))
 
-    def begin_message(self, sid, text, now=None):
+    def begin_message(self, sid, text, client_request_id=None, now=None):
         if not isinstance(text, str) or not (1 <= len(text) <= 1500):
             raise ValueError("text must be a string of length 1 to 1500")
         try:
@@ -589,6 +599,10 @@ class ChatStore:
             raise ValueError("text must be valid UTF-8") from None
         now = _now(now)
         with self.store.transaction() as db:
+            if client_request_id:
+                existing = db.execute('SELECT id FROM chat_messages WHERE session_id=? AND client_request_id=?', (sid, client_request_id)).fetchone()
+                if existing:
+                    return (None, 'duplicate')
             row = db.execute("SELECT id, status, turns, processing, lease_until, expires, last_seen FROM chat_sessions WHERE id = ?", (sid,)).fetchone()
             if row is None:
                 return (None, "missing")
@@ -610,8 +624,8 @@ class ChatStore:
                     return (None, "turn_limit")
             op = secrets.token_hex(32)
             db.execute(
-                "INSERT INTO chat_messages (session_id, role, text, created, sources, faq_ids, operation) VALUES (?, 'visitor', ?, ?, '[]', '[]', ?)",
-                (sid, text, now, op)
+                "INSERT INTO chat_messages (session_id, role, text, created, sources, faq_ids, operation, client_request_id) VALUES (?, 'visitor', ?, ?, '[]', '[]', ?, ?)",
+                (sid, text, now, op, client_request_id)
             )
             db.execute(
                 "UPDATE chat_sessions SET turns = turns + 1, last_seen = MAX(last_seen, ?), processing = ?, lease_until = ? WHERE id = ?",

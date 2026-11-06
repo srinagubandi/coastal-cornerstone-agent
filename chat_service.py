@@ -164,13 +164,19 @@ class ChatService:
         try:
             if not getattr(self.config, 'chat_enabled', False):
                 return {'error': 'Our virtual assistant is temporarily unavailable. For immediate assistance, please call (727) 771-5672, email ben@cccbuild.com, or use the public contact form on our website.'}, 404
-            kind, text = screen_message(body)
+            screen_body = {'message': body.get('message')} if isinstance(body, dict) else body
+            kind, text = screen_message(screen_body)
             if kind == 'invalid' or (kind != 'blocked' and not text):
                 return {'error': "We couldn't understand that message. Please enter a question about Coastal Cornerstone Construction or try again."}, 400
             raw_text = body['message']
             auth = self._auth(sid, token, now)
             if auth is None:
                 return {'error': "Your chat session has expired or is no longer available. Please start a new chat or contact us directly by calling (727) 771-5672, emailing ben@cccbuild.com, or using the public contact form."}, 401
+            request_id = body.get('request_id') if isinstance(body, dict) else None
+            if not isinstance(request_id, str) or not re.fullmatch(r'(?:[0-9a-fA-F]{32}|[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})', request_id):
+                request_id = None
+            if request_id and self.chats.has_request_id(sid, request_id):
+                return {'error': 'This message is already being processed. Please wait for the current answer before trying again.'}, 409
             # Check ignore
             normalized = self.chats._normalize(raw_text)
             if kind != 'blocked' and self.chats.is_ignored(normalized):
@@ -229,7 +235,8 @@ class ChatService:
         try:
             if not getattr(self.config, 'chat_enabled', False):
                 return {'error': 'Our virtual assistant is temporarily unavailable. For immediate assistance, please call (727) 771-5672, email ben@cccbuild.com, or use the public contact form on our website.'}, 404
-            kind, text = screen_message(body)
+            screen_body = {'message': body.get('message')} if isinstance(body, dict) else body
+            kind, text = screen_message(screen_body)
             if kind == 'invalid' or (kind != 'blocked' and not text):
                 return {'error': "We couldn't understand that message. Please enter a question about Coastal Cornerstone Construction or try again."}, 400
             auth = self._auth(sid, token, now)
@@ -250,7 +257,10 @@ class ChatService:
                     'session_status': session_status,
                 }, 200
             self.chats.finalize_due(self.mail.make_payload, now)
-            op, reason = self.chats.begin_message(sid, text, now)
+            request_id = body.get('request_id') if isinstance(body, dict) else None
+            if not isinstance(request_id, str) or not re.fullmatch(r'(?:[0-9a-fA-F]{32}|[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})', request_id):
+                request_id = None
+            op, reason = self.chats.begin_message(sid, text, request_id, now)
             if not op:
                 if reason in ('missing', 'expired'):
                     return {'error': "Your chat session has expired or is no longer available. Please start a new chat or contact us directly by calling (727) 771-5672, emailing ben@cccbuild.com, or using the public contact form."}, 401
@@ -260,6 +270,8 @@ class ChatService:
                     return {'error': 'This chat has reached its message limit. Please start a new chat or contact us directly.'}, 409
                 elif reason == 'busy':
                     return {'error': "I'm still working through your previous message. Please allow a moment before sending another. If you need help now, call (727) 771-5672, email ben@cccbuild.com, or use the public contact form."}, 409
+                elif reason == 'duplicate':
+                    return {'error': 'This message is already being processed. Please wait for the current answer before trying again.'}, 409
                 else:
                     return {'error': "Our chat service is temporarily unable to connect. Please call (727) 771-5672, email ben@cccbuild.com, or use the public contact form on our website. We're happy to assist you directly."}, 503
             return self._respond(sid, op, text, kind, now, timing)
