@@ -2,6 +2,7 @@ import threading
 import time
 import re
 import json
+import uuid
 
 from chat_store import ChatStore
 from chat_mail import ChatMail
@@ -19,6 +20,36 @@ class ChatService:
         self.stop = threading.Event()
         self.worker = None
         self.worker_lock = threading.Lock()
+
+    def _start_timing(self, operation):
+        return {
+            'request_id': uuid.uuid4().hex,
+            'operation': operation,
+            'started': time.perf_counter(),
+            'stages': {},
+        }
+
+    def _record_timing(self, timing, name, started):
+        if timing is not None:
+            timing['stages'][name] = round((time.perf_counter() - started) * 1000, 2)
+
+    def _finish_timing(self, timing, status_code):
+        if timing is None:
+            return
+        total_ms = round((time.perf_counter() - timing['started']) * 1000, 2)
+        event = {
+            'event': 'chat_timing',
+            'request_id': timing['request_id'],
+            'operation': timing['operation'],
+            'status_code': status_code,
+            'total_ms': total_ms,
+            'stages_ms': timing['stages'],
+        }
+        sink = getattr(self.config, 'chat_timing_sink', None)
+        if callable(sink):
+            sink(event)
+        elif total_ms >= 10000:
+            print(json.dumps(event, separators=(',', ':')), flush=True)
 
     def _classify_text(self, raw_text):
         import re
@@ -128,6 +159,8 @@ class ChatService:
             return H
 
     def message(self, sid, token, body, client, now=None):
+        timing = self._start_timing('message')
+        status_code = None
         try:
             if not getattr(self.config, 'chat_enabled', False):
                 return {'error': 'Our virtual assistant is temporarily unavailable. For immediate assistance, please call (727) 771-5672, email ben@cccbuild.com, or use the public contact form on our website.'}, 404
@@ -166,7 +199,7 @@ class ChatService:
                 visitor_entry_id = self.chats.capture_entry(sid, 'visitor', raw_text, classification, 'pending', now=now)
             except Exception:
                 pass
-            response, status_code = self._message(sid, token, body, client, now)
+            response, status_code = self._message(sid, token, body, client, now, timing)
             if status_code == 200:
                 outcome = response.get('status', 'unknown')
                 answer = response.get('answer', '')
@@ -189,8 +222,10 @@ class ChatService:
             return response, status_code
         except Exception:
             return {'error': "Our chat service is temporarily unable to connect. Please call (727) 771-5672, email ben@cccbuild.com, or use the public contact form on our website. We're happy to assist you directly."}, 503
+        finally:
+            self._finish_timing(timing, status_code or 503)
 
-    def _message(self, sid, token, body, client, now=None):
+    def _message(self, sid, token, body, client, now=None, timing=None):
         try:
             if not getattr(self.config, 'chat_enabled', False):
                 return {'error': 'Our virtual assistant is temporarily unavailable. For immediate assistance, please call (727) 771-5672, email ben@cccbuild.com, or use the public contact form on our website.'}, 404
@@ -227,7 +262,7 @@ class ChatService:
                     return {'error': "I'm still working through your previous message. Please allow a moment before sending another. If you need help now, call (727) 771-5672, email ben@cccbuild.com, or use the public contact form."}, 409
                 else:
                     return {'error': "Our chat service is temporarily unable to connect. Please call (727) 771-5672, email ben@cccbuild.com, or use the public contact form on our website. We're happy to assist you directly."}, 503
-            return self._respond(sid, op, text, kind, now)
+            return self._respond(sid, op, text, kind, now, timing)
         except Exception:
             return {'error': "Our chat service is temporarily unable to connect. Please call (727) 771-5672, email ben@cccbuild.com, or use the public contact form on our website. We're happy to assist you directly."}, 503
 
@@ -330,8 +365,9 @@ class ChatService:
                 return [faq_id]
         return []
 
-    def _respond(self, sid, op, text, kind, now=None):
+    def _respond(self, sid, op, text, kind, now=None, timing=None):
         try:
+            answer_started = time.perf_counter()
             ids = self._curated_ids(text) if kind != 'blocked' else []
             if ids and 'faq-027' in ids:
                 status, answer, sources, faq_ids = 'needs_help', HUMAN, [], []
@@ -346,6 +382,8 @@ class ChatService:
             else:
                 status, answer, sources, faq_ids = self._approved(self.agent._answer(text))
 
+            self._record_timing(timing, 'answer_generation', answer_started)
+            persistence_started = time.perf_counter()
             completed = self.chats.complete_message(sid, op, answer, sources, faq_ids, now)
             if not completed:
                 return ({'error':'Chat state changed; refresh the conversation'},409)
@@ -353,6 +391,7 @@ class ChatService:
             self.chats.finalize_due(self.mail.make_payload, now)
             snapshot = self.chats.snapshot(sid)
             session_status = snapshot['status'] if snapshot else 'ended'
+            self._record_timing(timing, 'persistence_and_snapshot', persistence_started)
 
             return ({'status':status,'answer':answer,'sources':sources,'faq_ids':faq_ids,'session_status':session_status},200)
 

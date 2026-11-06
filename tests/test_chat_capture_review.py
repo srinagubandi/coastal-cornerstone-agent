@@ -135,7 +135,7 @@ class TestChatCaptureReview(unittest.TestCase):
     def test_abort_retains_raw_entry(self):
         # Simulate a provider failure by making service._message return an error
         original_message = self.service._message
-        def fake_message(sid, token, body, client, now=None):
+        def fake_message(sid, token, body, client, now=None, timing=None):
             return ({'error': 'provider unavailable'}, 503)
         self.service._message = fake_message
         try:
